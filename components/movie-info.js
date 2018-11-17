@@ -1,7 +1,7 @@
 
-export default (props) => (
+export default ({movie}) => (
     <section>
-        props: {JSON.stringify(props)}
+        props: {JSON.stringify(movie)}
         <div className="movie-backdrop">
             <img src="https://image.tmdb.org/t/p/w700_and_h392_bestv2/bHarw8xrmQeqf3t8HpuMY7zoK4x.jpg" />
         </div>
@@ -9,7 +9,7 @@ export default (props) => (
             <img className="movie-poster" src="https://image.tmdb.org/t/p/w174_and_h261_bestv2/y31QB9kn3XSudA15tV7UWQ9XLuW.jpg" />
             <div className="info-row">
                 <span className="movie-title">
-                    Guardians of the Galaxy
+                    {movie.title}
                 </span>
                 &nbsp;
                 <span className="movie-year">
@@ -28,8 +28,7 @@ export default (props) => (
 
         <div className="content-padding movie-description">
             <h3>Overview</h3>
-            Light years from Earth, 26 years after being abducted, Peter Quill finds himself the prime target of a manhunt after discovering an orb wanted by Ronan the Accuser.
-
+            {movie.overview}
             <div>
                 <br/>
                 <strong>James Gunn</strong>
