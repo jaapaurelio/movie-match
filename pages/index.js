@@ -8,6 +8,8 @@ const Index = (props) => (
     <div>
         <Topbar title="Movie Match" />
         <SwipeArea>
+            {console.log(props.movies)}
+            ---
             <MovieInfo movie={props.movies.results[4]} />
         </SwipeArea>
 
@@ -22,11 +24,13 @@ const Index = (props) => (
   )
 
   Index.getInitialProps = function() {
-    return moviedb.miscTopRatedMovies().then(res => {
-        return {
-            movies: res
-          }
-      }).catch(console.error)
+    return moviedb.miscTopRatedMovies()
+        .then(movies => {
+            console.log(movies);
+            movies.results.map(movie => moviedb.movieInfo({ id: movie.id }));
+        }
+    );
+
   }
 
   export default Index
