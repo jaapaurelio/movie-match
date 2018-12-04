@@ -1,6 +1,8 @@
 import Topbar from "../components/topbar";
 import MovieInfo from "../components/movie-info";
+import Cast from "../components/cast";
 import SwipeArea from "../components/swipe-area";
+import VisibilitySensor from "react-visibility-sensor";
 const MovieDb = require("moviedb-promise");
 const moviedb = new MovieDb("284941729ae99106f71e56126227659b");
 
@@ -17,17 +19,21 @@ class Index extends React.Component {
 
   getNewMovie() {
     this.setState({
-      id: Math.floor(Math.random() * 20 + 1)
+      id: Math.floor(Math.random() * 10 + 1)
     });
   }
 
   like() {
     this.getNewMovie();
+    window.scrollTo(0, 0);
   }
 
   noLike() {
     this.getNewMovie();
+    window.scrollTo(0, 0);
   }
+
+  async onVisibleExtraInfo(visile) {}
 
   render() {
     const { movies, id } = this.props;
@@ -37,17 +43,23 @@ class Index extends React.Component {
         <Topbar title="Movie Match" />
         <SwipeArea>
           <MovieInfo movie={movies[this.state.id]} />
+          <VisibilitySensor
+            onChange={this.onVisibleExtraInfo}
+            partialVisibility={true}
+          >
+            <div>
+              <Cast />
+            </div>
+          </VisibilitySensor>
         </SwipeArea>
 
         <div className="buttons-container-space" />
         <div className="buttons-container">
-          <div>
-            <div onClick={this.noLike} className="button-choice button-no">
-              Not today
-            </div>
-            <div onClick={this.like} className="button-choice button-yes">
-              Yes please
-            </div>
+          <div onClick={this.noLike} className="button-choice button-no">
+            Not today
+          </div>
+          <div onClick={this.like} className="button-choice button-yes">
+            Yes please
           </div>
         </div>
 
@@ -59,7 +71,6 @@ class Index extends React.Component {
               background: #f9fcff;
               left: 0;
               right: 0;
-              border-top: 1px solid #e8ebef;
               text-align: center;
               display: flex;
               align-items: center;
@@ -81,13 +92,13 @@ class Index extends React.Component {
             }
 
             .button-choice {
-              padding: 6px 20px;
-              display: inline-block;
-              margin: 20px;
-              border-radius: 4px;
+              user-select: none;
+              padding: 15px 0;
               color: #fff;
               text-transform: uppercase;
               font-size: 12px;
+              width: 50%;
+              font-weight: bold;
             }
           `}
         </style>
@@ -97,7 +108,7 @@ class Index extends React.Component {
 
   componentDidMount() {
     this.setState({
-      id: Math.floor(Math.random() * 20 + 1)
+      id: Math.floor(Math.random() * 10 + 1)
     });
   }
 
