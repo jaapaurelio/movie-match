@@ -1,32 +1,34 @@
-export default ({ children }) => (
-  <div className="content-padding actors-container">
-    <h3>Cast</h3>
-
+export default ({ cast }) => (
+  <div className="actors-container">
+    <h3 className="content-padding">Cast</h3>
     <div className="actors">
-      <div className="actor-container">
-        <img
-          className="actor-image"
-          src="https://image.tmdb.org/t/p/w240_and_h266_face/gXKyT1YU5RWWPaE1je3ht58eUZr.jpg"
-        />
-        <div className="actor-name">Chris Pratt</div>
-        <div className="actor-persona">Peter Quill / Star-Lord</div>
-      </div>
-      <div className="actor-container">
-        <img
-          className="actor-image"
-          src="https://image.tmdb.org/t/p/w240_and_h266_face/ofNrWiA2KDdqiNxFTLp51HcXUlp.jpg"
-        />
-        <div className="actor-name">Zoe Saldana</div>
-        <div className="actor-persona">Gamora</div>
-      </div>
+      {cast.map(actor => (
+        <div key={actor.id} className="actor-container">
+          <img
+            className="actor-image"
+            src={
+              `https://image.tmdb.org/t/p/w240_and_h266_face/` +
+              actor.profile_path
+            }
+          />
+          <div className="actor-name">{actor.name}</div>
+          <div className="actor-character">{actor.character}</div>
+        </div>
+      ))}
     </div>
+
     <style jsx>
       {`
+        .content-padding {
+          padding: 0px 20px;
+        }
+
         h3 {
-          font-size: 15px;
+          font-size: 14px;
           font-weight: bold;
           margin-bottom: 10px;
         }
+
         strong {
           font-weight: bold;
         }
@@ -37,16 +39,21 @@ export default ({ children }) => (
 
         .actors {
           display: flex;
+          width: 100%;
+          overflow-x: auto;
         }
 
         .actor-container {
           margin-top: 10px;
-          width: 100px;
-          margin-right: 10px;
+          padding-right: 10px;
+        }
+
+        .actor-container:first-child {
+          padding-left: 10px;
         }
 
         .actor-image {
-          max-width: 100%;
+          width: 100px;
         }
 
         .actor-name {
@@ -54,7 +61,7 @@ export default ({ children }) => (
           font-weight: bold;
         }
 
-        .actor-persona {
+        .actor-character {
           font-size: 12px;
         }
       `}
