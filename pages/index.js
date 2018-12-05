@@ -2,7 +2,7 @@ import Topbar from "../components/topbar";
 import MovieInfo from "../components/movie-info";
 import Cast from "../components/cast";
 import SwipeArea from "../components/swipe-area";
-import VisibilitySensor from "react-visibility-sensor";
+import axios from "axios";
 const MovieDb = require("moviedb-promise");
 const moviedb = new MovieDb("284941729ae99106f71e56126227659b");
 
@@ -13,13 +13,25 @@ class Index extends React.Component {
     this.noLike = this.noLike.bind(this);
 
     this.state = {
-      id: 2
+      movie: null,
+      movies: null
     };
   }
 
-  getNewMovie() {
+  async getNewMovie(movies = this.state.movies) {
+    const movie = movies.pop();
+
     this.setState({
-      id: Math.floor(Math.random() * 10 + 1)
+      movie,
+      movies
+    });
+
+    const movieInfo = await moviedb.movieInfo(movie.id, {
+      append_to_response: "credits"
+    });
+    console.log({ ...movie, ...movieInfo });
+    this.setState({
+      movie: { ...movie, ...movieInfo }
     });
   }
 
@@ -33,25 +45,18 @@ class Index extends React.Component {
     window.scrollTo(0, 0);
   }
 
-  async onVisibleExtraInfo(visile) {}
-
   render() {
-    const { movies, id } = this.props;
-
+    const { movie } = this.state;
+    console.log("m", movie);
     return (
       <div>
         <Topbar title="Movie Match" />
-        <SwipeArea>
-          <MovieInfo movie={movies[this.state.id]} />
-          <VisibilitySensor
-            onChange={this.onVisibleExtraInfo}
-            partialVisibility={true}
-          >
-            <div>
-              <Cast />
-            </div>
-          </VisibilitySensor>
-        </SwipeArea>
+        {movie && (
+          <SwipeArea>
+            <MovieInfo movie={movie} />
+            {movie.credits && <Cast cast={movie.credits.cast.slice(0, 5)} />}
+          </SwipeArea>
+        )}
 
         <div className="buttons-container-space" />
         <div className="buttons-container">
@@ -106,31 +111,16 @@ class Index extends React.Component {
     );
   }
 
-  componentDidMount() {
-    this.setState({
-      id: Math.floor(Math.random() * 10 + 1)
-    });
-  }
+  async componentDidMount() {
+    const moviesR = await axios.get("/api/groups/AAAA");
+    let movies = moviesR.data.movies;
 
-  static async getInitialProps() {
-    const genreList = await moviedb.genreMovieList();
-    const genres = genreList.genres.reduce((acc, genre) => {
-      acc[genre.id] = genre;
-      return acc;
-    }, {});
+    movies = movies
+      .map(a => [Math.random(), a])
+      .sort((a, b) => a[0] - b[0])
+      .map(a => a[1]);
 
-    const movieList = await moviedb.miscTopRatedMovies({
-      append_to_response: "videos"
-    });
-
-    const movies = movieList.results.map(movie => ({
-      ...movie,
-      genres: movie.genre_ids.map(genreId => genres[genreId].name)
-    }));
-
-    return {
-      movies
-    };
+    this.getNewMovie(movies);
   }
 }
 
