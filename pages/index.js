@@ -29,7 +29,6 @@ class Index extends React.Component {
     const movieInfo = await moviedb.movieInfo(movie.id, {
       append_to_response: "credits"
     });
-    console.log({ ...movie, ...movieInfo });
     this.setState({
       movie: { ...movie, ...movieInfo }
     });
@@ -47,7 +46,6 @@ class Index extends React.Component {
 
   render() {
     const { movie } = this.state;
-    console.log("m", movie);
     return (
       <div>
         <Topbar title="Movie Match" />
