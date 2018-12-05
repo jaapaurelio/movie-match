@@ -41,8 +41,14 @@ export default ({ movie }) => {
           <div>
             <span className="gender">{movie.genres_name.join(", ")}</span>
           </div>
-          <span className="time"> {getRuntime(movie.runtime)} &nbsp;</span>
-          {movie.adult && <span className="more-18">+18</span>}
+          <div className="small-info">
+            <i className="far fa-star info-icon score-icon" />
+            <span className="score">{movie.vote_average}</span>
+            <span className="score-small">/10</span>
+            <i className="far info-icon fa-clock" />
+            <span className="time"> {getRuntime(movie.runtime)} &nbsp;</span>
+            {movie.adult && <span className="more-18">+18</span>}
+          </div>
         </div>
       </div>
       <div className="content-padding movie-description">
@@ -68,6 +74,27 @@ export default ({ movie }) => {
 
       <style jsx>
         {`
+          .small-info {
+            display: flex;
+            align-items: baseline;
+          }
+
+          .info-icon {
+            font-size: 11px;
+            align-self: center;
+            margin-right: 4px;
+          }
+
+          .score-icon {
+            color: #e0ce34;
+          }
+
+          .score-small {
+            color: #8e8e8e;
+            font-size: 12px;
+            margin-right: 8px;
+          }
+
           .content-padding {
             padding: 0px 20px;
           }
@@ -90,7 +117,7 @@ export default ({ movie }) => {
           .movie-poster {
             width: 100px;
             position: absolute;
-            top: -50px;
+            top: -40px;
             left: 10px;
           }
 
