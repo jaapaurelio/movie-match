@@ -21,13 +21,13 @@ export default ({ title = "Movie Match" }) => (
     <style jsx>
       {`
         .container {
-          background: #fff;
+          background: #123846;
           display: flex;
           justify-content: space-between;
           height: 45px;
           padding: 0px 20px;
           align-items: center;
-          color: #a1a3ab;
+          color: #ffffff;
           position: relative;
           top: 0;
           left: 0;

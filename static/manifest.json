@@ -1,0 +1,8 @@
+{
+  "short_name": "Movie Match",
+  "name": "Movie Match - Find the right movie",
+  "start_url": "/",
+  "background_color": "#123846",
+  "theme_color": "#123846",
+  "display": "standalone"
+}
