@@ -108,6 +108,8 @@ export default ({ movie }) => {
 
           .movie-backdrop {
             text-align: center;
+            max-height: 130px;
+            overflow: hidden;
           }
 
           .movie-backdrop img {
@@ -166,6 +168,7 @@ export default ({ movie }) => {
             background: #143846;
             color: #fff;
             line-height: 1.5;
+            min-height: 240px;
           }
 
           .crew-container {
