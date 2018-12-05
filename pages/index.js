@@ -47,7 +47,7 @@ class Index extends React.Component {
   render() {
     const { movie } = this.state;
     return (
-      <div>
+      <div className="page-container">
         <Topbar title="Movie Match" />
         {movie && (
           <SwipeArea>
@@ -68,6 +68,11 @@ class Index extends React.Component {
 
         <style jsx>
           {`
+            .page-container {
+              background: #123846;
+              min-height: 100%;
+            }
+
             .buttons-container {
               position: fixed;
               bottom: 0;
