@@ -12,7 +12,6 @@ class Matches extends React.Component {
   async componentDidMount() {
     const moviesR = await axios.get(`/api/groups/${this.props.roomId}`);
     let { movies, group } = moviesR.data;
-    console.log("moviesR.data", moviesR.data);
 
     const matches = Object.keys(group.likes).reduce((acc, movieId) => {
       if (group.likes[movieId] === group.numberOfUser) {
@@ -21,7 +20,6 @@ class Matches extends React.Component {
 
       return acc;
     }, []);
-    console.log(group.likes);
 
     this.setState({ matches });
   }
@@ -41,8 +39,8 @@ class Matches extends React.Component {
         />
         <div className="container">
           {this.state.matches.map(movie => (
-            <div>
-              <div>{movie.title}</div>
+            <div key={movie.id}>
+              <div className="movie-title">{movie.title}</div>
             </div>
           ))}
           {!this.state.matches.length && (
@@ -52,6 +50,7 @@ class Matches extends React.Component {
         <style jsx>{`
           .container {
             padding: 12px;
+            text-align: center;
           }
         `}</style>
       </div>
