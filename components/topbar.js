@@ -6,12 +6,12 @@ export default ({ title = "Movie Match" }) => (
       <div className="page-title">{title}</div>
       <div className="top-icons-container">
         <div className="top-icon">
-          <Link href="/">
+          <Link href="/room?id=AAAA">
             <i className="fas fa-clone" />
           </Link>
         </div>
         <div className="top-icon">
-          <Link href="/matches">
+          <Link href="/matches?id=AAAA">
             <i className="fas fa-heart" />
           </Link>
         </div>

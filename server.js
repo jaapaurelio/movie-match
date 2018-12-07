@@ -21,10 +21,9 @@ const pusher = new Pusher({
   encrypted: true
 });
 
-const groups = {
-  AAAA: {}
-};
-let genres = {};
+let __movies = {};
+const __groups = {};
+let __genres = {};
 
 const getMovies = async function() {
   const baseQuery = {
@@ -33,9 +32,11 @@ const getMovies = async function() {
   };
 
   const moviesL = await Promise.all([
-    moviedb.discoverMovie({ ...baseQuery, page: 1 }),
-    moviedb.discoverMovie({ ...baseQuery, page: 2 }),
-    moviedb.discoverMovie({ ...baseQuery, page: 3 })
+    moviedb.discoverMovie({ ...baseQuery, page: 1 })
+    //moviedb.discoverMovie({ ...baseQuery, page: 2 }),
+    //moviedb.discoverMovie({ ...baseQuery, page: 3 }),
+    //moviedb.discoverMovie({ ...baseQuery, page: 4 }),
+    //moviedb.discoverMovie({ ...baseQuery, page: 5 })
   ]);
 
   let movieList = [];
@@ -44,17 +45,20 @@ const getMovies = async function() {
     movieList = movieList.concat(movie.results);
   });
 
-  let movies = movieList.map(movie => ({
-    ...movie,
-    genres_name: movie.genre_ids.map(genreId => genres[genreId].name)
-  }));
+  const movies = movieList.reduce((acc, movie) => {
+    acc[movie.id] = {
+      ...movie,
+      genres_name: movie.genre_ids.map(genreId => __genres[genreId].name)
+    };
+    return acc;
+  }, {});
 
   return movies;
 };
 
 const getGenres = async function() {
   const genreList = await moviedb.genreMovieList();
-  genres = genreList.genres.reduce((acc, genre) => {
+  const genres = genreList.genres.reduce((acc, genre) => {
     acc[genre.id] = genre;
     return acc;
   }, {});
@@ -71,11 +75,53 @@ app
     server.use(bodyParser.json());
     server.use(bodyParser.urlencoded({ extended: true }));
 
-    server.get("/api/groups/:groupId/", (req, res) => {
-      const groupId = req.params.groupId;
-      const group = groups[groupId];
+    server.post("/api/groups/:roomId/:userId/:movieId/:like", (req, res) => {
+      const { movieId, userId, roomId } = req.params;
+      const like = req.params.like === "true";
 
-      res.send(group);
+      // new movie
+      if (!__groups[roomId].movies[movieId]) {
+        __groups[roomId].movies[movieId] = {
+          id: movieId,
+          mm_stats: {
+            user_likes: {},
+            user_seen: {}
+          }
+        };
+      }
+
+      let totalLikes = __groups[roomId].likes[movieId] || 0;
+      const numberOfUsers = __groups[roomId].numberOfUser;
+
+      if (like) {
+        totalLikes++;
+
+        if (totalLikes >= numberOfUsers) {
+          pusher.trigger(`room-${roomId}`, "movie-matched", { movieId });
+        }
+      }
+
+      __groups[roomId].movies[movieId].mm_stats.user_likes[userId] = like;
+      __groups[roomId].movies[movieId].mm_stats.user_seen[userId] = true;
+      __groups[roomId].likes[movieId] = totalLikes;
+
+      res.send({});
+    });
+
+    server.get("/api/groups/:roomId", (req, res) => {
+      const roomId = req.params.roomId;
+
+      if (!__groups[roomId]) {
+        __groups[roomId] = {
+          movies: {},
+          likes: {},
+          numberOfUser: 2
+        };
+      }
+
+      const group = __groups[roomId];
+
+      res.send({ group, movies: __movies });
     });
 
     server.get("*", (req, res) => {
@@ -85,8 +131,8 @@ app
     server.listen(port, async err => {
       if (err) throw err;
 
-      genres = await getGenres();
-      groups.AAAA.movies = await getMovies();
+      __genres = await getGenres();
+      __movies = await getMovies();
 
       console.log(`> Ready on http://localhost:${port}`);
     });

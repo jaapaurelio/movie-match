@@ -61,7 +61,7 @@ export default ({ movie }) => {
             <div className="crew-container">
               {crew.map(c => {
                 return (
-                  <div className="crew-info">
+                  <div key={c.credit_id} className="crew-info">
                     <div className="crew-name">{c.name}</div>
                     {c.job}
                   </div>
