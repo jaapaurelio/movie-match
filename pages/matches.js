@@ -1,18 +1,62 @@
-import Topbar from '../components/topbar'
+import Topbar from "../components/topbar";
+import axios from "axios";
 
-const Index = () => (
-    <div>
-        <Topbar title="Matches" />
-        Matches
+class Matches extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      matches: []
+    };
+  }
 
+  async componentDidMount() {
+    const moviesR = await axios.get(`/api/groups/${this.props.roomId}`);
+    let { movies, group } = moviesR.data;
+    console.log("moviesR.data", moviesR.data);
+
+    const matches = Object.keys(group.likes).reduce((acc, movieId) => {
+      if (group.likes[movieId] === group.numberOfUser) {
+        acc.push(movies[movieId]);
+      }
+
+      return acc;
+    }, []);
+    console.log(group.likes);
+
+    this.setState({ matches });
+  }
+
+  static getInitialProps({ query }) {
+    return { roomId: query.id };
+  }
+
+  render() {
+    return (
+      <div>
+        <Topbar
+          activetab="matches"
+          roomId={this.props.roomId}
+          title="Matches"
+          matched={this.state.matches.length}
+        />
+        <div className="container">
+          {this.state.matches.map(movie => (
+            <div>
+              <div>{movie.title}</div>
+            </div>
+          ))}
+          {!this.state.matches.length && (
+            <div className="mm-big-message">No matches yet. Keep trying.</div>
+          )}
+        </div>
         <style jsx>{`
-        p {
-            color: red;
-        }
-        `}
-        </style>
+          .container {
+            padding: 12px;
+          }
+        `}</style>
+      </div>
+    );
+  }
+}
 
-    </div>
-  )
-
-  export default Index
+export default Matches;

@@ -8,9 +8,14 @@ import Pusher from "pusher-js";
 const MovieDb = require("moviedb-promise");
 const moviedb = new MovieDb("284941729ae99106f71e56126227659b");
 
-var getRandomMovie = function(movies) {
+const getRandomMovie = function(movies) {
   var ids = Object.keys(movies);
   return movies[ids[(ids.length * Math.random()) << 0]];
+};
+
+const hasMaches = function(likes, nusers) {
+  const values = Object.values(likes);
+  return values.find(v => nusers === v);
 };
 
 class Index extends React.Component {
@@ -21,7 +26,9 @@ class Index extends React.Component {
 
     this.state = {
       movie: null,
-      movies: null
+      movies: null,
+      loading: true,
+      matched: false
     };
   }
 
@@ -94,7 +101,9 @@ class Index extends React.Component {
     this.channel = this.pusher.subscribe(`room-${this.props.roomId}`);
 
     this.channel.bind("movie-matched", movie => {
-      console.log(movie);
+      this.setState({
+        matched: true
+      });
     });
 
     this.pusher.connection.bind("connected", async () => {
@@ -103,6 +112,13 @@ class Index extends React.Component {
       const moviesR = await axios.get(`/api/groups/${this.props.roomId}`);
       let { movies, group } = moviesR.data;
       console.log(moviesR.data);
+
+      const matched = hasMaches(group.likes, group.numberOfUser);
+
+      this.setState({
+        loading: false,
+        matched
+      });
 
       if (!movies) {
         return;
@@ -137,7 +153,12 @@ class Index extends React.Component {
     const { movie } = this.state;
     return (
       <div>
-        <Topbar active="room" room="" title="Movie Match" />
+        <Topbar
+          activetab="room"
+          roomId={this.props.roomId}
+          title="Movie Match"
+          matched={this.state.matched}
+        />
         {movie && (
           <div>
             <SwipeArea>
@@ -154,6 +175,13 @@ class Index extends React.Component {
               </div>
             </div>
           </div>
+        )}
+
+        {!movie && !this.state.loading && (
+          <div className="mm-big-message">No more movies to show</div>
+        )}
+        {this.state.loading && (
+          <div className="mm-big-message">Loading movies</div>
         )}
 
         <style jsx>

@@ -32,11 +32,11 @@ const getMovies = async function() {
   };
 
   const moviesL = await Promise.all([
-    moviedb.discoverMovie({ ...baseQuery, page: 1 })
-    //moviedb.discoverMovie({ ...baseQuery, page: 2 }),
-    //moviedb.discoverMovie({ ...baseQuery, page: 3 }),
-    //moviedb.discoverMovie({ ...baseQuery, page: 4 }),
-    //moviedb.discoverMovie({ ...baseQuery, page: 5 })
+    moviedb.discoverMovie({ ...baseQuery, page: 1 }),
+    moviedb.discoverMovie({ ...baseQuery, page: 2 }),
+    moviedb.discoverMovie({ ...baseQuery, page: 3 }),
+    moviedb.discoverMovie({ ...baseQuery, page: 4 }),
+    moviedb.discoverMovie({ ...baseQuery, page: 5 })
   ]);
 
   let movieList = [];
