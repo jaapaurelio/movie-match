@@ -147,6 +147,13 @@ export default () => (
         color: #333;
         line-height: 1.4;
       }
+
+      .mm-big-message {
+        text-align: center;
+        padding: 20px;
+        font-size: 16px;
+        color: #0f3846;
+      }
     `}</style>
   </div>
 );

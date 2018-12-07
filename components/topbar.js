@@ -1,17 +1,21 @@
 import Link from "next/link";
 
-export default ({ title = "Movie Match" }) => (
+export default ({ matched, activetab, roomId, title = "Movie Match" }) => (
   <nav>
     <div className="container">
       <div className="page-title">{title}</div>
       <div className="top-icons-container">
-        <div className="top-icon">
-          <Link href="/room?id=AAAA">
+        <div className={`top-icon ${activetab === "room" ? "active-tab" : ""}`}>
+          <Link href={`/room?id=${roomId}`}>
             <i className="fas fa-clone" />
           </Link>
         </div>
-        <div className="top-icon">
-          <Link href="/matches?id=AAAA">
+        <div
+          className={`top-icon ${activetab === "matches" ? "active-tab" : ""} ${
+            matched ? "matched" : ""
+          }`}
+        >
+          <Link href={`/matches?id=${roomId}`}>
             <i className="fas fa-heart" />
           </Link>
         </div>
@@ -34,7 +38,6 @@ export default ({ title = "Movie Match" }) => (
           right: 0;
           z-index: 2;
           box-sizing: border-box;
-
           max-width: 800px;
           margin: 0 auto;
         }
@@ -52,6 +55,14 @@ export default ({ title = "Movie Match" }) => (
         .top-icon {
           margin-left: 10px;
           padding: 10px;
+        }
+
+        .active-tab {
+          border-bottom: 2px solid;
+        }
+
+        .matched {
+          color: #ccffbc;
         }
       `}
     </style>
