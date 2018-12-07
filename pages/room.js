@@ -107,11 +107,8 @@ class Index extends React.Component {
     });
 
     this.pusher.connection.bind("connected", async () => {
-      console.log("pusher connected!");
-
       const moviesR = await axios.get(`/api/groups/${this.props.roomId}`);
       let { movies, group } = moviesR.data;
-      console.log(moviesR.data);
 
       const matched = hasMaches(group.likes, group.numberOfUser);
 
@@ -134,8 +131,6 @@ class Index extends React.Component {
 
         return acc;
       }, {});
-
-      console.log(movies);
 
       this.getNewMovie(movies);
     });

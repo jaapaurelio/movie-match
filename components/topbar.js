@@ -5,20 +5,22 @@ export default ({ matched, activetab, roomId, title = "Movie Match" }) => (
     <div className="container">
       <div className="page-title">{title}</div>
       <div className="top-icons-container">
-        <div className={`top-icon ${activetab === "room" ? "active-tab" : ""}`}>
-          <Link href={`/room?id=${roomId}`}>
+        <Link href={`/room?id=${roomId}`}>
+          <div
+            className={`top-icon ${activetab === "room" ? "active-tab" : ""}`}
+          >
             <i className="fas fa-clone" />
-          </Link>
-        </div>
-        <div
-          className={`top-icon ${activetab === "matches" ? "active-tab" : ""} ${
-            matched ? "matched" : ""
-          }`}
-        >
-          <Link href={`/matches?id=${roomId}`}>
+          </div>
+        </Link>
+        <Link href={`/matches?id=${roomId}`}>
+          <div
+            className={`top-icon ${
+              activetab === "matches" ? "active-tab" : ""
+            } ${matched ? "matched" : ""}`}
+          >
             <i className="fas fa-heart" />
-          </Link>
-        </div>
+          </div>
+        </Link>
       </div>
     </div>
 
