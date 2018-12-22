@@ -1,9 +1,11 @@
 import Topbar from "../components/topbar";
 import MovieInfo from "../components/movie-info";
 import Cast from "../components/cast";
+import MatchPopup from "../components/match-popup";
 import SwipeArea from "../components/swipe-area";
 import axios from "axios";
 import Pusher from "pusher-js";
+import Router from 'next/router'
 
 const MovieDb = require("moviedb-promise");
 const moviedb = new MovieDb("284941729ae99106f71e56126227659b");
@@ -23,12 +25,15 @@ class Index extends React.Component {
     super(props);
     this.like = this.like.bind(this);
     this.noLike = this.noLike.bind(this);
+    this.onClickMatches = this.onClickMatches.bind(this);
+    this.onClickKeepPlaying = this.onClickKeepPlaying.bind(this);
 
     this.state = {
       movie: null,
       movies: null,
       loading: true,
-      matched: false
+      matched: false,
+      showMatchPopup: false
     };
   }
 
@@ -102,7 +107,8 @@ class Index extends React.Component {
 
     this.channel.bind("movie-matched", movie => {
       this.setState({
-        matched: true
+        matched: true,
+        showMatchPopup: true
       });
     });
 
@@ -137,7 +143,18 @@ class Index extends React.Component {
   }
 
   componentWillUnmount() {
-    this.pusher.disconnect();
+    if(this.pusher) {
+      this.pusher.disconnect();
+    }
+  }
+
+  onClickMatches() {
+    this.setState({showMatchPopup: false});
+    Router.push(`/matches?id=${this.props.roomId}`);
+  }
+
+  onClickKeepPlaying() {
+    this.setState({showMatchPopup: false})
   }
 
   static getInitialProps({ query }) {
@@ -145,7 +162,7 @@ class Index extends React.Component {
   }
 
   render() {
-    const { movie } = this.state;
+    const { movie, showMatchPopup } = this.state;
     return (
       <div>
         <Topbar
@@ -178,6 +195,8 @@ class Index extends React.Component {
         {this.state.loading && (
           <div className="mm-big-message">Loading movies</div>
         )}
+
+        <MatchPopup show={showMatchPopup} onClickMatches={this.onClickMatches} onClickKeepPlaying={this.onClickKeepPlaying}/>
 
         <style jsx>
           {`
