@@ -31,13 +31,12 @@ const getMovies = async function() {
     "vote_average.gte": 7
   };
 
-  const moviesL = await Promise.all([
-    moviedb.discoverMovie({ ...baseQuery, page: 1 }),
-    moviedb.discoverMovie({ ...baseQuery, page: 2 }),
-    moviedb.discoverMovie({ ...baseQuery, page: 3 }),
-    moviedb.discoverMovie({ ...baseQuery, page: 4 }),
-    moviedb.discoverMovie({ ...baseQuery, page: 5 })
-  ]);
+  let m = [];
+  for (let i = 1; i < 10; i++) {
+    m.push(moviedb.discoverMovie({ ...baseQuery, page: i }));
+  }
+
+  const moviesL = await Promise.all(m);
 
   let movieList = [];
 
