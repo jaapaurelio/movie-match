@@ -1,27 +1,8 @@
-import Link from "next/link";
-
-export default ({ matched, activetab, roomId, title = "Movie Match" }) => (
+export default ({ children, title = "Movie Match" }) => (
   <nav>
     <div className="container">
       <div className="page-title">{title}</div>
-      <div className="top-icons-container">
-        <Link href={`/room?id=${roomId}`}>
-          <div
-            className={`top-icon ${activetab === "room" ? "active-tab" : ""}`}
-          >
-            <i className="fas fa-clone" />
-          </div>
-        </Link>
-        <Link href={`/matches?id=${roomId}`}>
-          <div
-            className={`top-icon ${
-              activetab === "matches" ? "active-tab" : ""
-            } ${matched ? "matched" : ""}`}
-          >
-            <i className="fas fa-heart" />
-          </div>
-        </Link>
-      </div>
+      <div className="top-icons-container">{children}</div>
     </div>
 
     <style jsx>
