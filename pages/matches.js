@@ -1,4 +1,6 @@
 import Topbar from "../components/topbar";
+import TopbarButton from "../components/topbar-button";
+import Link from "next/link";
 import axios from "axios";
 
 class Matches extends React.Component {
@@ -31,12 +33,27 @@ class Matches extends React.Component {
   render() {
     return (
       <div>
-        <Topbar
-          activetab="matches"
-          roomId={this.props.roomId}
-          title="Matches"
-          matched={this.state.matches.length}
-        />
+        <Topbar activetab="room" title="Matches">
+          <TopbarButton>
+            <Link href={`/room?id=${this.props.roomId}`}>
+              <div className={`top-icon`}>
+                <i className="fas fa-clone" />
+              </div>
+            </Link>
+          </TopbarButton>
+          <TopbarButton>
+            <Link href={`/matches?id=${this.props.roomId}`}>
+              <div
+                className={`top-icon active-tab ${
+                  this.state.matches.length ? "matched" : ""
+                }`}
+              >
+                <i className="fas fa-heart" />
+              </div>
+            </Link>
+          </TopbarButton>
+        </Topbar>
+
         <div className="container">
           {this.state.matches.map(movie => (
             <div key={movie.id}>
