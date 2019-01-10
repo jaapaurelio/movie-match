@@ -16,14 +16,14 @@ export default ({ movie }) => {
 
   return (
     <section>
-      <div className="movie-backdrop">
+      {/*<div className="movie-backdrop">
         <img
           src={
             "https://image.tmdb.org/t/p/w700_and_h392_bestv2" +
             movie.backdrop_path
           }
         />
-      </div>
+        </div>*/}
       <div className="main-info">
         <img
           className="movie-poster"
@@ -95,10 +95,6 @@ export default ({ movie }) => {
             margin-right: 8px;
           }
 
-          .content-padding {
-            padding: 0px 20px;
-          }
-
           h3 {
             padding-top: 20px;
             padding-bottom: 4px;
@@ -118,22 +114,22 @@ export default ({ movie }) => {
 
           .movie-poster {
             width: 100px;
-            position: absolute;
-            top: -40px;
-            left: 10px;
+            margin-left: 10px;
           }
 
           .main-info {
-            padding: 20px 0;
+            padding: 10px 0;
             position: relative;
             background: #1f1f1f;
             color: #fff;
-            margin-top: -10px;
+            display: flex;
+            justify-content: start;
+            align-items: center;
           }
 
           .info-row {
-            margin-left: 120px;
             margin-bottom: 6px;
+            padding: 0 10px;
           }
 
           .big-space {

@@ -19,10 +19,6 @@ export default ({ cast }) => (
 
     <style jsx>
       {`
-        .content-padding {
-          padding: 0px 20px;
-        }
-
         h3 {
           font-size: 14px;
           font-weight: bold;
