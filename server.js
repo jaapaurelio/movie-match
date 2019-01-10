@@ -21,14 +21,24 @@ const pusher = new Pusher({
   encrypted: true
 });
 
-let __movies = {};
+let roomIdCounter = 100;
 const __groups = {};
 let __genres = {};
 
-const getMovies = async function() {
+const getMovies = async function({
+  selectedGenres,
+  startYear,
+  endYear,
+  ratingGte,
+  ratingLte
+}) {
   const baseQuery = {
-    "release_date.gte": "1990-05-07",
-    "vote_average.gte": 7
+    "vote_count.gte": 500,
+    "release_date.gte": `${startYear}-01-01`,
+    "release_date.lte": `${endYear}-12-30`,
+    "vote_average.gte": ratingGte,
+    "vote_average.lte": ratingLte,
+    with_genres: selectedGenres.join("|")
   };
 
   let m = [];
@@ -47,7 +57,11 @@ const getMovies = async function() {
   const movies = movieList.reduce((acc, movie) => {
     acc[movie.id] = {
       ...movie,
-      genres_name: movie.genre_ids.map(genreId => __genres[genreId].name)
+      genres_name: movie.genre_ids.map(genreId => __genres[genreId].name),
+      mm_stats: {
+        user_likes: {},
+        user_seen: {}
+      }
     };
     return acc;
   }, {});
@@ -78,17 +92,6 @@ app
       const { movieId, userId, roomId } = req.params;
       const like = req.params.like === "true";
 
-      // new movie
-      if (!__groups[roomId].movies[movieId]) {
-        __groups[roomId].movies[movieId] = {
-          id: movieId,
-          mm_stats: {
-            user_likes: {},
-            user_seen: {}
-          }
-        };
-      }
-
       let totalLikes = __groups[roomId].likes[movieId] || 0;
       const numberOfUsers = __groups[roomId].numberOfUser;
 
@@ -107,20 +110,32 @@ app
       res.send({});
     });
 
+    server.post("/api/rooms/", async (req, res) => {
+      const movies = await getMovies(req.body);
+
+      const numberOfMovies = Object.keys(movies).length;
+
+      if (numberOfMovies < 20) {
+        return res.send({ noMovies: true });
+      }
+
+      roomIdCounter++;
+
+      __groups[roomIdCounter] = {
+        movies,
+        likes: {},
+        numberOfUser: 2
+      };
+
+      return res.send({ success: true, roomId: roomIdCounter });
+    });
+
     server.get("/api/groups/:roomId", (req, res) => {
       const roomId = req.params.roomId;
 
-      if (!__groups[roomId]) {
-        __groups[roomId] = {
-          movies: {},
-          likes: {},
-          numberOfUser: 2
-        };
-      }
-
       const group = __groups[roomId];
 
-      res.send({ group, movies: __movies });
+      res.send({ group });
     });
 
     server.get("*", (req, res) => {
@@ -131,7 +146,6 @@ app
       if (err) throw err;
 
       __genres = await getGenres();
-      __movies = await getMovies();
 
       console.log(`> Ready on http://localhost:${port}`);
     });

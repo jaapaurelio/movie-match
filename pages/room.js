@@ -116,7 +116,12 @@ class Index extends React.Component {
 
     this.pusher.connection.bind("connected", async () => {
       const moviesR = await axios.get(`/api/groups/${this.props.roomId}`);
-      let { movies, group } = moviesR.data;
+      let { group } = moviesR.data;
+
+      if (!group) {
+        return Router.push(`/start`);
+      }
+      let movies = group.movies;
 
       const matched = hasMaches(group.likes, group.numberOfUser);
 
@@ -169,6 +174,13 @@ class Index extends React.Component {
       <div>
         <Topbar activetab="room" title="Movie Match">
           <TopbarButton>
+            <Link href={`/start`}>
+              <div className={`top-icon`}>
+                <i className="fas fa-home" />
+              </div>
+            </Link>
+          </TopbarButton>
+          <TopbarButton>
             <Link href={`/room?id=${this.props.roomId}`}>
               <div className={`top-icon active-tab`}>
                 <i className="fas fa-clone" />
@@ -186,6 +198,7 @@ class Index extends React.Component {
           </TopbarButton>
         </Topbar>
 
+        <div className="room-id">Room {this.props.roomId}</div>
         {movie && (
           <div>
             <SwipeArea>
@@ -219,6 +232,14 @@ class Index extends React.Component {
 
         <style jsx>
           {`
+            .room-id {
+              background: #0f3846;
+              color: #72a3b3;
+              text-align: center;
+              font-size: 11px;
+              padding-bottom: 10px;
+              font-weight: bold;
+            }
             .buttons-container {
               position: fixed;
               bottom: 0;

@@ -13,7 +13,8 @@ class Matches extends React.Component {
 
   async componentDidMount() {
     const moviesR = await axios.get(`/api/groups/${this.props.roomId}`);
-    let { movies, group } = moviesR.data;
+    let { group } = moviesR.data;
+    let movies = group.movies;
 
     const matches = Object.keys(group.likes).reduce((acc, movieId) => {
       if (group.likes[movieId] === group.numberOfUser) {
@@ -34,6 +35,13 @@ class Matches extends React.Component {
     return (
       <div>
         <Topbar activetab="room" title="Matches">
+          <TopbarButton>
+            <Link href={`/start`}>
+              <div className={`top-icon`}>
+                <i className="fas fa-home" />
+              </div>
+            </Link>
+          </TopbarButton>
           <TopbarButton>
             <Link href={`/room?id=${this.props.roomId}`}>
               <div className={`top-icon`}>
