@@ -20,7 +20,7 @@ class CreateRoom extends React.Component {
 
     this.state = {
       genres: [],
-      allSelected: true,
+      allSelected: false,
       errorMessages: [],
       startYear: 1990,
       endYear: 2019,
@@ -34,7 +34,7 @@ class CreateRoom extends React.Component {
       ratings
     };
 
-    this.toggleAllGenres = this.toggleAllGenres.bind(this);
+    this.unselectAllGenres = this.unselectAllGenres.bind(this);
     this.toggleGenre = this.toggleGenre.bind(this);
     this.submitForm = this.submitForm.bind(this);
     this.showErrors = this.showErrors.bind(this);
@@ -109,12 +109,12 @@ class CreateRoom extends React.Component {
       });
   }
 
-  toggleAllGenres() {
+  unselectAllGenres() {
     const allSelected = !this.state.allSelected;
 
     const genres = this.state.genres.map(genre => ({
       ...genre,
-      selected: allSelected
+      selected: false
     }));
 
     this.setState({ genres, allSelected });
@@ -132,11 +132,7 @@ class CreateRoom extends React.Component {
       return genre;
     });
 
-    this.setState({ genres, allSelected: this.areAllSelected(genres) });
-  }
-
-  areAllSelected(genres) {
-    return genres.every(genre => genre.selected);
+    this.setState({ genres });
   }
 
   async componentDidMount() {
@@ -144,7 +140,7 @@ class CreateRoom extends React.Component {
 
     const genres = genreMovieList.genres.map(genre => ({
       ...genre,
-      selected: true
+      selected: false
     }));
 
     this.setState({ genres });
@@ -234,12 +230,8 @@ class CreateRoom extends React.Component {
 
           <div className="form-title">Genders</div>
           <div className="checkbox-m select-all">
-            <label
-              className={this.state.allSelected ? "selected" : ""}
-              htmlFor="ALL"
-              onClick={this.toggleAllGenres}
-            >
-              Select all
+            <label htmlFor="ALL" onClick={this.unselectAllGenres}>
+              Clear all
             </label>
           </div>
           <div className="genders-container">
