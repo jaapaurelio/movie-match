@@ -11,6 +11,11 @@ export default () => (
         href="https://fonts.googleapis.com/css?family=Pacifico"
         rel="stylesheet"
       />
+
+      <link
+        href="https://fonts.googleapis.com/css?family=Thasadith:400,700"
+        rel="stylesheet"
+      />
       <link
         rel="stylesheet"
         href="https://use.fontawesome.com/releases/v5.5.0/css/all.css"

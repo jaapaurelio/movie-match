@@ -52,7 +52,7 @@ class CreateRoom extends React.Component {
     }
 
     if (!selectedGenres.length) {
-      errorMessages.push("Please select a genre.");
+      errorMessages.push("Please select at least one genre.");
     }
 
     if (errorMessages.length > 0) {
