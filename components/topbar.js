@@ -1,14 +1,20 @@
+import PageWidth from "./page-width";
 export default ({ children, title = "Movie Match" }) => (
   <nav>
-    <div className="container">
-      <div className="page-title">{title}</div>
-      <div className="top-icons-container">{children}</div>
-    </div>
+    <PageWidth>
+      <div className="container">
+        <div className="page-title">{title}</div>
+        <div className="top-icons-container">{children}</div>
+      </div>
+    </PageWidth>
 
     <style jsx>
       {`
-        .container {
+        nav {
           background: #333;
+        }
+
+        .container {
           display: flex;
           justify-content: space-between;
           height: 45px;

@@ -3,6 +3,7 @@ const MovieDb = require("moviedb-promise");
 const moviedb = new MovieDb("284941729ae99106f71e56126227659b");
 import axios from "axios";
 import Router from "next/router";
+import PageWidth from "../components/page-width";
 
 class CreateRoom extends React.Component {
   constructor(props) {
@@ -151,137 +152,143 @@ class CreateRoom extends React.Component {
       <div className="root-container">
         <Topbar title="Create Room" />
 
-        <div className="content-padding description">
-          Create the room for you and your friends. They'll join later.
+        <div className="description-container">
+          <PageWidth className="description mm-all-padding">
+            Create the room for you and your friends. They'll join later.
+          </PageWidth>
         </div>
-
-        <div className="content-padding">
-          <div className="form-title">Movies from year</div>
-          <div className="two-selects-row">
-            <select
-              className="select-m"
-              defaultValue={this.state.startYear}
-              onChange={event => {
-                this.setState({ startYear: event.target.value });
-              }}
-            >
-              {this.CONST.years.map((year, i) => {
-                return (
-                  <option key={i} value={year}>
-                    {year}
-                  </option>
-                );
-              })}
-            </select>
-            <span className="two-to">to</span>
-            <select
-              className="select-m"
-              defaultValue={this.state.endYear}
-              onChange={event => {
-                this.setState({ endYear: event.target.value });
-              }}
-            >
-              {this.CONST.years.map((year, i) => {
-                return (
-                  <option key={i} value={year}>
-                    {year}
-                  </option>
-                );
-              })}
-            </select>
-          </div>
-
-          <div className="form-title">Ratings from</div>
-          <div className="two-selects-row">
-            <select
-              className="select-m"
-              defaultValue={this.state.ratingGte}
-              onChange={event => {
-                this.setState({ ratingGte: event.target.value });
-              }}
-            >
-              {this.CONST.ratings.map((rating, i) => {
-                return (
-                  <option key={i} value={rating}>
-                    {rating}
-                  </option>
-                );
-              })}
-            </select>
-            <span className="two-to">to</span>
-            <select
-              className="select-m"
-              defaultValue={this.state.ratingLte}
-              onChange={event => {
-                this.setState({ ratingLte: event.target.value });
-              }}
-            >
-              {this.CONST.ratings.map((rating, i) => {
-                return (
-                  <option key={i} value={rating}>
-                    {rating}
-                  </option>
-                );
-              })}
-            </select>
-          </div>
-
-          <div className="form-title">Genders</div>
-          <div className="checkbox-m select-all">
-            <label htmlFor="ALL" onClick={this.unselectAllGenres}>
-              Clear all
-            </label>
-          </div>
-          <div className="genders-container">
-            {this.state.genres.map(genre => {
-              return (
-                <div key={genre.id} className="checkbox-m">
-                  <label
-                    className={genre.selected ? "selected" : ""}
-                    onClick={() => this.toggleGenre(genre.id)}
-                  >
-                    {genre.name}
-                  </label>
-                </div>
-              );
-            })}
-          </div>
-
-          {!!this.state.errorMessages.length && (
-            <div className="toast-error-container">
-              <div className="toast-error">
-                {this.state.errorMessages.map(message => (
-                  <span key={message}>
-                    {message} <br />
-                  </span>
-                ))}
-              </div>
+        <PageWidth>
+          <div className="mm-content-padding">
+            <div className="form-title">Movies from year</div>
+            <div className="two-selects-row">
+              <select
+                className="select-m"
+                defaultValue={this.state.startYear}
+                onChange={event => {
+                  this.setState({ startYear: event.target.value });
+                }}
+              >
+                {this.CONST.years.map((year, i) => {
+                  return (
+                    <option key={i} value={year}>
+                      {year}
+                    </option>
+                  );
+                })}
+              </select>
+              <span className="two-to">to</span>
+              <select
+                className="select-m"
+                defaultValue={this.state.endYear}
+                onChange={event => {
+                  this.setState({ endYear: event.target.value });
+                }}
+              >
+                {this.CONST.years.map((year, i) => {
+                  return (
+                    <option key={i} value={year}>
+                      {year}
+                    </option>
+                  );
+                })}
+              </select>
             </div>
-          )}
-          <div className="create-room-btn-container">
-            <button onClick={this.submitForm} className="create-room-btn">
-              Next
-            </button>
-          </div>
-        </div>
 
-        {this.state.creatingRoom && (
-          <div className="creating-room"> Creating room </div>
-        )}
+            <div className="form-title">Ratings from</div>
+            <div className="two-selects-row">
+              <select
+                className="select-m"
+                defaultValue={this.state.ratingGte}
+                onChange={event => {
+                  this.setState({ ratingGte: event.target.value });
+                }}
+              >
+                {this.CONST.ratings.map((rating, i) => {
+                  return (
+                    <option key={i} value={rating}>
+                      {rating}
+                    </option>
+                  );
+                })}
+              </select>
+              <span className="two-to">to</span>
+              <select
+                className="select-m"
+                defaultValue={this.state.ratingLte}
+                onChange={event => {
+                  this.setState({ ratingLte: event.target.value });
+                }}
+              >
+                {this.CONST.ratings.map((rating, i) => {
+                  return (
+                    <option key={i} value={rating}>
+                      {rating}
+                    </option>
+                  );
+                })}
+              </select>
+            </div>
+
+            <div className="form-title">Genders</div>
+            <div className="checkbox-m select-all">
+              <label htmlFor="ALL" onClick={this.unselectAllGenres}>
+                Clear all
+              </label>
+            </div>
+            <div className="genders-container">
+              {this.state.genres.map(genre => {
+                return (
+                  <div key={genre.id} className="checkbox-m">
+                    <label
+                      className={genre.selected ? "selected" : ""}
+                      onClick={() => this.toggleGenre(genre.id)}
+                    >
+                      {genre.name}
+                    </label>
+                  </div>
+                );
+              })}
+            </div>
+
+            {!!this.state.errorMessages.length && (
+              <div className="toast-error-container">
+                <div className="toast-error">
+                  {this.state.errorMessages.map(message => (
+                    <span key={message}>
+                      {message} <br />
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+            <div className="create-room-btn-container">
+              <button onClick={this.submitForm} className="create-room-btn">
+                Next
+              </button>
+            </div>
+          </div>
+
+          {this.state.creatingRoom && (
+            <div className="creating-room"> Creating room </div>
+          )}
+        </PageWidth>
         <style jsx>
           {`
             .container {
               padding: 0 10px;
             }
 
-            .description {
-              padding: 20px;
+            .description-container {
               font-size: 16px;
               text-align: left;
               background: #840c49;
               color: #fff;
               font-family: "Thasadith", sans-serif;
               margin-bottom: 20px;
+            }
+
+            .description {
+              padding: 20px;
             }
 
             .form-title {
