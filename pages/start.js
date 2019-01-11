@@ -49,16 +49,18 @@ class Start extends React.Component {
         </div>
         <PageWidth>
           <div className="options-container">
+            <div className="join-title">One creates the room</div>
+
             <div className="create-room-btn-container">
               <Link href={`/create-room`}>
                 <a className="start-btn">Create a Room</a>
               </Link>
             </div>
 
-            <div className="info">Friends will join you later.</div>
+            <div className="info">Friends will join you later</div>
           </div>
           <div className="options-container">
-            <div className="join-title">Join a room</div>
+            <div className="join-title">The others join him/her</div>
             <div>
               <input
                 className="room-input"
@@ -67,14 +69,14 @@ class Start extends React.Component {
                 maxLength="4"
                 onChange={this.onChangeId}
               />
-              <button className="join-btn start-btn" onClick={this.join}>
-                Join
-              </button>
+              <div>
+                <button className="join-btn start-btn" onClick={this.join}>
+                  Join
+                </button>
+              </div>
             </div>
 
-            <div className="info">
-              Ask your friend for the room number and join him/her.
-            </div>
+            <div className="info">Ask your friend for the room number</div>
           </div>
         </PageWidth>
         <style jsx>{`
@@ -87,7 +89,6 @@ class Start extends React.Component {
           .steps-area {
             font-family: "Thasadith", sans-serif;
             background: #840c49;
-            margin-bottom: 20px;
             color: #fff;
           }
 
@@ -96,7 +97,7 @@ class Start extends React.Component {
           }
 
           .options-container {
-            padding: 20px;
+            padding: 0 20px;
             text-align: center;
           }
 
@@ -115,26 +116,33 @@ class Start extends React.Component {
             font-size: 16px;
             cursor: pointer;
             background: transparent;
+            width: 170px;
+            box-sizing: border-box;
           }
 
           .join-title {
             text-align: center;
             font-weight: bold;
-            margin-bottom: 20px;
+            margin: 20px 0;
+            font-size: 14px;
           }
 
           .room-input {
             padding: 10px;
             font-size: 16px;
-            width: 80px;
             text-align: center;
             border: 1px solid #b7b7b7;
-            margin-right: 10px;
+            width: 170px;
+            box-sizing: border-box;
           }
 
           .join-btn {
             margin-top: 10px;
-            width: 100px;
+          }
+
+          .or {
+            font-size: 16px;
+            text-align: center;
           }
         `}</style>
       </div>
