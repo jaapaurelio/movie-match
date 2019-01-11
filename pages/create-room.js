@@ -152,9 +152,7 @@ class CreateRoom extends React.Component {
         <Topbar title="Create Room" />
 
         <div className="content-padding description">
-          Create the room for you and your friends.
-          <br />
-          They'll join the room later to choose the perfect movie to watch.
+          Create the room for you and your friends. They'll join later.
         </div>
 
         <div className="content-padding">
@@ -250,12 +248,14 @@ class CreateRoom extends React.Component {
           </div>
 
           {!!this.state.errorMessages.length && (
-            <div className="toast-error">
-              {this.state.errorMessages.map(message => (
-                <span key={message}>
-                  {message} <br />
-                </span>
-              ))}
+            <div className="toast-error-container">
+              <div className="toast-error">
+                {this.state.errorMessages.map(message => (
+                  <span key={message}>
+                    {message} <br />
+                  </span>
+                ))}
+              </div>
             </div>
           )}
           <div className="create-room-btn-container">
@@ -275,11 +275,13 @@ class CreateRoom extends React.Component {
             }
 
             .description {
-              padding-top: 8px;
-              padding-bottom: 8px;
-              font-size: 12px;
+              padding: 20px;
+              font-size: 16px;
               text-align: left;
-              background: #d6e2ff;
+              background: #840c49;
+              color: #fff;
+              font-family: "Thasadith", sans-serif;
+              margin-bottom: 20px;
             }
 
             .form-title {
@@ -330,7 +332,7 @@ class CreateRoom extends React.Component {
 
             .checkbox-m label {
               padding: 10px;
-              border: 1px solid #eee;
+              border: 1px solid #b7b7b7;
               border-radius: 4px;
               font-size: 14px;
               cursor: pointer;
@@ -347,34 +349,42 @@ class CreateRoom extends React.Component {
             .create-room-btn-container {
               text-align: right;
             }
+
             .create-room-btn {
-              background: #4cbcfa;
-              color: #fff;
-              text-transform: uppercase;
-              width: 200px;
-              padding: 15px;
-              margin: 20px 0;
+              display: inline-block;
+              padding: 10px;
+              border: 1px solid #840c49;
               border-radius: 4px;
-              border: 0;
-              font-size: 14px;
+              text-decoration: none;
+              color: #840c49;
+              font-size: 16px;
+              cursor: pointer;
+              background: transparent;
+
+              margin: 20px 0;
+              width: 75%;
+            }
+
+            .toast-error-container {
+              position: fixed;
+              z-index: 2;
+              bottom: 100px;
+              left: 0;
+              right: 0;
+              justify-content: center;
+              align-items: center;
+              display: flex;
             }
 
             .toast-error {
               background: #f78a88;
-              margin-top: 20px;
               color: #fff;
               font-size: 12px;
-              padding: 4px;
+              padding: 10px;
               border-radius: 4px;
               text-align: center;
-              display: inherit;
               box-sizing: content-box;
-              position: fixed;
-              bottom: 40px;
-              z-index: 2;
-              width: 400px;
-              left: 50%;
-              margin-left: -200px;
+              width: 80%;
             }
 
             .creating-room {

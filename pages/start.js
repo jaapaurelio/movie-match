@@ -37,7 +37,11 @@ class Start extends React.Component {
         <Topbar activetab="room" title="Movie Match" />
         <div className="steps-area">
           {steps.map((step, i) => {
-            return <div className="step-details">{step}</div>;
+            return (
+              <div key={i} className="step-details">
+                {step}
+              </div>
+            );
           })}
         </div>
         <div className="options-container">
@@ -56,10 +60,10 @@ class Start extends React.Component {
               className="room-input"
               type="text"
               placeholder="xxxx"
-              maxlength="4"
+              maxLength="4"
               onChange={this.onChangeId}
             />
-            <button className="start-btn" onClick={this.join}>
+            <button className="join-btn start-btn" onClick={this.join}>
               Join
             </button>
           </div>
@@ -75,31 +79,12 @@ class Start extends React.Component {
             margin-top: 10px;
           }
 
-          .start-here {
-            font-size: 16px;
-            font-weight: bold;
-            margin: 12px 0;
-            padding: 0 20px;
-          }
-
-          .headline {
-            padding: 0 20px;
-            font-size: 14px;
-            margin-bottom: 10px;
-            text-align: center;
-          }
-
           .steps-area {
             padding: 20px;
             font-family: "Thasadith", sans-serif;
-            background: aquamarine;
+            background: #840c49;
             margin-bottom: 20px;
-          }
-
-          .steps-area h1 {
-            font-size: 16px;
-            font-weight: bold;
-            margin-bottom: 10px;
+            color: #fff;
           }
 
           .step-details {
@@ -119,10 +104,10 @@ class Start extends React.Component {
           .start-btn {
             display: inline-block;
             padding: 10px;
-            border: 1px solid green;
+            border: 1px solid #840c49;
             border-radius: 4px;
             text-decoration: none;
-            color: green;
+            color: #840c49;
             font-size: 16px;
             cursor: pointer;
             background: transparent;
@@ -139,8 +124,13 @@ class Start extends React.Component {
             font-size: 16px;
             width: 80px;
             text-align: center;
+            border: 1px solid #b7b7b7;
             margin-right: 10px;
-            border: 1px solid #eee;
+          }
+
+          .join-btn {
+            margin-top: 10px;
+            width: 100px;
           }
         `}</style>
       </div>
