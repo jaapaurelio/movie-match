@@ -8,7 +8,7 @@ export default ({ children, title = "Movie Match" }) => (
     <style jsx>
       {`
         .container {
-          background: #123846;
+          background: #333;
           display: flex;
           justify-content: space-between;
           height: 45px;

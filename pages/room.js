@@ -172,7 +172,10 @@ class Index extends React.Component {
     const { movie, showMatchPopup } = this.state;
     return (
       <div>
-        <Topbar activetab="room" title="Movie Match">
+        <Topbar
+          activetab="room"
+          title={`Movie Match - Room ${this.props.roomId}`}
+        >
           <TopbarButton>
             <Link href={`/start`}>
               <div className={`top-icon`}>
@@ -198,7 +201,6 @@ class Index extends React.Component {
           </TopbarButton>
         </Topbar>
 
-        <div className="room-id">Room {this.props.roomId}</div>
         {movie && (
           <div>
             <SwipeArea>
@@ -233,7 +235,7 @@ class Index extends React.Component {
         <style jsx>
           {`
             .room-id {
-              background: #0f3846;
+              background: #333333;
               color: #72a3b3;
               text-align: center;
               font-size: 11px;
