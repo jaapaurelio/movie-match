@@ -1,3 +1,5 @@
+import PageWidth from "../components/page-width";
+
 export default ({ movie }) => {
   const getRuntime = min => {
     if (!min) {
@@ -24,52 +26,63 @@ export default ({ movie }) => {
           }
         />
         </div>*/}
-      <div className="main-info">
-        <img
-          className="movie-poster"
-          src={
-            "https://image.tmdb.org/t/p/w116_and_h174_bestv2/" +
-            movie.poster_path
-          }
-        />
-        <div className="info-row">
-          <span className="movie-title">{movie.title}</span>
-          &nbsp;
-          <span className="movie-year">
-            ({movie.release_date.split("-")[0]})
-          </span>
-          <div>
-            <span className="gender">{movie.genres_name.join(", ")}</span>
-          </div>
-          <div className="small-info">
-            <i className="far fa-star info-icon score-icon" />
-            <span className="score">{movie.vote_average}</span>
-            <span className="score-small">/10</span>
-            <i className="far info-icon fa-clock" />
-            <span className="time"> {getRuntime(movie.runtime)} &nbsp;</span>
-            {movie.adult && <span className="more-18">+18</span>}
-          </div>
-        </div>
-      </div>
-      <div className="content-padding movie-description">
-        <h3>Overview</h3>
-        {movie.overview}
-
-        {crew && (
-          <div>
-            <h3>Crew</h3>
-            <div className="crew-container">
-              {crew.map(c => {
-                return (
-                  <div key={c.credit_id} className="crew-info">
-                    <div className="crew-name">{c.name}</div>
-                    {c.job}
-                  </div>
-                );
-              })}
+      <div className="main-info-bg">
+        <PageWidth>
+          <div className="main-info">
+            <img
+              className="movie-poster"
+              src={
+                "https://image.tmdb.org/t/p/w116_and_h174_bestv2/" +
+                movie.poster_path
+              }
+            />
+            <div className="info-row">
+              <span className="movie-title">{movie.title}</span>
+              &nbsp;
+              <span className="movie-year">
+                ({movie.release_date.split("-")[0]})
+              </span>
+              <div>
+                <span className="gender">{movie.genres_name.join(", ")}</span>
+              </div>
+              <div className="small-info">
+                <i className="far fa-star info-icon score-icon" />
+                <span className="score">{movie.vote_average}</span>
+                <span className="score-small">/10</span>
+                <i className="far info-icon fa-clock" />
+                <span className="time">
+                  {" "}
+                  {getRuntime(movie.runtime)} &nbsp;
+                </span>
+                {movie.adult && <span className="more-18">+18</span>}
+              </div>
             </div>
           </div>
-        )}
+        </PageWidth>
+      </div>
+      <div className="movie-description-bg">
+        <PageWidth>
+          <div className="mm-content-padding movie-description">
+            <h3>Overview</h3>
+            {movie.overview}
+
+            {crew && (
+              <div>
+                <h3>Crew</h3>
+                <div className="crew-container">
+                  {crew.map(c => {
+                    return (
+                      <div key={c.credit_id} className="crew-info">
+                        <div className="crew-name">{c.name}</div>
+                        {c.job}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+          </div>
+        </PageWidth>
       </div>
 
       <style jsx>
@@ -117,10 +130,13 @@ export default ({ movie }) => {
             margin-left: 10px;
           }
 
+          .main-info-bg {
+            background: #1f1f1f;
+          }
+
           .main-info {
             padding: 10px 0;
             position: relative;
-            background: #1f1f1f;
             color: #fff;
             display: flex;
             justify-content: start;
@@ -158,10 +174,14 @@ export default ({ movie }) => {
             color: red;
           }
 
+          .movie-description-bg {
+            background: #143846;
+          }
+
           .movie-description {
             padding-bottom: 20px;
             font-size: 12px;
-            background: #143846;
+
             color: #fff;
             line-height: 1.5;
             min-height: 240px;

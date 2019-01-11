@@ -184,8 +184,12 @@ export default () => (
         display: none;
       }
 
-      .content-padding {
+      .mm-content-padding {
         padding: 0px 20px;
+      }
+
+      .mm-all-padding {
+        padding: 20px;
       }
     `}</style>
   </div>

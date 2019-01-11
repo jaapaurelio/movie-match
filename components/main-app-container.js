@@ -1,17 +1,7 @@
-
 export default ({ children }) => (
-    <section className="container">
-        {children}
+  <section>
+    {children}
 
-
-        <style jsx>{`
-            .container {
-                max-width: 600px;
-                margin: 0 auto;
-            }
-        `}
-        </style>
-    </section>
-
-
+    <style jsx>{``}</style>
+  </section>
 );

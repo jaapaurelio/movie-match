@@ -8,6 +8,7 @@ import Pusher from "pusher-js";
 import Router from "next/router";
 import Link from "next/link";
 import TopbarButton from "../components/topbar-button";
+import PageWidth from "../components/page-width";
 
 const MovieDb = require("moviedb-promise");
 const moviedb = new MovieDb("284941729ae99106f71e56126227659b");
@@ -205,27 +206,38 @@ class Index extends React.Component {
           <div>
             <SwipeArea>
               <MovieInfo movie={movie} />
-              {movie.credits && <Cast cast={movie.credits.cast.slice(0, 5)} />}
+              <PageWidth>
+                {movie.credits && (
+                  <Cast cast={movie.credits.cast.slice(0, 5)} />
+                )}
+              </PageWidth>
             </SwipeArea>
             <div className="buttons-container-space" />
-            <div className="buttons-container">
-              <div onClick={this.noLike} className="button-choice button-no">
-                Not today
-              </div>
-              <div onClick={this.like} className="button-choice button-yes">
-                Yes please
-              </div>
+            <div className="buttons-container-bg">
+              <PageWidth>
+                <div className="buttons-container">
+                  <div
+                    onClick={this.noLike}
+                    className="button-choice button-no"
+                  >
+                    Not today
+                  </div>
+                  <div onClick={this.like} className="button-choice button-yes">
+                    Yes please
+                  </div>
+                </div>
+              </PageWidth>
             </div>
           </div>
         )}
-
-        {!movie && !this.state.loading && (
-          <div className="mm-big-message">No more movies to show</div>
-        )}
-        {this.state.loading && (
-          <div className="mm-big-message">Loading movies</div>
-        )}
-
+        <PageWidth>
+          {!movie && !this.state.loading && (
+            <div className="mm-big-message">No more movies to show</div>
+          )}
+          {this.state.loading && (
+            <div className="mm-big-message">Loading movies</div>
+          )}
+        </PageWidth>
         <MatchPopup
           show={showMatchPopup}
           onClickMatches={this.onClickMatches}
@@ -242,12 +254,16 @@ class Index extends React.Component {
               padding-bottom: 10px;
               font-weight: bold;
             }
-            .buttons-container {
+            .buttons-container-bg {
               position: fixed;
               bottom: 0;
-              background: #f9fcff;
+              background: #333333;
               left: 0;
               right: 0;
+              padding: 4px 0;
+            }
+
+            .buttons-container {
               text-align: center;
               display: flex;
               align-items: center;

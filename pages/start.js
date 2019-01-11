@@ -1,6 +1,7 @@
 import Topbar from "../components/topbar";
 import Link from "next/link";
 import Router from "next/router";
+import PageWidth from "../components/page-width";
 
 const steps = [
   "Create or join a room.",
@@ -36,42 +37,46 @@ class Start extends React.Component {
       <div>
         <Topbar activetab="room" title="Movie Match" />
         <div className="steps-area">
-          {steps.map((step, i) => {
-            return (
-              <div key={i} className="step-details">
-                {step}
-              </div>
-            );
-          })}
+          <PageWidth className="mm-all-padding">
+            {steps.map((step, i) => {
+              return (
+                <div key={i} className="step-details">
+                  {step}
+                </div>
+              );
+            })}
+          </PageWidth>
         </div>
-        <div className="options-container">
-          <div className="create-room-btn-container">
-            <Link href={`/create-room`}>
-              <a className="start-btn">Create a Room</a>
-            </Link>
-          </div>
+        <PageWidth>
+          <div className="options-container">
+            <div className="create-room-btn-container">
+              <Link href={`/create-room`}>
+                <a className="start-btn">Create a Room</a>
+              </Link>
+            </div>
 
-          <div className="info">Friends will join you later.</div>
-        </div>
-        <div className="options-container">
-          <div className="join-title">Join a room</div>
-          <div>
-            <input
-              className="room-input"
-              type="text"
-              placeholder="xxxx"
-              maxLength="4"
-              onChange={this.onChangeId}
-            />
-            <button className="join-btn start-btn" onClick={this.join}>
-              Join
-            </button>
+            <div className="info">Friends will join you later.</div>
           </div>
+          <div className="options-container">
+            <div className="join-title">Join a room</div>
+            <div>
+              <input
+                className="room-input"
+                type="text"
+                placeholder="xxxx"
+                maxLength="4"
+                onChange={this.onChangeId}
+              />
+              <button className="join-btn start-btn" onClick={this.join}>
+                Join
+              </button>
+            </div>
 
-          <div className="info">
-            Ask your friend for the room number and join him/her.
+            <div className="info">
+              Ask your friend for the room number and join him/her.
+            </div>
           </div>
-        </div>
+        </PageWidth>
         <style jsx>{`
           .info {
             font-size: 12px;
@@ -80,7 +85,6 @@ class Start extends React.Component {
           }
 
           .steps-area {
-            padding: 20px;
             font-family: "Thasadith", sans-serif;
             background: #840c49;
             margin-bottom: 20px;
