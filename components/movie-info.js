@@ -18,14 +18,6 @@ export default ({ movie }) => {
 
   return (
     <section>
-      {/*<div className="movie-backdrop">
-        <img
-          src={
-            "https://image.tmdb.org/t/p/w700_and_h392_bestv2" +
-            movie.backdrop_path
-          }
-        />
-        </div>*/}
       <div className="main-info-bg">
         <PageWidth>
           <div className="main-info">

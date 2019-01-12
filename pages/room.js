@@ -257,7 +257,6 @@ class Index extends React.Component {
             .buttons-container-bg {
               position: fixed;
               bottom: 0;
-              background: #333333;
               left: 0;
               right: 0;
             }
@@ -294,6 +293,8 @@ class Index extends React.Component {
               font-size: 12px;
               width: 50%;
               font-weight: bold;
+              border-radius: 4px;
+              box-shadow: 0px 1px 2px 0px #00000094;
             }
           `}
         </style>
