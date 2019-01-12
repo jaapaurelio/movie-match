@@ -34,6 +34,12 @@ export default ({ movie }) => {
               <span className="movie-year">
                 ({movie.release_date.split("-")[0]})
               </span>
+              {movie.title != movie.original_title && (
+                <div className="original-title">
+                  {movie.original_title} &#8226;&nbsp;
+                  {movie.original_language}
+                </div>
+              )}
               <div>
                 <span className="gender">{movie.genres_name.join(", ")}</span>
               </div>
@@ -148,10 +154,16 @@ export default ({ movie }) => {
             font-weight: bold;
           }
 
+          .original-title {
+            font-size: 12px;
+            color: #dadada;
+            margin-top: 4px;
+          }
+
           .gender {
             display: inline-block;
             margin-right: 4px;
-            padding: 2px;
+            padding: 0 2px;
             font-size: 12px;
           }
 
