@@ -17,11 +17,16 @@ export default () => (
         rel="stylesheet"
       />
       <link
+        href="https://fonts.googleapis.com/css?family=Oswald"
+        rel="stylesheet"
+      />
+      <link
         rel="stylesheet"
         href="https://use.fontawesome.com/releases/v5.5.0/css/all.css"
         integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU"
         crossOrigin="anonymous"
       />
+      <meta name="theme-color" content="#151515" />
       <meta
         name="viewport"
         content="width=device-width, initial-scale=1, minimum-scale=1.0, user-scalable=no"
@@ -158,6 +163,7 @@ export default () => (
         font-family: "Open Sans", sans-serif;
         color: #333;
         line-height: 1.4;
+        background: whitesmoke;
       }
 
       .mm-big-message {
@@ -195,8 +201,9 @@ export default () => (
       .join-title {
         text-align: center;
         font-weight: bold;
-        margin: 20px 0;
-        font-size: 14px;
+        margin: 40px 0 10px;
+        font-size: 16px;
+        font-family: "Thasadith", sans-serif;
       }
 
       .room-input {
@@ -212,23 +219,28 @@ export default () => (
         margin-top: 10px;
       }
 
-      .start-btn {
+      .mm-btn {
         display: inline-block;
         padding: 10px;
-        border: 1px solid #840c49;
+        border: 1px solid #0b6561;
         border-radius: 4px;
         text-decoration: none;
-        color: #840c49;
+        color: #0b6561;
         font-size: 16px;
         cursor: pointer;
-        background: transparent;
+        background: #fff;
         width: 170px;
         box-sizing: border-box;
+        line-height: 1;
       }
 
       .options-container {
         padding: 0 20px;
         text-align: center;
+      }
+
+      strong {
+        font-weight: bold;
       }
     `}</style>
   </div>

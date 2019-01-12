@@ -3,11 +3,12 @@ import Link from "next/link";
 import Router from "next/router";
 import PageWidth from "../components/page-width";
 import Headline from "../components/headline";
+import Footer from "../components/footer";
 
 const steps = [
   "Create or join a room.",
   "Say yes to movies you want to watch.",
-  "Discover the perfect movie to watch together."
+  "Find the perfect movie to watch together."
 ];
 class Start extends React.Component {
   constructor(props) {
@@ -51,15 +52,15 @@ class Start extends React.Component {
             <div className="join-title">One creates the room</div>
 
             <div className="create-room-btn-container">
-              <Link href={`/create-room`}>
-                <a className="start-btn">Create a Room</a>
+              <Link prefetch href={`/create-room`}>
+                <a className="mm-btn">Create a Room</a>
               </Link>
             </div>
 
             <div className="info">Friends will join you later</div>
           </div>
           <div className="options-container">
-            <div className="join-title">The others join him/her</div>
+            <div className="join-title">Others join him/her</div>
             <div>
               <input
                 className="room-input"
@@ -69,15 +70,15 @@ class Start extends React.Component {
                 onChange={this.onChangeId}
               />
               <div>
-                <button className="join-btn start-btn" onClick={this.join}>
+                <button className="join-btn mm-btn" onClick={this.join}>
                   Join
                 </button>
               </div>
             </div>
-
             <div className="info">Ask your friend for the room number</div>
           </div>
         </PageWidth>
+        <Footer>Movie Match</Footer>
         <style jsx>{`
           .info {
             font-size: 12px;

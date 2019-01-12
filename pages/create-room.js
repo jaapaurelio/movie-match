@@ -27,7 +27,7 @@ class CreateRoom extends React.Component {
       errorMessages: [],
       startYear: 2000,
       endYear: 2019,
-      rating: 1,
+      rating: 2,
       creatingRoom: false
     };
 
@@ -261,7 +261,10 @@ class CreateRoom extends React.Component {
               </div>
             )}
             <div className="create-room-btn-container">
-              <button onClick={this.submitForm} className="create-room-btn">
+              <button
+                onClick={this.submitForm}
+                className="mm-btn create-room-btn"
+              >
                 Next
               </button>
             </div>
@@ -288,7 +291,8 @@ class CreateRoom extends React.Component {
             .form-title {
               font-size: 16px;
               font-weight: bold;
-              margin: 12px 0;
+              margin: 20px 0 10px;
+              font-family: "Thasadith", sans-serif;
             }
 
             .two-selects-row {
@@ -339,6 +343,7 @@ class CreateRoom extends React.Component {
               cursor: pointer;
               display: block;
               margin: 4px;
+              background: #fff;
             }
 
             .checkbox-m label.selected {
@@ -352,16 +357,6 @@ class CreateRoom extends React.Component {
             }
 
             .create-room-btn {
-              display: inline-block;
-              padding: 10px;
-              border: 1px solid #840c49;
-              border-radius: 4px;
-              text-decoration: none;
-              color: #840c49;
-              font-size: 16px;
-              cursor: pointer;
-              background: transparent;
-
               margin: 20px 0;
               width: 75%;
             }
@@ -369,7 +364,7 @@ class CreateRoom extends React.Component {
             .toast-error-container {
               position: fixed;
               z-index: 2;
-              bottom: 100px;
+              top: 50px;
               left: 0;
               right: 0;
               justify-content: center;
