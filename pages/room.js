@@ -260,7 +260,6 @@ class Index extends React.Component {
               background: #333333;
               left: 0;
               right: 0;
-              padding: 4px 0;
             }
 
             .buttons-container {
@@ -268,6 +267,7 @@ class Index extends React.Component {
               display: flex;
               align-items: center;
               justify-content: center;
+              padding: 4px;
             }
 
             .buttons-container-space {
@@ -277,11 +277,13 @@ class Index extends React.Component {
             .button-no {
               background: #ff565e;
               cursor: pointer;
+              margin-right: 2px;
             }
 
             .button-yes {
               background: #00e390;
               cursor: pointer;
+              margin-left: 2px;
             }
 
             .button-choice {

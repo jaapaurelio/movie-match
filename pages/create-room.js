@@ -4,6 +4,7 @@ const moviedb = new MovieDb("284941729ae99106f71e56126227659b");
 import axios from "axios";
 import Router from "next/router";
 import PageWidth from "../components/page-width";
+import Headline from "../components/headline";
 
 class CreateRoom extends React.Component {
   constructor(props) {
@@ -14,19 +15,19 @@ class CreateRoom extends React.Component {
       years.push(i);
     }
 
-    const ratings = [];
-    for (let i = 1; i <= 10; i++) {
-      ratings.push(i + ".0");
-    }
+    const ratings = [
+      { id: 0, label: "Bad movies" },
+      { id: 1, label: "Good movies" },
+      { id: 2, label: "Excellent movies" }
+    ];
 
     this.state = {
       genres: [],
       allSelected: false,
       errorMessages: [],
-      startYear: 1990,
+      startYear: 2000,
       endYear: 2019,
-      ratingGte: "7.0",
-      ratingLte: "10.0",
+      rating: 1,
       creatingRoom: false
     };
 
@@ -64,8 +65,7 @@ class CreateRoom extends React.Component {
       selectedGenres,
       startYear: this.state.startYear,
       endYear: this.state.endYear,
-      ratingGte: Number(this.state.ratingGte),
-      ratingLte: Number(this.state.ratingLte)
+      rating: this.state.rating
     });
   }
 
@@ -85,15 +85,33 @@ class CreateRoom extends React.Component {
     });
   }
 
-  createRoom(movieData) {
+  createRoom({ selectedGenres, startYear, endYear, rating }) {
     this.setState({
       creatingRoom: true
     });
 
+    let ratingGte;
+    let ratingLte;
+
+    if (rating == 0) {
+      ratingLte = 5;
+    }
+
+    if (rating == 1) {
+      ratingGte = 5.5;
+      ratingLte = 7.5;
+    }
+
+    if (rating == 2) {
+      ratingGte = 7.5;
+      ratingLte = 10;
+    }
+
+    const data = { selectedGenres, startYear, endYear, ratingGte, ratingLte };
+
     axios
-      .post(`/api/rooms/`, movieData)
+      .post(`/api/rooms/`, data)
       .then(room => {
-        console.log(room.data);
         if (room.data.noMovies) {
           return this.showErrors([
             "Not enouth movies. Please change your details."
@@ -101,7 +119,7 @@ class CreateRoom extends React.Component {
         }
 
         const roomId = room.data.roomId;
-        Router.push(`/room?id=${roomId}`);
+        Router.push(`/share-room?id=${roomId}`);
       })
       .finally(() => {
         this.setState({
@@ -150,13 +168,10 @@ class CreateRoom extends React.Component {
   render() {
     return (
       <div className="root-container">
-        <Topbar title="Create Room" />
-
-        <div className="description-container">
-          <PageWidth className="description mm-all-padding">
-            Create the room for you and your friends. They'll join later.
-          </PageWidth>
-        </div>
+        <Topbar title="Movie Match" />
+        <Headline className="description-container">
+          Create the room for you and your friends. They'll join later.
+        </Headline>
         <PageWidth>
           <div className="mm-content-padding">
             <div className="form-title">Movies from year</div>
@@ -194,35 +209,19 @@ class CreateRoom extends React.Component {
               </select>
             </div>
 
-            <div className="form-title">Ratings from</div>
+            <div className="form-title">Rating</div>
             <div className="two-selects-row">
               <select
                 className="select-m"
-                defaultValue={this.state.ratingGte}
+                defaultValue={this.state.rating}
                 onChange={event => {
-                  this.setState({ ratingGte: event.target.value });
+                  this.setState({ rating: event.target.value });
                 }}
               >
                 {this.CONST.ratings.map((rating, i) => {
                   return (
-                    <option key={i} value={rating}>
-                      {rating}
-                    </option>
-                  );
-                })}
-              </select>
-              <span className="two-to">to</span>
-              <select
-                className="select-m"
-                defaultValue={this.state.ratingLte}
-                onChange={event => {
-                  this.setState({ ratingLte: event.target.value });
-                }}
-              >
-                {this.CONST.ratings.map((rating, i) => {
-                  return (
-                    <option key={i} value={rating}>
-                      {rating}
+                    <option key={rating.id} value={rating.id}>
+                      {rating.label}
                     </option>
                   );
                 })}
@@ -279,11 +278,6 @@ class CreateRoom extends React.Component {
             }
 
             .description-container {
-              font-size: 16px;
-              text-align: left;
-              background: #840c49;
-              color: #fff;
-              font-family: "Thasadith", sans-serif;
               margin-bottom: 20px;
             }
 

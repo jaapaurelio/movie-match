@@ -34,12 +34,14 @@ const getMovies = async function({
 }) {
   const baseQuery = {
     "vote_count.gte": 500,
-    "release_date.gte": `${startYear}-01-01`,
-    "release_date.lte": `${endYear}-12-30`,
+    "primary_release_date.gte": `${startYear}-01-01`,
+    "primary_release_date.lte": `${endYear}-12-30`,
     "vote_average.gte": ratingGte,
     "vote_average.lte": ratingLte,
     with_genres: selectedGenres.join("|")
   };
+
+  console.log(baseQuery);
 
   let m = [];
   for (let i = 1; i < 10; i++) {

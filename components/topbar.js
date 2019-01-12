@@ -1,9 +1,14 @@
 import PageWidth from "./page-width";
+import Link from "next/link";
+
 export default ({ children, title = "Movie Match" }) => (
   <nav>
     <PageWidth>
       <div className="container">
-        <div className="page-title">{title}</div>
+        <Link href={`/start`}>
+          <div className="page-title">{title}</div>
+        </Link>
+
         <div className="top-icons-container">{children}</div>
       </div>
     </PageWidth>
@@ -12,6 +17,10 @@ export default ({ children, title = "Movie Match" }) => (
       {`
         nav {
           background: #333;
+          position: sticky;
+          top: 0;
+          z-index: 1;
+          border-bottom: 1px solid #000;
         }
 
         .container {
