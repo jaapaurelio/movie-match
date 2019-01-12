@@ -20,7 +20,7 @@ export default () => (
         rel="stylesheet"
         href="https://use.fontawesome.com/releases/v5.5.0/css/all.css"
         integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU"
-        crossorigin="anonymous"
+        crossOrigin="anonymous"
       />
       <meta
         name="viewport"
@@ -190,6 +190,45 @@ export default () => (
 
       .mm-all-padding {
         padding: 20px;
+      }
+
+      .join-title {
+        text-align: center;
+        font-weight: bold;
+        margin: 20px 0;
+        font-size: 14px;
+      }
+
+      .room-input {
+        padding: 10px;
+        font-size: 16px;
+        text-align: center;
+        border: 1px solid #b7b7b7;
+        width: 170px;
+        box-sizing: border-box;
+      }
+
+      .join-btn {
+        margin-top: 10px;
+      }
+
+      .start-btn {
+        display: inline-block;
+        padding: 10px;
+        border: 1px solid #840c49;
+        border-radius: 4px;
+        text-decoration: none;
+        color: #840c49;
+        font-size: 16px;
+        cursor: pointer;
+        background: transparent;
+        width: 170px;
+        box-sizing: border-box;
+      }
+
+      .options-container {
+        padding: 0 20px;
+        text-align: center;
       }
     `}</style>
   </div>

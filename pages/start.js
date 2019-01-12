@@ -2,6 +2,7 @@ import Topbar from "../components/topbar";
 import Link from "next/link";
 import Router from "next/router";
 import PageWidth from "../components/page-width";
+import Headline from "../components/headline";
 
 const steps = [
   "Create or join a room.",
@@ -36,17 +37,15 @@ class Start extends React.Component {
     return (
       <div>
         <Topbar activetab="room" title="Movie Match" />
-        <div className="steps-area">
-          <PageWidth className="mm-all-padding">
-            {steps.map((step, i) => {
-              return (
-                <div key={i} className="step-details">
-                  {step}
-                </div>
-              );
-            })}
-          </PageWidth>
-        </div>
+        <Headline>
+          {steps.map((step, i) => {
+            return (
+              <div key={i} className="step-details">
+                {step}
+              </div>
+            );
+          })}
+        </Headline>
         <PageWidth>
           <div className="options-container">
             <div className="join-title">One creates the room</div>
@@ -86,62 +85,12 @@ class Start extends React.Component {
             margin-top: 10px;
           }
 
-          .steps-area {
-            font-family: "Thasadith", sans-serif;
-            background: #840c49;
-            color: #fff;
-          }
-
           .step-details {
             font-size: 16px;
           }
 
-          .options-container {
-            padding: 0 20px;
-            text-align: center;
-          }
-
           .create-room-btn-container {
             padding: 0 10px;
-            text-align: center;
-          }
-
-          .start-btn {
-            display: inline-block;
-            padding: 10px;
-            border: 1px solid #840c49;
-            border-radius: 4px;
-            text-decoration: none;
-            color: #840c49;
-            font-size: 16px;
-            cursor: pointer;
-            background: transparent;
-            width: 170px;
-            box-sizing: border-box;
-          }
-
-          .join-title {
-            text-align: center;
-            font-weight: bold;
-            margin: 20px 0;
-            font-size: 14px;
-          }
-
-          .room-input {
-            padding: 10px;
-            font-size: 16px;
-            text-align: center;
-            border: 1px solid #b7b7b7;
-            width: 170px;
-            box-sizing: border-box;
-          }
-
-          .join-btn {
-            margin-top: 10px;
-          }
-
-          .or {
-            font-size: 16px;
             text-align: center;
           }
         `}</style>

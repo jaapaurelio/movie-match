@@ -1,7 +1,7 @@
-export default props => {
+export default ({ children, className = "" }) => {
   return (
-    <section className={`page-width ${props.className}`}>
-      {props.children}
+    <section className={`page-width ${className}`}>
+      {children}
       <style jsx>
         {`
           .page-width {
