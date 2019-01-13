@@ -36,7 +36,9 @@ class Index extends React.Component {
       movies: null,
       loading: true,
       matched: false,
-      showMatchPopup: false
+      showMatchPopup: false,
+      users: [],
+      info: {}
     };
   }
 
@@ -115,8 +117,16 @@ class Index extends React.Component {
       });
     });
 
+    this.channel.bind("users", users => {
+      this.setState({
+        users
+      });
+    });
+
     this.pusher.connection.bind("connected", async () => {
-      const moviesR = await axios.get(`/api/groups/${this.props.roomId}`);
+      const moviesR = await axios.get(
+        `/api/room/${this.props.roomId}/${userId}`
+      );
       let { group } = moviesR.data;
 
       if (!group) {
@@ -128,8 +138,16 @@ class Index extends React.Component {
 
       this.setState({
         loading: false,
-        matched
+        matched,
+        users: group.users,
+        info: {
+          genres: group.info.genres,
+          startYear: group.info.startYear,
+          endYear: group.info.endYear
+        }
       });
+
+      console.log(this.state);
 
       if (!movies) {
         return;
@@ -173,10 +191,7 @@ class Index extends React.Component {
     const { movie, showMatchPopup } = this.state;
     return (
       <div>
-        <Topbar
-          activetab="room"
-          title={`Movie Match - Room ${this.props.roomId}`}
-        >
+        <Topbar activetab="room" title={`Room ${this.props.roomId}`}>
           <TopbarButton>
             <Link href={`/start`}>
               <div className={`top-icon`}>
@@ -204,6 +219,19 @@ class Index extends React.Component {
 
         {movie && (
           <div>
+            <div className="room-info">
+              <PageWidth className="mm-content-padding">
+                <div className="eli">
+                  <i className="fas fa-user room-info-icon" />
+                  <span className="room-info-text">
+                    {this.state.users.length}
+                  </span>
+                  <i className="fas fa-info-circle room-info-icon" />
+                  {this.state.info.startYear}-{this.state.info.endYear}&nbsp;
+                  {this.state.info.genres.join(" ")}
+                </div>
+              </PageWidth>
+            </div>
             <SwipeArea>
               <MovieInfo movie={movie} />
               <PageWidth>
@@ -254,6 +282,28 @@ class Index extends React.Component {
               padding-bottom: 10px;
               font-weight: bold;
             }
+
+            .room-info {
+              background: #15bba9;
+              color: #fff;
+              font-size: 12px;
+              text-align: center;
+              padding-bottom: 10px;
+            }
+
+            .eli {
+              white-space: nowrap;
+              overflow: hidden;
+            }
+
+            .room-info-icon {
+              margin-right: 4px;
+            }
+
+            .room-info-text {
+              margin-right: 10px;
+            }
+
             .buttons-container-bg {
               position: fixed;
               bottom: 0;
@@ -280,7 +330,7 @@ class Index extends React.Component {
             }
 
             .button-yes {
-              background: #00e390;
+              background: #06baa8;
               cursor: pointer;
               margin-left: 2px;
             }

@@ -2,8 +2,9 @@ import Topbar from "../components/topbar";
 import Headline from "../components/headline";
 import Link from "next/link";
 import PageWidth from "../components/page-width";
-import Footer from "../components/footer";
 import converter from "number-to-words";
+import Pusher from "pusher-js";
+import axios from "axios";
 
 class ShareRoom extends React.Component {
   constructor(args) {
@@ -11,25 +12,28 @@ class ShareRoom extends React.Component {
     this.share = this.share.bind(this);
 
     this.state = {
-      showShareButton: false
+      showShareButton: false,
+      users: []
     };
   }
 
   numberOfPeople(number) {
-    const nString = converter.toWords(number);
-
     if (number == 0) {
-      return <span>Room is empty</span>;
+      return "";
     } else if (number == 1) {
+      return <span>You are alone in the room.</span>;
+    } else if (number == 2) {
       return (
         <span>
-          There is <strong>one</strong> person in the room
+          You have <strong>one</strong> friend in the room with you.
         </span>
       );
     } else {
+      const nString = converter.toWords(number - 1);
+
       return (
         <span>
-          There is <strong>{nString}</strong> people in the room
+          You have <strong>{nString}</strong> friends in the room with you.
         </span>
       );
     }
@@ -49,8 +53,43 @@ class ShareRoom extends React.Component {
   }
 
   componentDidMount() {
+    this.pusher = new Pusher(process.env.PUSHER_APP_KEY, {
+      cluster: process.env.PUSHER_APP_CLUSTER,
+      encrypted: true
+    });
+
+    this.channel = this.pusher.subscribe(`room-${this.props.roomId}`);
+
+    this.channel.bind("users", users => {
+      this.setState({
+        users
+      });
+    });
+
+    let userId = localStorage.getItem("userId");
+
+    if (!userId) {
+      userId = new Date().getTime();
+      localStorage.setItem("userId", userId);
+    }
+
+    this.pusher.connection.bind("connected", async () => {
+      const moviesR = await axios.get(
+        `/api/room/${this.props.roomId}/${userId}`
+      );
+      let { group } = moviesR.data;
+
+      this.setState({ users: group.users });
+    });
+
     if (navigator.share) {
       this.setState({ showShareButton: true });
+    }
+  }
+
+  componentWillUnmount() {
+    if (this.pusher) {
+      this.pusher.disconnect();
     }
   }
 
@@ -85,9 +124,10 @@ class ShareRoom extends React.Component {
                 <a className="mm-btn join-btn">Join Room</a>
               </Link>
             </div>
-            <div className="info">{this.numberOfPeople(3)}</div>
+            <div className="info">
+              {this.numberOfPeople(this.state.users.length)}
+            </div>
           </div>
-          <Footer />
         </PageWidth>
         <style jsx>{`
           .sss {
@@ -104,7 +144,7 @@ class ShareRoom extends React.Component {
             text-align: center;
             font-size: 40px;
             font-family: "Oswald", sans-serif;
-            color: #0b6561;
+            color: #06baa8;
             line-height: 1;
             margin-bottom: 10px;
           }

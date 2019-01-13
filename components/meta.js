@@ -163,7 +163,7 @@ export default () => (
         font-family: "Open Sans", sans-serif;
         color: #333;
         line-height: 1.4;
-        background: whitesmoke;
+        background: #fdfdfd;
       }
 
       .mm-big-message {
@@ -222,13 +222,13 @@ export default () => (
       .mm-btn {
         display: inline-block;
         padding: 10px;
-        border: 1px solid #0b6561;
+        border: 1px solid #15bba9;
         border-radius: 4px;
         text-decoration: none;
-        color: #0b6561;
-        font-size: 16px;
+        color: #ffffff;
+        font-size: 14px;
         cursor: pointer;
-        background: #fff;
+        background: #15bba9;
         width: 170px;
         box-sizing: border-box;
         line-height: 1;
