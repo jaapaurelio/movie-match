@@ -113,7 +113,21 @@ app
     });
 
     server.post("/api/rooms/", async (req, res) => {
-      const movies = await getMovies(req.body);
+      const {
+        selectedGenres,
+        startYear,
+        endYear,
+        ratingGte,
+        ratingLte
+      } = req.body;
+
+      const movies = await getMovies({
+        selectedGenres,
+        startYear,
+        endYear,
+        ratingGte,
+        ratingLte
+      });
 
       const numberOfMovies = Object.keys(movies).length;
 
@@ -123,19 +137,36 @@ app
 
       roomIdCounter++;
 
+      const genres = selectedGenres.map(genreId => __genres[genreId].name);
+
       __groups[roomIdCounter] = {
         movies,
         likes: {},
-        numberOfUser: 2
+        users: [],
+        info: {
+          genres,
+          startYear,
+          endYear,
+          ratingGte,
+          ratingLte
+        }
       };
 
       return res.send({ success: true, roomId: roomIdCounter });
     });
 
-    server.get("/api/groups/:roomId", (req, res) => {
+    server.get("/api/room/:roomId/:userId", (req, res) => {
       const roomId = req.params.roomId;
+      const userId = req.params.userId;
 
       const group = __groups[roomId];
+
+      console.log(userId, group && group.users);
+
+      if (group && !group.users.find(id => id === userId)) {
+        group.users.push(userId);
+        pusher.trigger(`room-${roomId}`, "users", group.users);
+      }
 
       res.send({ group });
     });

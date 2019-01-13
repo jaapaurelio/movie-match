@@ -78,7 +78,6 @@ class Start extends React.Component {
             <div className="info">Ask your friend for the room number</div>
           </div>
         </PageWidth>
-        <Footer>Movie Match</Footer>
         <style jsx>{`
           .info {
             font-size: 12px;

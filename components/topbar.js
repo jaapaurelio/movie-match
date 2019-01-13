@@ -16,11 +16,10 @@ export default ({ children, title = "Movie Match" }) => (
     <style jsx>
       {`
         nav {
-          background: #111;
+          background: #15bba9;
           position: sticky;
           top: 0;
           z-index: 1;
-          border-bottom: 1px solid #000;
         }
 
         .container {
