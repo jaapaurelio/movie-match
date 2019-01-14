@@ -16,7 +16,7 @@ export default ({ children, title = "Movie Match" }) => (
     <style jsx>
       {`
         nav {
-          background: #15bba9;
+          background: #333;
           position: sticky;
           top: 0;
           z-index: 1;

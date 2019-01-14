@@ -26,7 +26,7 @@ export default () => (
         integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU"
         crossOrigin="anonymous"
       />
-      <meta name="theme-color" content="#151515" />
+      <meta name="theme-color" content="#333" />
       <meta
         name="viewport"
         content="width=device-width, initial-scale=1, minimum-scale=1.0, user-scalable=no"
@@ -223,7 +223,7 @@ export default () => (
         display: inline-block;
         padding: 10px;
         border: 1px solid #15bba9;
-        border-radius: 4px;
+        border-radius: 6px;
         text-decoration: none;
         color: #ffffff;
         font-size: 14px;
