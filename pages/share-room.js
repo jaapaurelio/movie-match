@@ -155,9 +155,10 @@ class ShareRoom extends React.Component {
             width: auto;
             padding: 6px 15px;
             border: 0;
-            border-bottom: 1px solid #0b6561;
+            border-bottom: 1px solid #00b9a7;
             background: transparent;
             border-radius: 0;
+            color: #00b9a7;
           }
 
           .info {
