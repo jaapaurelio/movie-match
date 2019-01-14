@@ -2,7 +2,7 @@
   "short_name": "Movie Match",
   "name": "Movie Match - Find the right movie",
   "start_url": "/",
-  "background_color": "#123846",
-  "theme_color": "#123846",
+  "background_color": "#FFF",
+  "theme_color": "##15bba9",
   "display": "standalone"
 }

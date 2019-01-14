@@ -7,7 +7,7 @@ export default props => {
         {`
           .headline {
             font-family: "Thasadith", sans-serif;
-            background: #15bba9;
+            background: #06baa8;
             color: #fff;
           }
         `}

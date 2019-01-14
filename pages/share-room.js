@@ -79,7 +79,9 @@ class ShareRoom extends React.Component {
       );
       let { group } = moviesR.data;
 
-      this.setState({ users: group.users });
+      if (group) {
+        this.setState({ users: group.users });
+      }
     });
 
     if (navigator.share) {

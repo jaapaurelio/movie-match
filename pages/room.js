@@ -284,7 +284,7 @@ class Index extends React.Component {
             }
 
             .room-info {
-              background: #15bba9;
+              background: #333;
               color: #fff;
               font-size: 12px;
               text-align: center;
