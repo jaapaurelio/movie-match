@@ -12,7 +12,7 @@ class Matches extends React.Component {
   }
 
   async componentDidMount() {
-    const moviesR = await axios.get(`/api/groups/${this.props.roomId}`);
+    const moviesR = await axios.get(`/api/room/${this.props.roomId}/x`);
     let { group } = moviesR.data;
     let movies = group.movies;
 
