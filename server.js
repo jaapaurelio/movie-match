@@ -96,11 +96,12 @@ app
 
       let totalLikes = __groups[roomId].likes[movieId] || 0;
       const numberOfUsers = __groups[roomId].numberOfUser;
+      __groups[roomId].numberOfUser = 2;
 
       if (like) {
         totalLikes++;
 
-        if (totalLikes >= numberOfUsers) {
+        if (totalLikes >= 2) {
           pusher.trigger(`room-${roomId}`, "movie-matched", { movieId });
         }
       }
