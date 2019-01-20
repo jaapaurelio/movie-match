@@ -144,7 +144,6 @@ class ShareRoom extends React.Component {
           .room-number {
             text-align: center;
             font-size: 40px;
-            font-family: "Oswald", sans-serif;
             color: #333;
             line-height: 1;
             margin-bottom: 10px;

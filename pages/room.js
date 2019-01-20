@@ -251,7 +251,7 @@ class Index extends React.Component {
                     Not today
                   </div>
                   <div onClick={this.like} className="button-choice button-yes">
-                    Yes please
+                    Yes
                   </div>
                 </div>
               </PageWidth>
