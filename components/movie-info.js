@@ -97,11 +97,11 @@ export default ({ movie }) => {
           }
 
           .score-icon {
-            color: #e0ce34;
+            color: #fff;
           }
 
           .score-small {
-            color: #8e8e8e;
+            color: #9e7c00;
             font-size: 12px;
             margin-right: 8px;
           }
@@ -126,16 +126,17 @@ export default ({ movie }) => {
           .movie-poster {
             width: 100px;
             margin-left: 10px;
+            border-radius: 6px;
           }
 
           .main-info-bg {
-            background: #1f1f1f;
+            background: #ffc818;
           }
 
           .main-info {
             padding: 10px 0;
             position: relative;
-            color: #fff;
+
             display: flex;
             justify-content: start;
             align-items: center;
@@ -156,7 +157,7 @@ export default ({ movie }) => {
 
           .original-title {
             font-size: 12px;
-            color: #dadada;
+            color: #8a6c00;
             margin-top: 4px;
           }
 
@@ -179,14 +180,11 @@ export default ({ movie }) => {
           }
 
           .movie-description-bg {
-            background: #143846;
           }
 
           .movie-description {
             padding-bottom: 20px;
             font-size: 12px;
-
-            color: #fff;
             line-height: 1.5;
             min-height: 240px;
           }

@@ -26,6 +26,10 @@ export default () => (
         integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU"
         crossOrigin="anonymous"
       />
+      <link
+        href="https://fonts.googleapis.com/css?family=Quicksand:500|Raleway"
+        rel="stylesheet"
+      />
       <meta name="theme-color" content="#333" />
       <meta
         name="viewport"
@@ -160,7 +164,7 @@ export default () => (
       }
 
       body {
-        font-family: "Open Sans", sans-serif;
+        font-family: "Raleway", sans-serif;
         color: #333;
         line-height: 1.4;
         background: #fdfdfd;
@@ -203,7 +207,6 @@ export default () => (
         font-weight: bold;
         margin: 40px 0 10px;
         font-size: 16px;
-        font-family: "Thasadith", sans-serif;
       }
 
       .room-input {
@@ -222,13 +225,13 @@ export default () => (
       .mm-btn {
         display: inline-block;
         padding: 10px;
-        border: 1px solid #15bba9;
+        border: 1px solid #ffc818;
         border-radius: 6px;
         text-decoration: none;
-        color: #ffffff;
+        color: #333;
         font-size: 14px;
         cursor: pointer;
-        background: #15bba9;
+        background: #ffc818;
         width: 170px;
         box-sizing: border-box;
         line-height: 1;

@@ -292,7 +292,6 @@ class CreateRoom extends React.Component {
               font-size: 16px;
               font-weight: bold;
               margin: 20px 0 10px;
-              font-family: "Thasadith", sans-serif;
             }
 
             .two-selects-row {
@@ -347,9 +346,8 @@ class CreateRoom extends React.Component {
             }
 
             .checkbox-m label.selected {
-              background: #d6fde4;
-              border-color: #90e0a9f7;
-              color: #31503b;
+              background: #ffe37c;
+              border-color: #ffc800;
             }
 
             .create-room-btn-container {
@@ -358,7 +356,7 @@ class CreateRoom extends React.Component {
 
             .create-room-btn {
               margin: 20px 0;
-              width: 75%;
+              width: 100%;
             }
 
             .toast-error-container {
@@ -389,7 +387,7 @@ class CreateRoom extends React.Component {
               left: 0;
               bottom: 0;
               right: 0;
-              background: #365c69cc;
+              background: #ffc818d4;
               display: flex;
               justify-content: center;
               align-items: center;

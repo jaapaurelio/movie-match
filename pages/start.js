@@ -42,7 +42,7 @@ class Start extends React.Component {
           {steps.map((step, i) => {
             return (
               <div key={i} className="step-details">
-                {step}
+                {i + 1}. {step}
               </div>
             );
           })}
@@ -87,6 +87,9 @@ class Start extends React.Component {
 
           .step-details {
             font-size: 16px;
+          }
+          .step-details:not(:first-child) {
+            margin-top: 10px;
           }
 
           .create-room-btn-container {

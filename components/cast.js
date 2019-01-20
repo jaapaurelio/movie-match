@@ -50,6 +50,7 @@ export default ({ cast }) => (
 
         .actor-image {
           width: 100px;
+          border-radius: 6px;
         }
 
         .actor-name {
