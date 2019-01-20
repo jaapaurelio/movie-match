@@ -4,30 +4,13 @@ export default () => (
     <Head>
       <link rel="manifest" href="/static/manifest.json" />
       <link
-        href="https://fonts.googleapis.com/css?family=Open+Sans:400,700"
-        rel="stylesheet"
-      />
-      <link
-        href="https://fonts.googleapis.com/css?family=Pacifico"
-        rel="stylesheet"
-      />
-
-      <link
-        href="https://fonts.googleapis.com/css?family=Thasadith:400,700"
-        rel="stylesheet"
-      />
-      <link
-        href="https://fonts.googleapis.com/css?family=Oswald"
-        rel="stylesheet"
-      />
-      <link
         rel="stylesheet"
         href="https://use.fontawesome.com/releases/v5.5.0/css/all.css"
         integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU"
         crossOrigin="anonymous"
       />
       <link
-        href="https://fonts.googleapis.com/css?family=Quicksand:500|Raleway"
+        href="https://fonts.googleapis.com/css?family=Quicksand|Raleway:400,700"
         rel="stylesheet"
       />
       <meta name="theme-color" content="#333" />
@@ -204,7 +187,6 @@ export default () => (
 
       .join-title {
         text-align: center;
-        font-weight: bold;
         margin: 40px 0 10px;
         font-size: 16px;
       }
