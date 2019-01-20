@@ -154,7 +154,12 @@ class CreateRoom extends React.Component {
     this.setState({ genres });
   }
 
-  async componentDidMount() {
+  componentWillMount() {
+    const genres = this.props.genres;
+    this.setState({ genres });
+  }
+
+  static async getInitialProps({ req }) {
     const genreMovieList = await moviedb.genreMovieList();
 
     const genres = genreMovieList.genres.map(genre => ({
@@ -162,7 +167,7 @@ class CreateRoom extends React.Component {
       selected: false
     }));
 
-    this.setState({ genres });
+    return { genres };
   }
 
   render() {
@@ -228,13 +233,13 @@ class CreateRoom extends React.Component {
               </select>
             </div>
 
-            <div className="form-title">Genders</div>
+            <div className="form-title">Genres</div>
             <div className="checkbox-m select-all">
               <label htmlFor="ALL" onClick={this.unselectAllGenres}>
                 Clear all
               </label>
             </div>
-            <div className="genders-container">
+            <div className="genres-container">
               {this.state.genres.map(genre => {
                 return (
                   <div key={genre.id} className="checkbox-m">
@@ -290,7 +295,6 @@ class CreateRoom extends React.Component {
 
             .form-title {
               font-size: 16px;
-              font-weight: bold;
               margin: 20px 0 10px;
             }
 
@@ -312,7 +316,7 @@ class CreateRoom extends React.Component {
               font-size: 14px;
             }
 
-            .genders-container {
+            .genres-container {
               display: flex;
               flex-wrap: wrap;
             }
