@@ -324,7 +324,7 @@ class Index extends React.Component {
             }
 
             .button-no {
-              background: #ff565e;
+              background: #333;
               cursor: pointer;
               margin-right: 2px;
             }
