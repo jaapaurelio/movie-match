@@ -6,9 +6,9 @@ export default props => {
       <style jsx>
         {`
           .headline {
-            font-family: "Thasadith", sans-serif;
-            background: #06baa8;
-            color: #fff;
+            font-family: "Quicksand", sans-serif;
+            background: #ffc818;
+            color: #333;
           }
         `}
       </style>

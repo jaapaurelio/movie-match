@@ -138,7 +138,6 @@ class ShareRoom extends React.Component {
           .title {
             text-align: center;
             margin: 20px 0 10px;
-            font-family: "Oswald", sans-serif;
             font-size: 14px;
           }
 
@@ -146,7 +145,7 @@ class ShareRoom extends React.Component {
             text-align: center;
             font-size: 40px;
             font-family: "Oswald", sans-serif;
-            color: #06baa8;
+            color: #333;
             line-height: 1;
             margin-bottom: 10px;
           }
