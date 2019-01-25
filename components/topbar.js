@@ -6,9 +6,13 @@ export default ({ children, title = "Movie Match" }) => (
     <PageWidth>
       <div className="container">
         <Link href={`/start`}>
-          <div className="page-title">{title}</div>
+          <img className="logo" src="/static/Icon.png" />
         </Link>
 
+        <Link href={`/start`}>
+          <div className="page-title">{title}</div>
+        </Link>
+        <div className="space-between" />
         <div className="top-icons-container">{children}</div>
       </div>
     </PageWidth>
@@ -21,10 +25,17 @@ export default ({ children, title = "Movie Match" }) => (
           top: 0;
           z-index: 1;
         }
+        .logo {
+          width: 20px;
+          margin-right: 10px;
+        }
+
+        .space-between {
+          flex-grow: 1;
+        }
 
         .container {
           display: flex;
-          justify-content: space-between;
           height: 45px;
           padding: 0px 20px;
           align-items: center;
