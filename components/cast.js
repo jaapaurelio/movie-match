@@ -29,10 +29,6 @@ export default ({ cast }) => (
           font-weight: bold;
         }
 
-        .actors-container {
-          margin: 20px 0;
-        }
-
         .actors {
           display: flex;
           width: 100%;

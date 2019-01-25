@@ -186,7 +186,6 @@ export default ({ movie }) => {
             padding-bottom: 20px;
             font-size: 12px;
             line-height: 1.5;
-            min-height: 240px;
           }
 
           .crew-container {

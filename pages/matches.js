@@ -2,6 +2,8 @@ import Topbar from "../components/topbar";
 import TopbarButton from "../components/topbar-button";
 import Link from "next/link";
 import axios from "axios";
+import MovieInfo from "../components/movie-info";
+import PageWidth from "../components/page-width";
 
 class Matches extends React.Component {
   constructor(props) {
@@ -62,20 +64,30 @@ class Matches extends React.Component {
           </TopbarButton>
         </Topbar>
 
-        <div className="container">
-          {this.state.matches.map(movie => (
-            <div key={movie.id}>
-              <div className="movie-title">{movie.title}</div>
-            </div>
-          ))}
-          {!this.state.matches.length && (
-            <div className="mm-big-message">No matches yet. Keep trying.</div>
-          )}
-        </div>
+        <PageWidth>
+          <div className="container">
+            <h1 className="title">Matches</h1>
+            {this.state.matches.map(movie => (
+              <div className="movie-container" key={movie.id}>
+                <MovieInfo movie={movie} />
+              </div>
+            ))}
+            {!this.state.matches.length && (
+              <div className="mm-big-message">No matches yet. Keep trying.</div>
+            )}
+          </div>
+        </PageWidth>
         <style jsx>{`
-          .container {
-            padding: 12px;
-            text-align: center;
+          .movie-container {
+            margin: 0 20px 20px 20px;
+            box-sizing: border-box;
+            background: whitesmoke;
+            border-radius: 4px;
+          }
+
+          .title {
+            font-size: 16px;
+            padding: 20px;
           }
         `}</style>
       </div>
