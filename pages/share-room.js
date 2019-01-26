@@ -5,6 +5,7 @@ import PageWidth from "../components/page-width";
 import converter from "number-to-words";
 import Pusher from "pusher-js";
 import axios from "axios";
+import Router from "next/router";
 
 class ShareRoom extends React.Component {
   constructor(args) {
@@ -68,11 +69,13 @@ class ShareRoom extends React.Component {
 
     this.pusher.connection.bind("connected", async () => {
       const moviesR = await axios.get(`/api/room/${this.props.roomId}`);
-      let { group } = moviesR.data;
+      let { room } = moviesR.data;
 
-      if (group) {
-        this.setState({ users: group.users });
+      if (!room) {
+        return Router.push(`/start`);
       }
+
+      this.setState({ users: room.users });
     });
 
     if (navigator.share) {
@@ -164,7 +167,8 @@ class ShareRoom extends React.Component {
   }
 
   static getInitialProps({ query }) {
-    return { roomId: query.id };
+    const roomId = query.id && query.id.toUpperCase();
+    return { roomId };
   }
 }
 
