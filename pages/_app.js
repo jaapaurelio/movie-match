@@ -22,6 +22,7 @@ class MyApp extends App {
       <Container>
         <MainAppContainer>
           <Meta />
+
           <Component {...pageProps} />
         </MainAppContainer>
       </Container>
