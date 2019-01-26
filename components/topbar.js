@@ -73,6 +73,7 @@ export default ({
         .logo {
           width: 20px;
           margin-right: 10px;
+          cursor: pointer;
         }
 
         .space-between {
@@ -98,6 +99,7 @@ export default ({
         .page-title {
           font-size: 12px;
           text-transform: uppercase;
+          cursor: pointer;
         }
 
         .top-icons-container {
