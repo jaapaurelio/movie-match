@@ -72,7 +72,7 @@ class Index extends React.Component {
   postLike(like) {
     const movieId = this.state.movie.id;
     axios.post(
-      `api/groups/${this.props.roomId}/${this.state.userId}/${movieId}/${like}`
+      `api/room/${this.props.roomId}/${this.state.userId}/${movieId}/${like}`
     );
   }
 
