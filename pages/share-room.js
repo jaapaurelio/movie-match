@@ -98,7 +98,7 @@ class ShareRoom extends React.Component {
   render() {
     return (
       <div>
-        <Topbar activetab="room" title="Movie Match" />
+        <Topbar newRoomPage={true} activetab="room" />
         <Headline>
           Share the room with friends. They can join any time.
         </Headline>

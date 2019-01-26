@@ -173,7 +173,7 @@ class CreateRoom extends React.Component {
   render() {
     return (
       <div className="root-container">
-        <Topbar title="Movie Match" />
+        <Topbar newRoomPage={true} />
         <Headline className="description-container">
           Create the room for you and your friends. They'll join later.
         </Headline>

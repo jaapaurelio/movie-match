@@ -8,7 +8,7 @@ import Footer from "../components/footer";
 const steps = [
   "Create or join a room.",
   "Say yes to movies you want to watch.",
-  "Find the perfect movie to watch together."
+  "Find the perfect movie."
 ];
 class Start extends React.Component {
   constructor(props) {
@@ -37,7 +37,7 @@ class Start extends React.Component {
   render() {
     return (
       <div>
-        <Topbar activetab="room" title="Movie Match" />
+        <Topbar newRoomPage={true} activetab="room" />
         <Headline>
           {steps.map((step, i) => {
             return (

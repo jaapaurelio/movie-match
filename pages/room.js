@@ -6,8 +6,6 @@ import SwipeArea from "../components/swipe-area";
 import axios from "axios";
 import Pusher from "pusher-js";
 import Router from "next/router";
-import Link from "next/link";
-import TopbarButton from "../components/topbar-button";
 import PageWidth from "../components/page-width";
 
 const MovieDb = require("moviedb-promise");
@@ -191,31 +189,7 @@ class Index extends React.Component {
     const { movie, showMatchPopup } = this.state;
     return (
       <div>
-        <Topbar activetab="room" title={`Room ${this.props.roomId}`}>
-          <TopbarButton>
-            <Link href={`/start`}>
-              <div className={`top-icon`}>
-                <i className="fas fa-home" />
-              </div>
-            </Link>
-          </TopbarButton>
-          <TopbarButton>
-            <Link href={`/room?id=${this.props.roomId}`}>
-              <div className={`top-icon active-tab`}>
-                <i className="fas fa-clone" />
-              </div>
-            </Link>
-          </TopbarButton>
-          <TopbarButton>
-            <Link href={`/matches?id=${this.props.roomId}`}>
-              <div
-                className={`top-icon ${this.state.matched ? "matched" : ""}`}
-              >
-                <i className="fas fa-heart" />
-              </div>
-            </Link>
-          </TopbarButton>
-        </Topbar>
+        <Topbar roomPage={true} activetab="room" roomId={this.props.roomId} />
 
         {movie && (
           <div>
@@ -284,11 +258,11 @@ class Index extends React.Component {
             }
 
             .room-info {
-              background: #333;
+              background: #424242;
               color: #fff;
               font-size: 12px;
               text-align: center;
-              padding-bottom: 10px;
+              padding: 10px 0;
             }
 
             .eli {

@@ -1,7 +1,12 @@
 import PageWidth from "./page-width";
 import Link from "next/link";
 
-export default ({ children, title = "Movie Match" }) => (
+export default ({
+  newRoomPage = "",
+  roomPage = "",
+  matchesPage = "",
+  roomId
+}) => (
   <nav>
     <PageWidth>
       <div className="container">
@@ -9,11 +14,51 @@ export default ({ children, title = "Movie Match" }) => (
           <img className="logo" src="/static/Icon.png" />
         </Link>
 
-        <Link href={`/start`}>
-          <div className="page-title">{title}</div>
-        </Link>
+        {!roomId && (
+          <Link href={`/start`}>
+            <div className="page-title">Movie Match</div>
+          </Link>
+        )}
         <div className="space-between" />
-        <div className="top-icons-container">{children}</div>
+        <div className="top-icons-container">
+          <Link href={`/start`}>
+            <div className="sublink">
+              <div
+                className={
+                  `sublink-btn ` + (newRoomPage && "sublink-btn-active")
+                }
+              >
+                New Room
+              </div>
+            </div>
+          </Link>
+          {roomId && (
+            <Link href={`/room?id=${roomId}`}>
+              <div className="sublink">
+                <div
+                  className={
+                    `sublink-btn ` + (roomPage && "sublink-btn-active")
+                  }
+                >
+                  Room {roomId}
+                </div>
+              </div>
+            </Link>
+          )}
+          {roomId && (
+            <Link href={`/matches?id=${roomId}`}>
+              <div className="sublink">
+                <div
+                  className={
+                    `sublink-btn ` + (matchesPage && "sublink-btn-active")
+                  }
+                >
+                  Matches
+                </div>
+              </div>
+            </Link>
+          )}
+        </div>
       </div>
     </PageWidth>
 
@@ -52,12 +97,13 @@ export default ({ children, title = "Movie Match" }) => (
 
         .page-title {
           font-size: 12px;
-          font-weight: bold;
           text-transform: uppercase;
         }
 
         .top-icons-container {
           display: flex;
+          height: 100%;
+          align-items: center;
         }
 
         .top-icon {
@@ -71,6 +117,26 @@ export default ({ children, title = "Movie Match" }) => (
 
         .matched {
           color: #ccffbc;
+        }
+
+        .sublink {
+          font-size: 10px;
+          margin-left: 10px;
+          color: #fff;
+          display: flex;
+          height: 100%;
+          align-items: center;
+          cursor: pointer;
+        }
+
+        .sublink-btn {
+          border-bottom: 1px solid #fff;
+          padding: 2px;
+        }
+
+        .sublink-btn-active {
+          color: #ffc818;
+          border-color: #ffc818;
         }
       `}
     </style>
