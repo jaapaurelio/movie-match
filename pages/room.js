@@ -7,18 +7,14 @@ import axios from "axios";
 import Pusher from "pusher-js";
 import Router from "next/router";
 import PageWidth from "../components/page-width";
+import shuffle from "shuffle-array";
+import jsCookie from "js-cookie";
 
 const MovieDb = require("moviedb-promise");
 const moviedb = new MovieDb("284941729ae99106f71e56126227659b");
 
-const getRandomMovie = function(movies) {
-  var ids = Object.keys(movies);
-  return movies[ids[(ids.length * Math.random()) << 0]];
-};
-
-const hasMaches = function(likes, nusers) {
-  const values = Object.values(likes);
-  return values.find(v => nusers === v);
+const hasMaches = function(movies, nusers) {
+  return movies.find(movie => movie.usersLike === nusers);
 };
 
 class Index extends React.Component {
@@ -40,8 +36,10 @@ class Index extends React.Component {
     };
   }
 
-  async getNewMovie(movies) {
-    const movie = getRandomMovie(movies);
+  async getNewMovie() {
+    const movies = this.state.movies;
+
+    const movie = movies.pop();
 
     if (!movie) {
       return this.setState({
@@ -50,42 +48,58 @@ class Index extends React.Component {
       });
     }
 
-    delete movies[movie.id];
-
     this.setState({
       movie,
       movies
     });
 
-    const movieInfo = await moviedb.movieInfo(movie.id, {
-      append_to_response: "credits"
-    });
-
-    // Improve. Prevent add info to the wrong movie.
-    if (this.state.movie.id === movieInfo.id) {
-      this.setState({
-        movie: { ...movie, ...movieInfo }
+    if (!movie.vote_count) {
+      const movieInfo = await moviedb.movieInfo(movie.id, {
+        append_to_response: "credits"
       });
+
+      if (this.state.movie.id === movieInfo.id) {
+        this.setState({
+          movie: { ...this.state.movie, ...movieInfo }
+        });
+      }
     }
+
+    const nextMovie = this.state.movies[this.state.movies.length - 1];
+
+    if (!nextMovie) return;
+
+    moviedb
+      .movieInfo(nextMovie.id, {
+        append_to_response: "credits"
+      })
+      .then(movie => {
+        const nextMovies = this.state.movies;
+        if (nextMovies[nextMovies.length - 1].id === movie.id) {
+          nextMovies[nextMovies.length - 1] = movie;
+          this.setState({
+            movies: nextMovies
+          });
+        }
+      });
   }
 
   postLike(like) {
     const movieId = this.state.movie.id;
-    axios.post(
-      `api/room/${this.props.roomId}/${this.state.userId}/${movieId}/${like}`
-    );
+    like = like ? "like" : "nolike";
+    axios.post(`api/room/${this.props.roomId}/${movieId}/${like}`);
   }
 
   like() {
     this.postLike(true);
-    this.getNewMovie(this.state.movies);
+    this.getNewMovie();
     window.scrollTo(0, 0);
   }
 
   noLike() {
     this.postLike(false);
 
-    this.getNewMovie(this.state.movies);
+    this.getNewMovie();
     window.scrollTo(0, 0);
   }
 
@@ -95,16 +109,8 @@ class Index extends React.Component {
       encrypted: true
     });
 
-    let userId = localStorage.getItem("userId");
-
-    if (!userId) {
-      userId = new Date().getTime();
-      localStorage.setItem("userId", userId);
-    }
-
-    this.setState({
-      userId
-    });
+    const userId = jsCookie.get("userId");
+    console.log("userId", userId);
 
     this.channel = this.pusher.subscribe(`room-${this.props.roomId}`);
 
@@ -122,26 +128,25 @@ class Index extends React.Component {
     });
 
     this.pusher.connection.bind("connected", async () => {
-      const moviesR = await axios.get(
-        `/api/room/${this.props.roomId}/${userId}`
-      );
-      let { group } = moviesR.data;
+      const moviesR = await axios.get(`/api/room/${this.props.roomId}`);
+      let { room } = moviesR.data;
 
-      if (!group) {
+      if (!room) {
         return Router.push(`/start`);
       }
-      let movies = group.movies;
 
-      const matched = hasMaches(group.likes, group.numberOfUser);
+      let movies = room.movies;
+
+      const matched = hasMaches(room.movies, room.numberOfUser);
 
       this.setState({
         loading: false,
         matched,
-        users: group.users,
+        users: room.users,
         info: {
-          genres: group.info.genres,
-          startYear: group.info.startYear,
-          endYear: group.info.endYear
+          genres: room.info.genres,
+          startYear: room.info.startYear,
+          endYear: room.info.endYear
         }
       });
 
@@ -149,18 +154,16 @@ class Index extends React.Component {
         return;
       }
 
-      movies = Object.keys(movies).reduce((acc, movieId) => {
-        if (
-          !group.movies[movieId] ||
-          !group.movies[movieId].mm_stats.user_seen[userId]
-        ) {
-          acc[movieId] = movies[movieId];
-        }
+      movies = movies.filter(movie => {
+        return !movie.usersSeen.includes(userId);
+      });
 
-        return acc;
-      }, {});
+      console.log("filtrados", movies);
+      movies = shuffle(movies);
 
-      this.getNewMovie(movies);
+      this.setState({ movies });
+
+      this.getNewMovie();
     });
   }
 
@@ -180,13 +183,7 @@ class Index extends React.Component {
   }
 
   static async getInitialProps({ query }) {
-    if (!process.browser) {
-      const moviesR = await axios.get(
-        `https://127.0.0.1/api/room/${this.props.roomId}/${userId}`
-      );
-    }
-
-    return { moviesR, roomId: query.id };
+    return { roomId: query.id };
   }
 
   render() {
@@ -194,22 +191,23 @@ class Index extends React.Component {
     return (
       <div>
         <Topbar roomPage={true} activetab="room" roomId={this.props.roomId} />
-
-        {movie && (
+        {this.state.info.genres && (
+          <div className="room-info">
+            <PageWidth className="mm-content-padding">
+              <div className="eli">
+                <i className="fas fa-user room-info-icon" />
+                <span className="room-info-text">
+                  {this.state.users.length}
+                </span>
+                <i className="fas fa-info-circle room-info-icon" />
+                {this.state.info.startYear}-{this.state.info.endYear}&nbsp;
+                {this.state.info.genres.map(g => g.name + ", ")}
+              </div>
+            </PageWidth>
+          </div>
+        )}
+        {movie && movie.credits && (
           <div>
-            <div className="room-info">
-              <PageWidth className="mm-content-padding">
-                <div className="eli">
-                  <i className="fas fa-user room-info-icon" />
-                  <span className="room-info-text">
-                    {this.state.users.length}
-                  </span>
-                  <i className="fas fa-info-circle room-info-icon" />
-                  {this.state.info.startYear}-{this.state.info.endYear}&nbsp;
-                  {this.state.info.genres.join(" ")}
-                </div>
-              </PageWidth>
-            </div>
             <SwipeArea>
               <MovieInfo movie={movie} />
               <PageWidth>

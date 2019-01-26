@@ -12,17 +12,11 @@ class Matches extends React.Component {
   }
 
   async componentDidMount() {
-    const moviesR = await axios.get(`/api/room/${this.props.roomId}/x`);
-    let { group } = moviesR.data;
-    let movies = group.movies;
+    const moviesR = await axios.get(`/api/room/${this.props.roomId}`);
+    let { room } = moviesR.data;
+    let movies = room.movies;
 
-    const matches = Object.keys(group.likes).reduce((acc, movieId) => {
-      if (group.likes[movieId] === group.numberOfUser) {
-        acc.push(movies[movieId]);
-      }
-
-      return acc;
-    }, []);
+    const matches = movies.filter(movie => movie.matched);
 
     this.setState({ matches });
   }
@@ -45,7 +39,7 @@ class Matches extends React.Component {
             <h1 className="title">Matches</h1>
             {this.state.matches.map(movie => (
               <div className="movie-container" key={movie.id}>
-                <MovieInfo movie={movie} />
+                {movie.title}
               </div>
             ))}
             {!this.state.matches.length && (

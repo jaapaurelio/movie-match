@@ -1,18 +1,21 @@
+require("dotenv").config();
+
 const cors = require("cors");
 const next = require("next");
 const express = require("express");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const userMiddleware = require("./server/user-middleware");
-const appRoutes = require("./server/routes");
 const mongoose = require("mongoose");
+
 require("./server/models/genre.model");
+require("./server/models/room.model");
+
+const appRoutes = require("./server/routes");
 var Genre = mongoose.model("Genre");
 
 const MovieDb = require("moviedb-promise");
 const moviedb = new MovieDb("284941729ae99106f71e56126227659b");
-
-require("dotenv").config();
 
 const dev = process.env.NODE_ENV !== "production";
 const port = process.env.PORT || 3000;
@@ -56,7 +59,7 @@ app
     server.listen(port, async err => {
       if (err) throw err;
 
-      //await loadGenres();
+      await loadGenres();
 
       console.log(`> Ready on http://localhost:${port}`);
     });
