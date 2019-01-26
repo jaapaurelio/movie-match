@@ -2,8 +2,9 @@ import React from "react";
 import App, { Container } from "next/app";
 import Meta from "../components/meta";
 import MainAppContainer from "../components/main-app-container";
+import { appWithTranslation } from "../i18n";
 
-export default class MyApp extends App {
+class MyApp extends App {
   static async getInitialProps({ Component, router, ctx }) {
     let pageProps = {};
 
@@ -27,3 +28,5 @@ export default class MyApp extends App {
     );
   }
 }
+
+export default appWithTranslation(MyApp);

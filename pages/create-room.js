@@ -167,7 +167,7 @@ class CreateRoom extends React.Component {
       selected: false
     }));
 
-    return { genres };
+    return { genres, namespacesRequired: ["common"] };
   }
 
   render() {

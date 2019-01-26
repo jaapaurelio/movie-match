@@ -7,6 +7,8 @@ const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const userMiddleware = require("./server/user-middleware");
 const mongoose = require("mongoose");
+const nextI18NextMiddleware = require("next-i18next/middleware");
+const nextI18next = require("./i18n");
 
 require("./server/models/genre.model");
 require("./server/models/room.model");
@@ -51,6 +53,7 @@ app
     server.use(cookieParser());
     server.use(userMiddleware);
     server.use(appRoutes);
+    nextI18NextMiddleware(nextI18next, app, server);
 
     server.get("*", (req, res) => {
       return handler(req, res);
