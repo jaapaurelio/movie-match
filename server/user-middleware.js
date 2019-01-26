@@ -1,4 +1,9 @@
+var uniqid = require("uniqid");
+
 module.exports = function(req, res, next) {
-  console.log("cook", req.cookies);
+  if (!req.cookies.user) {
+    req.cookies.user = uniqid();
+  }
+
   next();
 };

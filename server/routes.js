@@ -1,5 +1,7 @@
 var router = require("express").Router();
 const Pusher = require("pusher");
+const MovieDb = require("moviedb-promise");
+const moviedb = new MovieDb("284941729ae99106f71e56126227659b");
 
 const pusher = new Pusher({
   appId: process.env.PUSHER_APP_ID,
@@ -9,9 +11,12 @@ const pusher = new Pusher({
   encrypted: true
 });
 
+const database = {
+  genres: {},
+  rooms: {}
+};
+
 let roomIdCounter = 100;
-const __groups = {};
-let __genres = {};
 
 const getMovies = async function({
   selectedGenres,
@@ -29,8 +34,6 @@ const getMovies = async function({
     with_genres: selectedGenres.join("|")
   };
 
-  console.log(baseQuery);
-
   let m = [];
   for (let i = 1; i < 10; i++) {
     m.push(moviedb.discoverMovie({ ...baseQuery, page: i }));
@@ -47,7 +50,9 @@ const getMovies = async function({
   const movies = movieList.reduce((acc, movie) => {
     acc[movie.id] = {
       ...movie,
-      genres_name: movie.genre_ids.map(genreId => __genres[genreId].name),
+      genres_name: movie.genre_ids.map(
+        genreId => database.genres[genreId].name
+      ),
       mm_stats: {
         user_likes: {},
         user_seen: {}
@@ -59,23 +64,13 @@ const getMovies = async function({
   return movies;
 };
 
-const getGenres = async function() {
-  const genreList = await moviedb.genreMovieList();
-  const genres = genreList.genres.reduce((acc, genre) => {
-    acc[genre.id] = genre;
-    return acc;
-  }, {});
-
-  return genres;
-};
-
-router.post("/api/groups/:roomId/:userId/:movieId/:like", (req, res) => {
+router.post("/api/room/:roomId/:userId/:movieId/:like", (req, res) => {
   const { movieId, userId, roomId } = req.params;
   const like = req.params.like === "true";
 
-  let totalLikes = __groups[roomId].likes[movieId] || 0;
-  const numberOfUsers = __groups[roomId].numberOfUser;
-  __groups[roomId].numberOfUser = 2;
+  let totalLikes = database.rooms[roomId].likes[movieId] || 0;
+  const numberOfUsers = database.rooms[roomId].numberOfUser;
+  database.rooms[roomId].numberOfUser = 2;
 
   if (like) {
     totalLikes++;
@@ -85,9 +80,9 @@ router.post("/api/groups/:roomId/:userId/:movieId/:like", (req, res) => {
     }
   }
 
-  __groups[roomId].movies[movieId].mm_stats.user_likes[userId] = like;
-  __groups[roomId].movies[movieId].mm_stats.user_seen[userId] = true;
-  __groups[roomId].likes[movieId] = totalLikes;
+  database.rooms[roomId].movies[movieId].mm_stats.user_likes[userId] = like;
+  database.rooms[roomId].movies[movieId].mm_stats.user_seen[userId] = true;
+  database.rooms[roomId].likes[movieId] = totalLikes;
 
   res.send({});
 });
@@ -111,9 +106,9 @@ router.post("/api/rooms/", async (req, res) => {
 
   roomIdCounter++;
 
-  const genres = selectedGenres.map(genreId => __genres[genreId].name);
+  const genres = selectedGenres.map(genreId => database.genres[genreId].name);
 
-  __groups[roomIdCounter] = {
+  database.rooms[roomIdCounter] = {
     movies,
     likes: {},
     users: [],
@@ -133,7 +128,7 @@ router.get("/api/room/:roomId/:userId", (req, res) => {
   const roomId = req.params.roomId;
   const userId = req.params.userId;
 
-  const group = __groups[roomId];
+  const group = database.rooms[roomId];
 
   console.log(userId, group && group.users);
 
