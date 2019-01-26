@@ -145,8 +145,6 @@ class Index extends React.Component {
         }
       });
 
-      console.log(this.state);
-
       if (!movies) {
         return;
       }
@@ -181,8 +179,14 @@ class Index extends React.Component {
     this.setState({ showMatchPopup: false });
   }
 
-  static getInitialProps({ query }) {
-    return { roomId: query.id };
+  static async getInitialProps({ query }) {
+    if (!process.browser) {
+      const moviesR = await axios.get(
+        `https://127.0.0.1/api/room/${this.props.roomId}/${userId}`
+      );
+    }
+
+    return { moviesR, roomId: query.id };
   }
 
   render() {
