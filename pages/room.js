@@ -158,7 +158,6 @@ class Index extends React.Component {
         return !movie.usersSeen.includes(userId);
       });
 
-      console.log("filtrados", movies);
       movies = shuffle(movies);
 
       this.setState({ movies });
@@ -183,7 +182,8 @@ class Index extends React.Component {
   }
 
   static async getInitialProps({ query }) {
-    return { roomId: query.id };
+    const roomId = query.id && query.id.toUpperCase();
+    return { roomId };
   }
 
   render() {

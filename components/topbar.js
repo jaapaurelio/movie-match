@@ -40,7 +40,7 @@ export default ({
                     `sublink-btn ` + (roomPage && "sublink-btn-active")
                   }
                 >
-                  Room {roomId}
+                  Room <span className="room-id-top">{roomId}</span>
                 </div>
               </div>
             </Link>
@@ -139,6 +139,11 @@ export default ({
         .sublink-btn-active {
           color: #ffc818;
           border-color: #ffc818;
+        }
+
+        .room-id-top {
+          letter-spacing: 1px;
+          text-transform: uppercase;
         }
       `}
     </style>

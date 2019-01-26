@@ -53,6 +53,7 @@ export default () => (
         border: 1px solid #b7b7b7;
         width: 170px;
         box-sizing: border-box;
+        text-transform: uppercase;
       }
 
       .join-btn {
