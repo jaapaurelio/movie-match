@@ -1,9 +1,7 @@
-import Topbar from "../components/topbar";
-import TopbarButton from "../components/topbar-button";
-import Link from "next/link";
 import axios from "axios";
 import MovieInfo from "../components/movie-info";
 import PageWidth from "../components/page-width";
+import Topbar from "../components/topbar";
 
 class Matches extends React.Component {
   constructor(props) {
@@ -36,33 +34,11 @@ class Matches extends React.Component {
   render() {
     return (
       <div>
-        <Topbar activetab="room" title="Matches">
-          <TopbarButton>
-            <Link href={`/start`}>
-              <div className={`top-icon`}>
-                <i className="fas fa-home" />
-              </div>
-            </Link>
-          </TopbarButton>
-          <TopbarButton>
-            <Link href={`/room?id=${this.props.roomId}`}>
-              <div className={`top-icon`}>
-                <i className="fas fa-clone" />
-              </div>
-            </Link>
-          </TopbarButton>
-          <TopbarButton>
-            <Link href={`/matches?id=${this.props.roomId}`}>
-              <div
-                className={`top-icon active-tab ${
-                  this.state.matches.length ? "matched" : ""
-                }`}
-              >
-                <i className="fas fa-heart" />
-              </div>
-            </Link>
-          </TopbarButton>
-        </Topbar>
+        <Topbar
+          matchesPage={true}
+          activetab="room"
+          roomId={this.props.roomId}
+        />
 
         <PageWidth>
           <div className="container">
