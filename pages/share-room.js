@@ -66,17 +66,8 @@ class ShareRoom extends React.Component {
       });
     });
 
-    let userId = localStorage.getItem("userId");
-
-    if (!userId) {
-      userId = new Date().getTime();
-      localStorage.setItem("userId", userId);
-    }
-
     this.pusher.connection.bind("connected", async () => {
-      const moviesR = await axios.get(
-        `/api/room/${this.props.roomId}/${userId}`
-      );
+      const moviesR = await axios.get(`/api/room/${this.props.roomId}`);
       let { group } = moviesR.data;
 
       if (group) {

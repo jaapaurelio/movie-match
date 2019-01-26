@@ -2,6 +2,10 @@ var router = require("express").Router();
 const Pusher = require("pusher");
 const MovieDb = require("moviedb-promise");
 const moviedb = new MovieDb("284941729ae99106f71e56126227659b");
+var randomstring = require("randomstring");
+const mongoose = require("mongoose");
+var Genre = mongoose.model("Genre");
+var Room = mongoose.model("Room");
 
 const pusher = new Pusher({
   appId: process.env.PUSHER_APP_ID,
@@ -16,7 +20,21 @@ const database = {
   rooms: {}
 };
 
-let roomIdCounter = 100;
+const roomIds = [];
+
+const generateRoomId = function() {
+  let roomId;
+  do {
+    roomId = randomstring.generate({
+      length: 4,
+      charset: "alphabetic",
+      readable: true,
+      capitalization: "uppercase"
+    });
+  } while (roomIds.some(id => roomId === id));
+
+  return roomId;
+};
 
 const getMovies = async function({
   selectedGenres,
@@ -35,61 +53,74 @@ const getMovies = async function({
   };
 
   let m = [];
-  for (let i = 1; i < 10; i++) {
+  for (let i = 1; i < 2; i++) {
     m.push(moviedb.discoverMovie({ ...baseQuery, page: i }));
   }
 
-  const moviesL = await Promise.all(m);
+  const moviesListResult = await Promise.all(m);
 
-  let movieList = [];
+  let moviesList = [];
+  for (let i = 0; i < moviesListResult.length; i++) {
+    moviesList = moviesList.concat(moviesListResult[i].results);
+  }
 
-  moviesL.forEach(movie => {
-    movieList = movieList.concat(movie.results);
-  });
-
-  const movies = movieList.reduce((acc, movie) => {
-    acc[movie.id] = {
-      ...movie,
-      genres_name: movie.genre_ids.map(
-        genreId => database.genres[genreId].name
-      ),
-      mm_stats: {
-        user_likes: {},
-        user_seen: {}
+  const movies = moviesList.reduce((acc, movie) => {
+    acc.push({
+      id: movie.id,
+      title: movie.title,
+      mmStats: {
+        usersLike: [],
+        usersSeen: []
       }
-    };
+    });
+
     return acc;
-  }, {});
+  }, []);
 
   return movies;
 };
 
-router.post("/api/room/:roomId/:userId/:movieId/:like", (req, res) => {
-  const { movieId, userId, roomId } = req.params;
-  const like = req.params.like === "true";
+router.post("/api/room/:roomId/:movieId/:like", async (req, res) => {
+  const { movieId, roomId } = req.params;
+  const { userId } = req.cookies;
+  const like = req.params.like === "like";
 
-  let totalLikes = database.rooms[roomId].likes[movieId] || 0;
-  const numberOfUsers = database.rooms[roomId].numberOfUser;
-  database.rooms[roomId].numberOfUser = 2;
+  const room = await Room.findOne({ id: roomId });
+  const movieIndex = room.movies.findIndex(movie => movie.id == movieId);
+
+  const movie = room.movies[movieIndex];
+  const numberSeenMovies = room.movies.filter(movie =>
+    movie.usersSeen.includes(userId)
+  ).length;
 
   if (like) {
-    totalLikes++;
+    movie.usersLike.push(userId);
 
-    if (totalLikes >= 2) {
-      pusher.trigger(`room-${roomId}`, "movie-matched", { movieId });
+    if (
+      room.users.length >= 2 &&
+      numberSeenMovies > 5 &&
+      movie.usersLike.length >= room.users.length
+    ) {
+      movie.matched = true;
+      pusher.trigger(`room-${roomId}`, "movie-matched", { movie });
     }
   }
 
-  database.rooms[roomId].movies[movieId].mm_stats.user_likes[userId] = like;
-  database.rooms[roomId].movies[movieId].mm_stats.user_seen[userId] = true;
-  database.rooms[roomId].likes[movieId] = totalLikes;
+  if (!movie.usersSeen.includes(userId)) {
+    movie.usersSeen.push(userId);
+  }
+  room.movies[movieIndex] = movie;
+
+  await room.save();
 
   res.send({});
 });
 
 router.post("/api/rooms/", async (req, res) => {
   const { selectedGenres, startYear, endYear, ratingGte, ratingLte } = req.body;
+  const roomId = generateRoomId();
 
+  const genres = await Genre.find();
   const movies = await getMovies({
     selectedGenres,
     startYear,
@@ -98,46 +129,41 @@ router.post("/api/rooms/", async (req, res) => {
     ratingLte
   });
 
-  const numberOfMovies = Object.keys(movies).length;
+  const roomGenres = selectedGenres.map(genreId =>
+    genres.find(g => g.id === genreId)
+  );
 
-  if (numberOfMovies < 20) {
-    return res.send({ noMovies: true });
-  }
-
-  roomIdCounter++;
-
-  const genres = selectedGenres.map(genreId => database.genres[genreId].name);
-
-  database.rooms[roomIdCounter] = {
+  const room = new Room({
+    id: roomId,
     movies,
-    likes: {},
     users: [],
     info: {
-      genres,
+      genres: roomGenres,
       startYear,
       endYear,
       ratingGte,
       ratingLte
     }
-  };
+  });
 
-  return res.send({ success: true, roomId: roomIdCounter });
+  await room.save();
+
+  return res.send({ success: true, roomId: roomId });
 });
 
-router.get("/api/room/:roomId/:userId", (req, res) => {
+router.get("/api/room/:roomId", async (req, res) => {
   const roomId = req.params.roomId;
-  const userId = req.params.userId;
+  const userId = req.cookies.userId;
 
-  const group = database.rooms[roomId];
+  const room = await Room.findOne({ id: roomId });
 
-  console.log(userId, group && group.users);
-
-  if (group && !group.users.find(id => id === userId)) {
-    group.users.push(userId);
-    pusher.trigger(`room-${roomId}`, "users", group.users);
+  if (room && !room.users.find(id => id === userId)) {
+    room.users.push(userId);
+    await room.save();
+    pusher.trigger(`room-${roomId}`, "users", room.users);
   }
 
-  res.send({ group });
+  res.send({ room });
 });
 
 module.exports = router;

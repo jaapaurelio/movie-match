@@ -41,7 +41,9 @@ export default ({ movie }) => {
                 </div>
               )}
               <div>
-                <span className="gender">{movie.genres_name.join(", ")}</span>
+                <span className="gender">
+                  {movie.genres.map(genre => genre.name + ", ")}
+                </span>
               </div>
               <div className="small-info">
                 <i className="far fa-star info-icon score-icon" />
