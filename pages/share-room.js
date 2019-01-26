@@ -132,9 +132,6 @@ class ShareRoom extends React.Component {
           </div>
         </PageWidth>
         <style jsx>{`
-          .sss {
-            font-weight: bold;
-          }
           .title {
             text-align: center;
             margin: 20px 0 10px;
@@ -147,6 +144,7 @@ class ShareRoom extends React.Component {
             color: #333;
             line-height: 1;
             margin-bottom: 10px;
+            font-weight: bold;
           }
 
           .share-btn {
