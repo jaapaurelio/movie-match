@@ -26,7 +26,7 @@ class ShareRoom extends React.Component {
     } else if (number == 2) {
       return (
         <span>
-          You have <strong>one</strong> friend in the room with you.
+          You have <strong>one</strong> friend in the room.
         </span>
       );
     } else {
@@ -34,7 +34,7 @@ class ShareRoom extends React.Component {
 
       return (
         <span>
-          You have <strong>{nString}</strong> friends in the room with you.
+          You have <strong>{nString}</strong> friends in the room.
         </span>
       );
     }
@@ -168,7 +168,7 @@ class ShareRoom extends React.Component {
 
   static getInitialProps({ query }) {
     const roomId = query.id && query.id.toUpperCase();
-    return { roomId };
+    return { roomId, namespacesRequired: ["common"] };
   }
 }
 

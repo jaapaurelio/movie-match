@@ -4,12 +4,8 @@ import Router from "next/router";
 import PageWidth from "../components/page-width";
 import Headline from "../components/headline";
 import Footer from "../components/footer";
+import { withNamespaces } from "../i18n";
 
-const steps = [
-  "Create or join a room.",
-  "Say yes to movies you want to watch.",
-  "Find the perfect movie."
-];
 class Start extends React.Component {
   constructor(props) {
     super(props);
@@ -20,6 +16,12 @@ class Start extends React.Component {
 
     this.onChangeId = this.onChangeId.bind(this);
     this.join = this.join.bind(this);
+
+    this.steps = [
+      this.props.t("headline1"),
+      this.props.t("headline2"),
+      this.props.t("headline3")
+    ];
   }
 
   onChangeId(event) {
@@ -39,7 +41,7 @@ class Start extends React.Component {
       <div>
         <Topbar newRoomPage={true} activetab="room" />
         <Headline>
-          {steps.map((step, i) => {
+          {this.steps.map((step, i) => {
             return (
               <div key={i} className="step-details">
                 {i + 1}. {step}
@@ -100,6 +102,12 @@ class Start extends React.Component {
       </div>
     );
   }
+
+  static async getInitialProps() {
+    return {
+      namespacesRequired: ["common"]
+    };
+  }
 }
 
-export default Start;
+export default withNamespaces("common")(Start);

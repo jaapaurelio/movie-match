@@ -183,7 +183,7 @@ class Index extends React.Component {
 
   static async getInitialProps({ query }) {
     const roomId = query.id && query.id.toUpperCase();
-    return { roomId };
+    return { roomId, namespacesRequired: ["common"] };
   }
 
   render() {

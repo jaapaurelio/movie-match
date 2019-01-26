@@ -22,7 +22,7 @@ class Matches extends React.Component {
   }
 
   static getInitialProps({ query }) {
-    return { roomId: query.id };
+    return { roomId: query.id, namespacesRequired: ["common"] };
   }
 
   render() {
