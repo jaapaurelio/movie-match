@@ -77,6 +77,13 @@ class Index extends React.Component {
         const nextMovies = this.state.movies;
         if (nextMovies[nextMovies.length - 1].id === movie.id) {
           nextMovies[nextMovies.length - 1] = movie;
+
+          this.preloadImages([
+            `https://image.tmdb.org/t/p/w116_and_h174_bestv2/${
+              movie.poster_path
+            }`
+          ]);
+
           this.setState({
             movies: nextMovies
           });
@@ -179,6 +186,13 @@ class Index extends React.Component {
 
   onClickKeepPlaying() {
     this.setState({ showMatchPopup: false });
+  }
+
+  preloadImages(toPreload) {
+    toPreload.map(src => {
+      const image = new Image();
+      image.src = src;
+    });
   }
 
   static async getInitialProps({ query }) {
