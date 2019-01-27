@@ -13,7 +13,10 @@ const InfoSchema = new mongoose.Schema({
   startYear: Number,
   endYear: Number,
   ratingGte: Number,
-  ratingLte: Number
+  ratingLte: Number,
+  rating: Number,
+  page: Number,
+  totalPages: Number
 });
 
 var RoomSchema = new mongoose.Schema({

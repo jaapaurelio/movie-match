@@ -117,7 +117,6 @@ class Index extends React.Component {
     });
 
     const userId = jsCookie.get("userId");
-    console.log("userId", userId);
 
     this.channel = this.pusher.subscribe(`room-${this.props.roomId}`);
 
@@ -131,6 +130,18 @@ class Index extends React.Component {
     this.channel.bind("users", users => {
       this.setState({
         users
+      });
+    });
+
+    this.channel.bind("new-movies", movies => {
+      movies = movies.filter(movie => {
+        return !movie.usersSeen.includes(userId);
+      });
+
+      movies = shuffle(movies);
+
+      this.setState({
+        movies: [...movies, ...this.state.movies]
       });
     });
 

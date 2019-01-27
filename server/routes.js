@@ -41,7 +41,8 @@ const getMovies = async function({
   startYear,
   endYear,
   ratingGte,
-  ratingLte
+  ratingLte,
+  page
 }) {
   const baseQuery = {
     "vote_count.gte": 500,
@@ -52,32 +53,25 @@ const getMovies = async function({
     with_genres: selectedGenres.join("|")
   };
 
-  let m = [];
-  for (let i = 1; i < 2; i++) {
-    m.push(moviedb.discoverMovie({ ...baseQuery, page: i }));
-  }
+  const moviesListResponse = await moviedb.discoverMovie({
+    ...baseQuery,
+    page
+  });
 
-  const moviesListResult = await Promise.all(m);
-
-  let moviesList = [];
-  for (let i = 0; i < moviesListResult.length; i++) {
-    moviesList = moviesList.concat(moviesListResult[i].results);
-  }
+  const moviesList = moviesListResponse.results;
 
   const movies = moviesList.reduce((acc, movie) => {
     acc.push({
       id: movie.id,
       title: movie.title,
-      mmStats: {
-        usersLike: [],
-        usersSeen: []
-      }
+      usersLike: [],
+      usersSeen: []
     });
 
     return acc;
   }, []);
 
-  return movies;
+  return { movies, totalPages: moviesListResponse.total_pages };
 };
 
 router.post("/api/room/:roomId/:movieId/:like", async (req, res) => {
@@ -89,6 +83,9 @@ router.post("/api/room/:roomId/:movieId/:like", async (req, res) => {
   const movieIndex = room.movies.findIndex(movie => movie.id == movieId);
 
   const movie = room.movies[movieIndex];
+
+  movie.usersSeen.push(userId);
+
   const numberSeenMovies = room.movies.filter(movie =>
     movie.usersSeen.includes(userId)
   ).length;
@@ -106,10 +103,32 @@ router.post("/api/room/:roomId/:movieId/:like", async (req, res) => {
     }
   }
 
-  if (!movie.usersSeen.includes(userId)) {
-    movie.usersSeen.push(userId);
-  }
   room.movies[movieIndex] = movie;
+
+  // Get more movies
+  if (numberSeenMovies + 2 == room.movies.length) {
+    if (room.info.page < room.info.totalPages) {
+      room.info.page++;
+    } else {
+      room.info.ratingLte = Math.round((room.info.ratingGte - 0.1) * 100) / 100;
+      room.info.ratingGte = Math.round((room.info.ratingLte - 0.5) * 100) / 100;
+      room.info.page = 1;
+    }
+
+    const { movies, totalPages } = await getMovies({
+      selectedGenres: room.info.genres.map(g => g.id),
+      startYear: room.info.startYear,
+      endYear: room.info.endYear,
+      ratingGte: room.info.ratingGte,
+      ratingLte: room.info.ratingLte,
+      page: room.info.page
+    });
+
+    room.movies = [...room.movies, ...movies];
+    room.info.totalPages = totalPages;
+
+    pusher.trigger(`room-${roomId}`, "new-movies", movies);
+  }
 
   await room.save();
 
@@ -117,16 +136,35 @@ router.post("/api/room/:roomId/:movieId/:like", async (req, res) => {
 });
 
 router.post("/api/rooms/", async (req, res) => {
-  const { selectedGenres, startYear, endYear, ratingGte, ratingLte } = req.body;
+  const { selectedGenres, startYear, endYear, rating } = req.body;
   const roomId = generateRoomId();
 
+  let ratingGte = 1;
+  let ratingLte = 10;
+
+  if (rating == 0) {
+    ratingGte = 1;
+    ratingLte = 5;
+  }
+
+  if (rating == 1) {
+    ratingGte = 5;
+    ratingLte = 10;
+  }
+
+  if (rating == 2) {
+    ratingGte = 7;
+    ratingLte = 10;
+  }
+
   const genres = await Genre.find();
-  const movies = await getMovies({
+  const { movies, totalPages } = await getMovies({
     selectedGenres,
     startYear,
     endYear,
     ratingGte,
-    ratingLte
+    ratingLte,
+    page: 1
   });
 
   const roomGenres = selectedGenres.map(genreId =>
@@ -141,8 +179,11 @@ router.post("/api/rooms/", async (req, res) => {
       genres: roomGenres,
       startYear,
       endYear,
+      rating,
       ratingGte,
-      ratingLte
+      ratingLte,
+      page: 1,
+      totalPages
     }
   });
 
