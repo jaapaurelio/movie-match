@@ -15,15 +15,16 @@ const pusher = new Pusher({
   encrypted: true
 });
 
-const database = {
-  genres: {},
-  rooms: {}
-};
+const generateRoomId = async function() {
+  const roomIdsMap = await Room.find(
+    {},
+    {
+      _id: 0,
+      id: 1
+    }
+  ).exec();
+  const roomIds = roomIdsMap.map(r => r.id);
 
-const roomIds = [];
-
-const generateRoomId = function() {
-  let roomId;
   do {
     roomId = randomstring.generate({
       length: 4,
@@ -79,7 +80,7 @@ router.post("/api/room/:roomId/:movieId/:like", async (req, res) => {
   const { userId } = req.cookies;
   const like = req.params.like === "like";
 
-  const room = await Room.findOne({ id: roomId });
+  const room = await Room.findOne({ id: roomId }).exec();
   const movieIndex = room.movies.findIndex(movie => movie.id == movieId);
   const movie = room.movies[movieIndex];
 
@@ -136,7 +137,7 @@ router.post("/api/room/:roomId/:movieId/:like", async (req, res) => {
 
 router.post("/api/rooms/", async (req, res) => {
   const { selectedGenres, startYear, endYear, rating } = req.body;
-  const roomId = generateRoomId();
+  const roomId = await generateRoomId();
 
   let ratingGte = 1;
   let ratingLte = 10;
@@ -156,7 +157,7 @@ router.post("/api/rooms/", async (req, res) => {
     ratingLte = 10;
   }
 
-  const genres = await Genre.find();
+  const genres = await Genre.find().exec();
   const { movies, totalPages } = await getMovies({
     selectedGenres,
     startYear,
@@ -195,7 +196,7 @@ router.get("/api/room/:roomId", async (req, res) => {
   const roomId = req.params.roomId;
   const userId = req.cookies.userId;
 
-  const room = await Room.findOne({ id: roomId });
+  const room = await Room.findOne({ id: roomId }).exec();
 
   if (room && !room.users.find(id => id === userId)) {
     room.users.push(userId);
