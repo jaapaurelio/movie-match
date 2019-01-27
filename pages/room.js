@@ -28,7 +28,7 @@ class Index extends React.Component {
 
     this.state = {
       movie: null,
-      movies: null,
+      movies: [],
       loading: true,
       matched: false,
       showMatchPopup: false,
@@ -75,10 +75,16 @@ class Index extends React.Component {
       })
       .then(movie => {
         const nextMovies = this.state.movies;
-        if (nextMovies[nextMovies.length - 1].id === movie.id) {
-          nextMovies[nextMovies.length - 1] = { ...movie, fullyLoaded: true };
+        const l = nextMovies.length - 1;
 
-          this.preloadImages(nextMovies[nextMovies.length - 1]);
+        if (!movie || !nextMovies.length) {
+          return;
+        }
+
+        if (nextMovies[l].id === movie.id) {
+          nextMovies[l] = { ...movie, fullyLoaded: true };
+
+          this.preloadImages(nextMovies[l]);
 
           this.setState({
             movies: nextMovies
@@ -154,7 +160,6 @@ class Index extends React.Component {
       const matched = hasMaches(room.movies, room.numberOfUser);
 
       this.setState({
-        loading: false,
         matched,
         users: room.users,
         info: {
@@ -176,7 +181,11 @@ class Index extends React.Component {
 
       this.setState({ movies });
 
-      this.getNewMovie(movies);
+      await this.getNewMovie(movies);
+
+      this.setState({
+        loading: false
+      });
     });
   }
 
@@ -275,12 +284,13 @@ class Index extends React.Component {
             </div>
           </div>
         )}
+
         <PageWidth>
           {!movie && !this.state.loading && (
             <div className="mm-big-message">No more movies to show</div>
           )}
-          {this.state.loading && (
-            <div className="mm-big-message">Loading movies</div>
+          {(this.state.loading || (movie && !movie.fullyLoaded)) && (
+            <div className="mm-big-message">loading movies...</div>
           )}
         </PageWidth>
         <MatchPopup
