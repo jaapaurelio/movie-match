@@ -18,7 +18,7 @@ class CreateRoom extends React.Component {
     const ratings = [
       { id: 0, label: "Bad movies" },
       { id: 1, label: "Good movies" },
-      { id: 2, label: "Excellent movies" }
+      { id: 2, label: "Best movies" }
     ];
 
     this.state = {
@@ -36,7 +36,6 @@ class CreateRoom extends React.Component {
       ratings
     };
 
-    this.unselectAllGenres = this.unselectAllGenres.bind(this);
     this.toggleGenre = this.toggleGenre.bind(this);
     this.submitForm = this.submitForm.bind(this);
     this.showErrors = this.showErrors.bind(this);
@@ -90,24 +89,7 @@ class CreateRoom extends React.Component {
       creatingRoom: true
     });
 
-    let ratingGte;
-    let ratingLte;
-
-    if (rating == 0) {
-      ratingLte = 5;
-    }
-
-    if (rating == 1) {
-      ratingGte = 5.5;
-      ratingLte = 7.5;
-    }
-
-    if (rating == 2) {
-      ratingGte = 7.5;
-      ratingLte = 10;
-    }
-
-    const data = { selectedGenres, startYear, endYear, ratingGte, ratingLte };
+    const data = { selectedGenres, startYear, endYear, rating };
 
     axios
       .post(`/api/rooms/`, data)
@@ -126,17 +108,6 @@ class CreateRoom extends React.Component {
           creatingRoom: false
         });
       });
-  }
-
-  unselectAllGenres() {
-    const allSelected = !this.state.allSelected;
-
-    const genres = this.state.genres.map(genre => ({
-      ...genre,
-      selected: false
-    }));
-
-    this.setState({ genres, allSelected });
   }
 
   toggleGenre(id) {
@@ -159,7 +130,7 @@ class CreateRoom extends React.Component {
     this.setState({ genres });
   }
 
-  static async getInitialProps({ req }) {
+  static async getInitialProps() {
     const genreMovieList = await moviedb.genreMovieList();
 
     const genres = genreMovieList.genres.map(genre => ({
@@ -179,7 +150,42 @@ class CreateRoom extends React.Component {
         </Headline>
         <PageWidth>
           <div className="mm-content-padding">
-            <div className="form-title">Movies from year</div>
+            <div className="form-title">Movie genres</div>
+            <div className="genres-container">
+              {this.state.genres.map(genre => {
+                return (
+                  <div key={genre.id} className="checkbox-m">
+                    <label
+                      className={genre.selected ? "selected" : ""}
+                      onClick={() => this.toggleGenre(genre.id)}
+                    >
+                      {genre.name}
+                    </label>
+                  </div>
+                );
+              })}
+            </div>
+
+            <div className="form-title">Rating</div>
+            <div className="two-selects-row">
+              <select
+                className="select-m"
+                defaultValue={this.state.rating}
+                onChange={event => {
+                  this.setState({ rating: event.target.value });
+                }}
+              >
+                {this.CONST.ratings.map((rating, i) => {
+                  return (
+                    <option key={rating.id} value={rating.id}>
+                      {rating.label}
+                    </option>
+                  );
+                })}
+              </select>
+            </div>
+
+            <div className="form-title">From year</div>
             <div className="two-selects-row">
               <select
                 className="select-m"
@@ -212,46 +218,6 @@ class CreateRoom extends React.Component {
                   );
                 })}
               </select>
-            </div>
-
-            <div className="form-title">Rating</div>
-            <div className="two-selects-row">
-              <select
-                className="select-m"
-                defaultValue={this.state.rating}
-                onChange={event => {
-                  this.setState({ rating: event.target.value });
-                }}
-              >
-                {this.CONST.ratings.map((rating, i) => {
-                  return (
-                    <option key={rating.id} value={rating.id}>
-                      {rating.label}
-                    </option>
-                  );
-                })}
-              </select>
-            </div>
-
-            <div className="form-title">Genres</div>
-            <div className="checkbox-m select-all">
-              <label htmlFor="ALL" onClick={this.unselectAllGenres}>
-                Clear all
-              </label>
-            </div>
-            <div className="genres-container">
-              {this.state.genres.map(genre => {
-                return (
-                  <div key={genre.id} className="checkbox-m">
-                    <label
-                      className={genre.selected ? "selected" : ""}
-                      onClick={() => this.toggleGenre(genre.id)}
-                    >
-                      {genre.name}
-                    </label>
-                  </div>
-                );
-              })}
             </div>
 
             {!!this.state.errorMessages.length && (
@@ -324,8 +290,8 @@ class CreateRoom extends React.Component {
             .checkbox-m {
               display: inline-block;
               user-select: none;
-              width: 50%;
               box-sizing: content-box;
+              flex: 1 1 auto;
             }
 
             .select-all {
@@ -359,7 +325,7 @@ class CreateRoom extends React.Component {
             }
 
             .create-room-btn {
-              margin: 20px 0;
+              margin: 40px 0;
               width: 100%;
             }
 
