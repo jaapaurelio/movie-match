@@ -18,9 +18,9 @@ class Start extends React.Component {
     this.join = this.join.bind(this);
 
     this.steps = [
-      this.props.t("headline1"),
-      this.props.t("headline2"),
-      this.props.t("headline3")
+      "Create or join a room.",
+      "Say yes to movies you want to watch.",
+      "Find the perfect movie."
     ];
   }
 
