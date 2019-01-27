@@ -8,6 +8,6 @@ export default class extends React.Component {
       });
       res.end();
     }
-    return {};
+    return { namespacesRequired: ["common"] };
   }
 }

@@ -39,6 +39,7 @@ class CreateRoom extends React.Component {
     this.toggleGenre = this.toggleGenre.bind(this);
     this.submitForm = this.submitForm.bind(this);
     this.showErrors = this.showErrors.bind(this);
+    this.backbtn = this.backbtn.bind(this);
   }
 
   submitForm() {
@@ -141,10 +142,14 @@ class CreateRoom extends React.Component {
     return { genres, namespacesRequired: ["common"] };
   }
 
+  backbtn() {
+    Router.replace(`/start`);
+  }
+
   render() {
     return (
       <div className="root-container">
-        <Topbar newRoomPage={true} />
+        <Topbar backbtn={this.backbtn} newRoomPage={true} />
         <Headline className="description-container">
           Create the room for you and your friends. They'll join later.
         </Headline>

@@ -1,7 +1,7 @@
 import axios from "axios";
-import MovieInfo from "../components/movie-info";
 import PageWidth from "../components/page-width";
 import Topbar from "../components/topbar";
+import Router from "next/router";
 
 class Matches extends React.Component {
   constructor(props) {
@@ -9,6 +9,7 @@ class Matches extends React.Component {
     this.state = {
       matches: []
     };
+    this.backbtn = this.backbtn.bind(this);
   }
 
   async componentDidMount() {
@@ -25,10 +26,15 @@ class Matches extends React.Component {
     return { roomId: query.id, namespacesRequired: ["common"] };
   }
 
+  backbtn() {
+    Router.replace(`/room?id=${this.props.roomId}`);
+  }
+
   render() {
     return (
       <div>
         <Topbar
+          backbtn={this.backbtn}
           matchesPage={true}
           activetab="room"
           roomId={this.props.roomId}
