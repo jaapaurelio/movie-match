@@ -81,7 +81,6 @@ router.post("/api/room/:roomId/:movieId/:like", async (req, res) => {
 
   const room = await Room.findOne({ id: roomId });
   const movieIndex = room.movies.findIndex(movie => movie.id == movieId);
-
   const movie = room.movies[movieIndex];
 
   movie.usersSeen.push(userId);
