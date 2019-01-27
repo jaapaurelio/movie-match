@@ -2,10 +2,18 @@ var mongoose = require("mongoose");
 
 const MovieSchema = new mongoose.Schema({
   id: Number,
-  title: String,
   usersLike: [String],
   usersSeen: [String],
-  matched: { type: Boolean, default: false }
+  matched: { type: Boolean, default: false },
+  title: String,
+  overview: String,
+  original_title: String,
+  poster_path: String,
+  runtime: Number,
+  genres: [{ id: Number, name: String }],
+  release_date: String,
+  vote_average: Number,
+  original_language: String
 });
 
 const InfoSchema = new mongoose.Schema({
@@ -25,7 +33,8 @@ var RoomSchema = new mongoose.Schema({
   name: String,
   likes: Object,
   users: [String],
-  info: InfoSchema
+  info: InfoSchema,
+  matches: { type: [Number], default: [] }
 });
 
 mongoose.model("Room", RoomSchema);

@@ -54,6 +54,8 @@ const getMovies = async function({
     with_genres: selectedGenres.join("|")
   };
 
+  const allGenres = await Genre.find({}).exec();
+
   const moviesListResponse = await moviedb.discoverMovie({
     ...baseQuery,
     page
@@ -62,15 +64,27 @@ const getMovies = async function({
   const moviesList = moviesListResponse.results;
 
   const movies = moviesList.reduce((acc, movie) => {
+    const genres = movie.genre_ids.map(mgId => {
+      const genre = allGenres.find(g => g.id === mgId);
+
+      return {
+        id: genre.id,
+        name: genre.name
+      };
+    });
+
     acc.push({
       id: movie.id,
-      title: movie.title,
       usersLike: [],
-      usersSeen: []
+      usersSeen: [],
+      ...movie,
+      genres
     });
 
     return acc;
   }, []);
+
+  console.log(movies[0]);
 
   return { movies, totalPages: moviesListResponse.total_pages };
 };
@@ -99,11 +113,14 @@ router.post("/api/room/:roomId/:movieId/:like", async (req, res) => {
       movie.usersLike.length >= room.users.length
     ) {
       movie.matched = true;
+      room.matches.push(movie.id);
       pusher.trigger(`room-${roomId}`, "movie-matched", { movie });
     }
   }
 
   room.movies[movieIndex] = movie;
+
+  await room.save();
 
   // Get more movies
   if (numberSeenMovies + 2 == room.movies.length) {
@@ -129,8 +146,6 @@ router.post("/api/room/:roomId/:movieId/:like", async (req, res) => {
 
     pusher.trigger(`room-${roomId}`, "new-movies", movies);
   }
-
-  await room.save();
 
   res.send({});
 });
@@ -203,6 +218,8 @@ router.get("/api/room/:roomId", async (req, res) => {
     await room.save();
     pusher.trigger(`room-${roomId}`, "users", room.users);
   }
+
+  room.matches = room.matches.slice(0, 4);
 
   res.send({ room });
 });
