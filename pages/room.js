@@ -75,21 +75,24 @@ class Index extends React.Component {
       })
       .then(movie => {
         const nextMovies = this.state.movies;
-        const l = nextMovies.length - 1;
 
-        if (!movie || !nextMovies.length) {
+        if (!movie) {
           return;
         }
 
-        if (nextMovies[l].id === movie.id) {
-          nextMovies[l] = { ...movie, fullyLoaded: true };
+        const movieIndex = nextMovies.findIndex(m => m.id == movie.id);
 
-          this.preloadImages(nextMovies[l]);
+        nextMovies[movieIndex] = {
+          ...nextMovies[movieIndex],
+          ...movie,
+          fullyLoaded: true
+        };
 
-          this.setState({
-            movies: nextMovies
-          });
-        }
+        this.preloadImages(nextMovies[movieIndex]);
+
+        this.setState({
+          movies: nextMovies
+        });
       });
   }
 
