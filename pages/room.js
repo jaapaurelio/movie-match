@@ -78,11 +78,7 @@ class Index extends React.Component {
         if (nextMovies[nextMovies.length - 1].id === movie.id) {
           nextMovies[nextMovies.length - 1] = { ...movie, fullyLoaded: true };
 
-          this.preloadImages([
-            `https://image.tmdb.org/t/p/w116_and_h174_bestv2/${
-              movie.poster_path
-            }`
-          ]);
+          this.preloadImages(nextMovies[nextMovies.length - 1]);
 
           this.setState({
             movies: nextMovies
@@ -199,7 +195,20 @@ class Index extends React.Component {
     this.setState({ showMatchPopup: false });
   }
 
-  preloadImages(toPreload) {
+  preloadImages(movie) {
+    const poster = [
+      `https://image.tmdb.org/t/p/w116_and_h174_bestv2/${movie.poster_path}`
+    ];
+
+    const cast = movie.credits.cast
+      .slice(0, 5)
+      .map(
+        actor =>
+          `https://image.tmdb.org/t/p/w240_and_h266_face/` + actor.profile_path
+      );
+
+    const toPreload = [...poster, ...cast];
+
     toPreload.map(src => {
       const image = new Image();
       image.src = src;
