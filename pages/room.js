@@ -24,6 +24,7 @@ class Index extends React.Component {
     this.noLike = this.noLike.bind(this);
     this.onClickMatches = this.onClickMatches.bind(this);
     this.onClickKeepPlaying = this.onClickKeepPlaying.bind(this);
+    this.backbtn = this.backbtn.bind(this);
 
     this.state = {
       movie: null,
@@ -36,9 +37,7 @@ class Index extends React.Component {
     };
   }
 
-  async getNewMovie() {
-    const movies = this.state.movies;
-
+  async getNewMovie(movies) {
     const movie = movies.pop();
 
     if (!movie) {
@@ -53,19 +52,20 @@ class Index extends React.Component {
       movies
     });
 
-    if (!movie.vote_count) {
+    // first movie has no data
+    if (!movie.fullyLoaded) {
       const movieInfo = await moviedb.movieInfo(movie.id, {
         append_to_response: "credits"
       });
 
       if (this.state.movie.id === movieInfo.id) {
         this.setState({
-          movie: { ...this.state.movie, ...movieInfo }
+          movie: { ...this.state.movie, ...movieInfo, fullyLoaded: true }
         });
       }
     }
 
-    const nextMovie = this.state.movies[this.state.movies.length - 1];
+    const nextMovie = movies[movies.length - 1];
 
     if (!nextMovie) return;
 
@@ -76,7 +76,7 @@ class Index extends React.Component {
       .then(movie => {
         const nextMovies = this.state.movies;
         if (nextMovies[nextMovies.length - 1].id === movie.id) {
-          nextMovies[nextMovies.length - 1] = movie;
+          nextMovies[nextMovies.length - 1] = { ...movie, fullyLoaded: true };
 
           this.preloadImages([
             `https://image.tmdb.org/t/p/w116_and_h174_bestv2/${
@@ -99,14 +99,14 @@ class Index extends React.Component {
 
   like() {
     this.postLike(true);
-    this.getNewMovie();
+    this.getNewMovie(this.state.movies);
     window.scrollTo(0, 0);
   }
 
   noLike() {
     this.postLike(false);
 
-    this.getNewMovie();
+    this.getNewMovie(this.state.movies);
     window.scrollTo(0, 0);
   }
 
@@ -180,7 +180,7 @@ class Index extends React.Component {
 
       this.setState({ movies });
 
-      this.getNewMovie();
+      this.getNewMovie(movies);
     });
   }
 
@@ -211,11 +211,20 @@ class Index extends React.Component {
     return { roomId, namespacesRequired: ["common"] };
   }
 
+  backbtn() {
+    return Router.replace(`/share-room?id=${this.props.roomId}`);
+  }
+
   render() {
     const { movie, showMatchPopup } = this.state;
     return (
       <div>
-        <Topbar roomPage={true} activetab="room" roomId={this.props.roomId} />
+        <Topbar
+          backbtn={this.backbtn}
+          roomPage={true}
+          activetab="room"
+          roomId={this.props.roomId}
+        />
         {this.state.info.genres && (
           <div className="room-info">
             <PageWidth className="mm-content-padding">
@@ -231,14 +240,12 @@ class Index extends React.Component {
             </PageWidth>
           </div>
         )}
-        {movie && movie.credits && (
+        {movie && movie.fullyLoaded && (
           <div>
             <SwipeArea>
               <MovieInfo movie={movie} />
               <PageWidth>
-                {movie.credits && (
-                  <Cast cast={movie.credits.cast.slice(0, 5)} />
-                )}
+                <Cast cast={movie.credits.cast.slice(0, 5)} />
               </PageWidth>
             </SwipeArea>
             <div className="buttons-container-space" />

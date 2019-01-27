@@ -5,14 +5,21 @@ export default ({
   newRoomPage = "",
   roomPage = "",
   matchesPage = "",
-  roomId
+  roomId,
+  backbtn
 }) => (
   <nav>
     <PageWidth>
-      <div className="container">
-        <Link href={`/start`}>
-          <img className="logo" src="/static/Icon.png" />
-        </Link>
+      <div
+        className={
+          backbtn ? "container container-with-navigation" : "container"
+        }
+      >
+        {backbtn && (
+          <i onClick={backbtn} className="navigation-icon fas fa-angle-left" />
+        )}
+
+        <img onClick={backbtn} className="logo" src="/static/Icon.png" />
 
         {!roomId && (
           <Link href={`/start`}>
@@ -70,6 +77,16 @@ export default ({
           top: 0;
           z-index: 1;
         }
+
+        .navigation-icon {
+          height: 100%;
+          display: flex;
+          align-items: center;
+          width: 20px;
+          justify-content: center;
+          box-sizing: border-box;
+        }
+
         .logo {
           width: 20px;
           margin-right: 10px;
@@ -94,6 +111,10 @@ export default ({
           box-sizing: border-box;
           max-width: 800px;
           margin: 0 auto;
+        }
+
+        .container-with-navigation {
+          padding-left: 0;
         }
 
         .page-title {

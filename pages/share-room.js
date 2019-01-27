@@ -11,6 +11,7 @@ class ShareRoom extends React.Component {
   constructor(args) {
     super(args);
     this.share = this.share.bind(this);
+    this.backbtn = this.backbtn.bind(this);
 
     this.state = {
       showShareButton: false,
@@ -89,10 +90,14 @@ class ShareRoom extends React.Component {
     }
   }
 
+  backbtn() {
+    return Router.replace(`/create-room`);
+  }
+
   render() {
     return (
       <div>
-        <Topbar newRoomPage={true} activetab="room" />
+        <Topbar backbtn={this.backbtn} newRoomPage={true} activetab="room" />
         <Headline>
           Share the room with friends. They can join any time.
         </Headline>

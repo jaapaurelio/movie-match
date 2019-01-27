@@ -103,7 +103,7 @@ class Start extends React.Component {
     );
   }
 
-  static async getInitialProps() {
+  static getInitialProps() {
     return {
       namespacesRequired: ["common"]
     };
