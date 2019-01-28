@@ -84,8 +84,6 @@ const getMovies = async function({
     return acc;
   }, []);
 
-  console.log(movies[0]);
-
   return { movies, totalPages: moviesListResponse.total_pages };
 };
 
