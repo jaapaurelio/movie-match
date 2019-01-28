@@ -5,13 +5,15 @@ import Router from "next/router";
 import Headline from "../components/headline";
 import MovieHead from "../components/movie-head";
 import Loader from "../components/loader";
+import RoomInfoBar from "../components/room-info-bar";
 
 class Matches extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       matches: [],
-      loading: true
+      loading: true,
+      room: {}
     };
     this.backbtn = this.backbtn.bind(this);
   }
@@ -27,7 +29,7 @@ class Matches extends React.Component {
       };
     });
 
-    this.setState({ matches, loading: false });
+    this.setState({ room, matches, loading: false });
   }
 
   static getInitialProps({ query }) {
@@ -47,6 +49,8 @@ class Matches extends React.Component {
           activetab="room"
           roomId={this.props.roomId}
         />
+        {!this.state.loading && <RoomInfoBar room={this.state.room} />}
+
         {this.state.loading && <Loader />}
         {!!this.state.matches.length && (
           <div className="container">
