@@ -42,8 +42,16 @@ export default ({ movie }) => {
               <i className="far fa-star info-icon score-icon" />
               <span className="score">{movie.vote_average}</span>
               <span className="score-small">/10</span>
-              <i className="far info-icon fa-clock" />
-              <span className="time"> {getRuntime(movie.runtime)} &nbsp;</span>
+
+              {!!movie.runtime && (
+                <span>
+                  <i className="far info-icon fa-clock" />
+                  <span className="time">
+                    {" "}
+                    {getRuntime(movie.runtime)} &nbsp;
+                  </span>
+                </span>
+              )}
               {movie.adult && <span className="more-18">+18</span>}
             </div>
           </div>
@@ -60,10 +68,6 @@ export default ({ movie }) => {
             font-size: 11px;
             align-self: center;
             margin-right: 4px;
-          }
-
-          .score-icon {
-            color: #fff;
           }
 
           .score-small {
