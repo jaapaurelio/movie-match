@@ -221,6 +221,10 @@ router.get("/api/room/:roomId", async (req, res) => {
 
   room.matches = room.matches.slice(0, 4);
 
+  res.cookie("roomId", roomId, {
+    maxAge: 365 * 24 * 60 * 60 * 1000
+  });
+
   res.send({ room });
 });
 

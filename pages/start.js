@@ -3,15 +3,16 @@ import Link from "next/link";
 import Router from "next/router";
 import PageWidth from "../components/page-width";
 import Headline from "../components/headline";
-import Footer from "../components/footer";
 import { withNamespaces } from "../i18n";
+import jsCookie from "js-cookie";
 
 class Start extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      roomId: undefined
+      roomId: undefined,
+      lastRoomId: undefined
     };
 
     this.onChangeId = this.onChangeId.bind(this);
@@ -36,10 +37,19 @@ class Start extends React.Component {
     }
   }
 
+  componentDidMount() {
+    const lastRoomId = jsCookie.get("roomId");
+    this.setState({ lastRoomId });
+  }
+
   render() {
     return (
       <div>
-        <Topbar newRoomPage={true} activetab="room" />
+        <Topbar
+          roomId={this.state.lastRoomId}
+          newRoomPage={true}
+          activetab="room"
+        />
         <Headline>
           {this.steps.map((step, i) => {
             return (
