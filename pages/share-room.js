@@ -7,6 +7,12 @@ import Pusher from "pusher-js";
 import axios from "axios";
 import Router from "next/router";
 
+const ratings = [
+  { id: 0, label: "Bad movies" },
+  { id: 1, label: "Good movies" },
+  { id: 2, label: "Best movies" }
+];
+
 class ShareRoom extends React.Component {
   constructor(args) {
     super(args);
@@ -14,8 +20,9 @@ class ShareRoom extends React.Component {
     this.backbtn = this.backbtn.bind(this);
 
     this.state = {
-      showShareButton: false,
-      users: []
+      showShareButton: true,
+      users: [],
+      room: undefined
     };
   }
 
@@ -76,7 +83,7 @@ class ShareRoom extends React.Component {
         return Router.push(`/start`);
       }
 
-      this.setState({ users: room.users });
+      this.setState({ room, users: room.users });
     });
 
     if (navigator.share) {
@@ -104,6 +111,7 @@ class ShareRoom extends React.Component {
         <PageWidth>
           <div className="title">room</div>
           <div className="room-number">{this.props.roomId}</div>
+
           {this.state.showShareButton && (
             <div className="options-container">
               <button onClick={this.share} className="mm-btn share-btn">
@@ -111,6 +119,7 @@ class ShareRoom extends React.Component {
               </button>
             </div>
           )}
+
           <div className="options-container">
             <div className="join-title">Share and join the room</div>
             <input
@@ -129,11 +138,28 @@ class ShareRoom extends React.Component {
               {this.numberOfPeople(this.state.users.length)}
             </div>
           </div>
+          {!!this.state.room && (
+            <div className="room-info">
+              <div className="room-data">
+                {ratings[this.state.room.info.rating].label}{" "}
+                {this.state.room.info.startYear}-{this.state.room.info.endYear}{" "}
+                {this.state.room.info.genres.map(
+                  g => g.name.toLowerCase() + " "
+                )}{" "}
+              </div>
+              <div>
+                {this.state.room.movies.slice(0, 5).map(m => {
+                  return m.title + ", ";
+                })}
+                and more...
+              </div>
+            </div>
+          )}
         </PageWidth>
         <style jsx>{`
           .title {
             text-align: center;
-            margin: 20px 0 10px;
+            margin: 40px 0 10px;
             font-size: 14px;
           }
 
@@ -142,7 +168,6 @@ class ShareRoom extends React.Component {
             font-size: 40px;
             color: #333;
             line-height: 1;
-            margin-bottom: 10px;
             font-weight: bold;
           }
 
@@ -154,6 +179,7 @@ class ShareRoom extends React.Component {
             background: transparent;
             border-radius: 0;
             color: #00b9a7;
+            margin-top: 10px;
           }
 
           .info {
@@ -165,6 +191,18 @@ class ShareRoom extends React.Component {
           .note {
             margin-top: 40px;
             font-size: 12px;
+          }
+
+          .room-info {
+            text-align: center;
+            margin-top: 40px;
+            font-size: 14px;
+            padding: 0 20px 20px 20px;
+          }
+
+          .room-data {
+            font-weight: bold;
+            margin-bottom: 10px;
           }
         `}</style>
       </div>
