@@ -8,6 +8,7 @@ import axios from "axios";
 import Pusher from "pusher-js";
 import Router from "next/router";
 import PageWidth from "../components/page-width";
+import RoomInfoBar from "../components/room-info-bar";
 import shuffle from "shuffle-array";
 import jsCookie from "js-cookie";
 
@@ -34,7 +35,8 @@ class Index extends React.Component {
       matched: false,
       showMatchPopup: false,
       users: [],
-      info: {}
+      info: {},
+      room: {}
     };
   }
 
@@ -170,7 +172,8 @@ class Index extends React.Component {
           genres: room.info.genres,
           startYear: room.info.startYear,
           endYear: room.info.endYear
-        }
+        },
+        room
       });
 
       if (!movies) {
@@ -247,21 +250,7 @@ class Index extends React.Component {
           activetab="room"
           roomId={this.props.roomId}
         />
-        {this.state.info.genres && (
-          <div className="room-info">
-            <PageWidth className="mm-content-padding">
-              <div className="eli">
-                <i className="fas fa-user room-info-icon" />
-                <span className="room-info-text">
-                  {this.state.users.length}
-                </span>
-                <i className="fas fa-info-circle room-info-icon" />
-                {this.state.info.startYear}-{this.state.info.endYear}&nbsp;
-                {this.state.info.genres.map(g => g.name + ", ")}
-              </div>
-            </PageWidth>
-          </div>
-        )}
+        {this.state.info.genres && <RoomInfoBar room={this.state.room} />}
         {movie && movie.fullyLoaded && (
           <div>
             <SwipeArea>
@@ -310,27 +299,6 @@ class Index extends React.Component {
               font-size: 11px;
               padding-bottom: 10px;
               font-weight: bold;
-            }
-
-            .room-info {
-              background: #424242;
-              color: #fff;
-              font-size: 12px;
-              text-align: center;
-              padding: 10px 0;
-            }
-
-            .eli {
-              white-space: nowrap;
-              overflow: hidden;
-            }
-
-            .room-info-icon {
-              margin-right: 4px;
-            }
-
-            .room-info-text {
-              margin-right: 10px;
             }
 
             .buttons-container-bg {
