@@ -63,7 +63,7 @@ class Matches extends React.Component {
           {this.state.matches.length && (
             <div>
               <PageWidth>
-                <h1 className="title">Matches</h1>
+                <h1 className="title">Perfect Match</h1>
               </PageWidth>
 
               <PageWidth>
@@ -76,8 +76,11 @@ class Matches extends React.Component {
                     Show more matches
                   </button>
                 </div>
-                {this.state.showMore && (
-                  <div className="other-options">
+              </PageWidth>
+
+              {this.state.showMore && (
+                <div className="other-options">
+                  <PageWidth>
                     {this.state.matches.map((movie, i) => {
                       {
                         return (
@@ -89,9 +92,9 @@ class Matches extends React.Component {
                         );
                       }
                     })}
-                  </div>
-                )}
-              </PageWidth>
+                  </PageWidth>
+                </div>
+              )}
               <PageWidth>
                 {!this.state.matches.length && (
                   <div className="mm-big-message">
@@ -109,7 +112,7 @@ class Matches extends React.Component {
 
           .title {
             font-size: 16px;
-            padding: 20px;
+            padding: 20px 20px 10px 20px;
           }
 
           .movie-info {
@@ -122,12 +125,12 @@ class Matches extends React.Component {
 
           .show-more-container {
             text-align: center;
+            margin: 20px 0;
           }
 
           .other-options {
             background: #efefef;
             border-radius: 4px;
-            margin-top: 20px;
             padding: 20px;
           }
         `}</style>

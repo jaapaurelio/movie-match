@@ -73,6 +73,7 @@ export default () => (
         width: 170px;
         box-sizing: border-box;
         line-height: 1;
+        outline: none;
       }
 
       .options-container {
