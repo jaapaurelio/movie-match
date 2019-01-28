@@ -20,7 +20,7 @@ class ShareRoom extends React.Component {
     this.backbtn = this.backbtn.bind(this);
 
     this.state = {
-      showShareButton: true,
+      showShareButton: false,
       users: [],
       room: undefined
     };
