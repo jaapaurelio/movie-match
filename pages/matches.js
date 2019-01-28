@@ -4,17 +4,16 @@ import Topbar from "../components/topbar";
 import Router from "next/router";
 import Headline from "../components/headline";
 import MovieHead from "../components/movie-head";
+import Loader from "../components/loader";
 
 class Matches extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       matches: [],
-      loading: true,
-      showMore: false
+      loading: true
     };
     this.backbtn = this.backbtn.bind(this);
-    this.toggleShowMore = this.toggleShowMore.bind(this);
   }
 
   async componentDidMount() {
@@ -39,12 +38,6 @@ class Matches extends React.Component {
     Router.replace(`/room?id=${this.props.roomId}`);
   }
 
-  toggleShowMore() {
-    this.setState({
-      showMore: !this.state.showMore
-    });
-  }
-
   render() {
     return (
       <div>
@@ -54,65 +47,58 @@ class Matches extends React.Component {
           activetab="room"
           roomId={this.props.roomId}
         />
+        {this.state.loading && <Loader />}
+        {!!this.state.matches.length && (
+          <div className="container">
+            <Headline>
+              We found the perfect match for you. <br />
+              Have a nice movie!
+            </Headline>
 
-        <div className="container">
-          <Headline>
-            We found the perfect match for you. <br />
-            Have a nice movie!
-          </Headline>
-          {this.state.matches.length && (
             <div>
               <PageWidth>
-                <h1 className="title">Perfect Match</h1>
+                <h1 className="title">Perfect match</h1>
               </PageWidth>
 
               <PageWidth>
                 <div className="movie-container perfect-match">
                   <MovieHead movie={this.state.matches[0]} />
                 </div>
-
-                <div className="show-more-container">
-                  <button onClick={this.toggleShowMore} className="mm-btn">
-                    Show more matches
-                  </button>
-                </div>
               </PageWidth>
 
-              {this.state.showMore && (
-                <div className="other-options">
-                  <PageWidth>
-                    {this.state.matches.map((movie, i) => {
-                      {
-                        return (
-                          i != 0 && (
-                            <div className="movie-container" key={movie.id}>
-                              <MovieHead movie={movie} />
-                            </div>
-                          )
-                        );
-                      }
-                    })}
-                  </PageWidth>
-                </div>
-              )}
-              <PageWidth>
-                {!this.state.matches.length && (
-                  <div className="mm-big-message">
-                    No matches yet. Keep trying.
-                  </div>
-                )}
-              </PageWidth>
+              <div className="other-options">
+                <PageWidth>
+                  <h1 className="title">Alternative matches</h1>
+                  {this.state.matches.map((movie, i) => {
+                    {
+                      return (
+                        i != 0 && (
+                          <div className="movie-container" key={movie.id}>
+                            <MovieHead movie={movie} />
+                          </div>
+                        )
+                      );
+                    }
+                  })}
+                </PageWidth>
+              </div>
             </div>
+          </div>
+        )}
+
+        <PageWidth>
+          {!this.state.loading && !this.state.matches.length && (
+            <div className="info-message">No matches yet. Keep trying.</div>
           )}
-        </div>
+        </PageWidth>
 
         <style jsx>{`
-          .movie-container {
-          }
-
           .title {
-            font-size: 16px;
+            font-size: 14px;
             padding: 20px 20px 10px 20px;
+            text-align: center;
+            font-weight: bold;
+            text-align: right;
           }
 
           .movie-info {
@@ -130,8 +116,12 @@ class Matches extends React.Component {
 
           .other-options {
             background: #efefef;
-            border-radius: 4px;
-            padding: 20px;
+            margin-top: 20px;
+          }
+
+          .info-message {
+            text-align: center;
+            padding-top: 20px;
           }
         `}</style>
       </div>
