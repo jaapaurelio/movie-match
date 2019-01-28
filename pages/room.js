@@ -59,7 +59,7 @@ class Index extends React.Component {
         append_to_response: "credits"
       });
 
-      if (this.state.movie.id === movieInfo.id) {
+      if (this.state.movie && this.state.movie.id === movieInfo.id) {
         this.setState({
           movie: { ...this.state.movie, ...movieInfo, fullyLoaded: true }
         });
@@ -234,7 +234,7 @@ class Index extends React.Component {
   }
 
   backbtn() {
-    return Router.replace(`/share-room?id=${this.props.roomId}`);
+    return Router.replace(`/start`);
   }
 
   render() {
