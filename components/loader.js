@@ -4,11 +4,11 @@ export default props => {
       <style jsx>
         {`
           .loader {
-            height: 4px;
-            width: 100%;
-            position: relative;
             overflow: hidden;
-            background-color: #ddd;
+            position: sticky;
+            z-index: 3;
+            width: 100%;
+            height: 4px;
           }
           .loader:before {
             display: block;
@@ -18,7 +18,7 @@ export default props => {
             width: 200px;
             height: 4px;
             background-color: #ffc818;
-            animation: loading 2s linear infinite;
+            animation: loading 1s linear infinite;
           }
 
           @keyframes loading {
