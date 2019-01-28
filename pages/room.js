@@ -3,6 +3,7 @@ import MovieInfo from "../components/movie-info";
 import Cast from "../components/cast";
 import MatchPopup from "../components/match-popup";
 import SwipeArea from "../components/swipe-area";
+import Loader from "../components/loader";
 import axios from "axios";
 import Pusher from "pusher-js";
 import Router from "next/router";
@@ -287,13 +288,11 @@ class Index extends React.Component {
             </div>
           </div>
         )}
+        {this.state.loading && <Loader />}
 
         <PageWidth>
           {!movie && !this.state.loading && (
             <div className="mm-big-message">No more movies to show</div>
-          )}
-          {(this.state.loading || (movie && !movie.fullyLoaded)) && (
-            <div className="mm-big-message">loading movies...</div>
           )}
         </PageWidth>
         <MatchPopup
