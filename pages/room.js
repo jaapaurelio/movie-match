@@ -32,7 +32,7 @@ class Index extends React.Component {
       movies: [],
       loading: true,
       matched: false,
-      showMatchPopup: false,
+      showMatchPopup: true,
       users: [],
       info: {},
       room: {}
@@ -279,7 +279,6 @@ class Index extends React.Component {
         <MatchPopup
           show={showMatchPopup}
           onClickMatches={this.onClickMatches}
-          onClickKeepPlaying={this.onClickKeepPlaying}
         />
 
         <style jsx>

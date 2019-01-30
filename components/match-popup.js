@@ -1,14 +1,11 @@
-export default ({ show, onClickMatches, onClickKeepPlaying }) => (
+export default ({ show, onClickMatches }) => (
   <div className={`popup-container ${show ? "show" : ""}`}>
     <div className="popup-content">
       <h1>It's a match!</h1>
-      <div className="desc">You can watch it now</div>
+      <div className="desc">We found the perfect match for you.</div>
       <div className="btn-container">
         <div onClick={onClickMatches} className="match-btn">
           Check matches
-        </div>
-        <div onClick={onClickKeepPlaying} className="match-btn">
-          Keep playing
         </div>
       </div>
     </div>
@@ -45,10 +42,12 @@ export default ({ show, onClickMatches, onClickKeepPlaying }) => (
 
         h1 {
           font-size: 30px;
+          font-family: "Pacifico", cursive;
+          margin-bottom: 20px;
         }
 
         .desc {
-          margin-bottom: 50px;
+          margin-bottom: 20px;
           font-size: 14px;
         }
 
@@ -61,11 +60,13 @@ export default ({ show, onClickMatches, onClickKeepPlaying }) => (
 
         .match-btn {
           border: 1px solid #fff;
-          padding: 4px;
+          padding: 6px;
           cursor: pointer;
           margin-bottom: 20px;
           width: 200px;
           text-align: center;
+          border-radius: 4px;
+          box-sizing: border-box;
         }
       `}
     </style>
