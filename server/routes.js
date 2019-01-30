@@ -117,12 +117,15 @@ router.post("/api/room/:roomId/:movieId/:like", async (req, res) => {
       numberSeenMovies > 5 &&
       movie.usersLike.length >= room.users.length
     ) {
-      movie.matched = true;
-      room.matches.push(movie.id);
+      const matches = room.movies
+        .filter(m => {
+          return m.usersLike.length >= room.users.length;
+        })
+        .map(m => m.id);
 
-      if (room.matches.length >= 3) {
+      if (matches.length >= 3) {
         room.matched = true;
-        room.matches = shuffle(room.matches);
+        room.matches = shuffle(matches);
 
         pusher.trigger(`room-${roomId}`, "movie-matched", {
           matches: room.matches
