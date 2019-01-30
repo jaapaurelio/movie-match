@@ -13,7 +13,7 @@ export default () => (
         crossOrigin="anonymous"
       />
       <link
-        href="https://fonts.googleapis.com/css?family=Quicksand|Raleway:400,700"
+        href="https://fonts.googleapis.com/css?family=Quicksand|Raleway:400,700|Pacifico"
         rel="stylesheet"
       />
       <meta name="theme-color" content="#333" />

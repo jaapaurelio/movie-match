@@ -1,7 +1,6 @@
 import axios from "axios";
 import PageWidth from "../components/page-width";
 import Topbar from "../components/topbar";
-import Router from "next/router";
 import Headline from "../components/headline";
 import MovieHead from "../components/movie-head";
 import Loader from "../components/loader";
