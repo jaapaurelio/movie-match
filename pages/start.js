@@ -48,7 +48,7 @@ class Start extends React.Component {
         <Topbar
           roomId={this.state.lastRoomId}
           newRoomPage={true}
-          activetab="room"
+          title="Movie Match"
         />
         <Headline>
           {this.steps.map((step, i) => {
