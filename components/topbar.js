@@ -19,8 +19,6 @@ export default ({
           <i onClick={backbtn} className="navigation-icon fas fa-angle-left" />
         )}
 
-        <img onClick={backbtn} className="logo" src="/static/Icon.png" />
-
         {!roomId && (
           <Link href={`/start`}>
             <div className="page-title">Movie Match</div>
@@ -85,6 +83,7 @@ export default ({
           width: 20px;
           justify-content: center;
           box-sizing: border-box;
+          padding: 0 20px;
         }
 
         .logo {
