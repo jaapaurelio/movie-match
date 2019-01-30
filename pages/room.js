@@ -15,10 +15,6 @@ import jsCookie from "js-cookie";
 const MovieDb = require("moviedb-promise");
 const moviedb = new MovieDb("284941729ae99106f71e56126227659b");
 
-const hasMaches = function(movies, nusers) {
-  return movies.find(movie => movie.usersLike === nusers);
-};
-
 class Index extends React.Component {
   constructor(props) {
     super(props);
@@ -32,7 +28,7 @@ class Index extends React.Component {
       movies: [],
       loading: true,
       matched: false,
-      showMatchPopup: true,
+      showMatchPopup: false,
       users: [],
       info: {},
       room: {}
@@ -127,7 +123,7 @@ class Index extends React.Component {
 
     this.channel = this.pusher.subscribe(`room-${this.props.roomId}`);
 
-    this.channel.bind("movie-matched", movie => {
+    this.channel.bind("movie-matched", matches => {
       this.setState({
         matched: true,
         showMatchPopup: true
@@ -140,16 +136,23 @@ class Index extends React.Component {
       });
     });
 
-    this.channel.bind("new-movies", movies => {
+    this.channel.bind("new-movies", async movies => {
       movies = movies.filter(movie => {
         return !movie.usersSeen.includes(userId);
       });
 
       movies = shuffle(movies);
+      movies = [...movies, ...this.state.movies];
 
       this.setState({
-        movies: [...movies, ...this.state.movies]
+        movies
       });
+
+      console.log(this.state);
+
+      if (!this.state.movie) {
+        this.getNewMovie(movies);
+      }
     });
 
     this.pusher.connection.bind("connected", async () => {
@@ -160,9 +163,13 @@ class Index extends React.Component {
         return Router.push(`/start`);
       }
 
-      let movies = room.movies;
+      const matched = room.matched;
 
-      const matched = hasMaches(room.movies, room.numberOfUser);
+      if (matched) {
+        return Router.replace(`/matches?id=${this.props.roomId}`);
+      }
+
+      let movies = room.movies;
 
       this.setState({
         matched,

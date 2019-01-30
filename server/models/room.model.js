@@ -33,7 +33,8 @@ var RoomSchema = new mongoose.Schema({
   likes: Object,
   users: [String],
   info: InfoSchema,
-  matches: { type: [Number], default: [] }
+  matches: { type: [Number], default: [] },
+  matched: { type: Boolean, default: false }
 });
 
 mongoose.model("Room", RoomSchema);

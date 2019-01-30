@@ -36,11 +36,7 @@ class Matches extends React.Component {
   render() {
     return (
       <div>
-        <Topbar
-          matchesPage={true}
-          activetab="room"
-          roomId={this.props.roomId}
-        />
+        <Topbar roomPage={true} activetab="room" roomId={this.props.roomId} />
         {!this.state.loading && (
           <RoomInfoBar users={this.state.room.users} room={this.state.room} />
         )}
