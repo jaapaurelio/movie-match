@@ -46,20 +46,6 @@ export default ({
               </div>
             </Link>
           )}
-
-          {roomId && (
-            <Link href={`/matches?id=${roomId}`}>
-              <div className="sublink">
-                <div
-                  className={
-                    `sublink-btn ` + (matchesPage && "sublink-btn-active")
-                  }
-                >
-                  Matches
-                </div>
-              </div>
-            </Link>
-          )}
         </div>
       </div>
     </PageWidth>

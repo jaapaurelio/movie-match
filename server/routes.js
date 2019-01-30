@@ -1,11 +1,12 @@
-var router = require("express").Router();
+const router = require("express").Router();
 const Pusher = require("pusher");
 const MovieDb = require("moviedb-promise");
 const moviedb = new MovieDb("284941729ae99106f71e56126227659b");
-var randomstring = require("randomstring");
+const randomstring = require("randomstring");
 const mongoose = require("mongoose");
-var Genre = mongoose.model("Genre");
-var Room = mongoose.model("Room");
+const Genre = mongoose.model("Genre");
+const Room = mongoose.model("Room");
+const shuffle = require("shuffle-array");
 
 const pusher = new Pusher({
   appId: process.env.PUSHER_APP_ID,
@@ -98,7 +99,7 @@ router.post("/api/room/:roomId/:movieId/:like", async (req, res) => {
   const { userId } = req.cookies;
   const like = req.params.like === "like";
 
-  const room = await Room.findOne({ id: roomId }).exec();
+  let room = await Room.findOne({ id: roomId }).exec();
   const movieIndex = room.movies.findIndex(movie => movie.id == movieId);
   const movie = room.movies[movieIndex];
 
@@ -118,22 +119,31 @@ router.post("/api/room/:roomId/:movieId/:like", async (req, res) => {
     ) {
       movie.matched = true;
       room.matches.push(movie.id);
-      pusher.trigger(`room-${roomId}`, "movie-matched", { movie });
+
+      if (room.matches.length >= 3) {
+        room.matched = true;
+        room.matches = shuffle(room.matches);
+
+        pusher.trigger(`room-${roomId}`, "movie-matched", {
+          matches: room.matches
+        });
+      }
     }
   }
 
   room.movies[movieIndex] = movie;
 
-  await room.save();
+  room = await room.save();
 
   // Get more movies
   if (numberSeenMovies + 2 == room.movies.length) {
+    const info = room.info;
     if (room.info.page < room.info.totalPages) {
-      room.info.page++;
+      info.page++;
     } else {
-      room.info.ratingLte = Math.round((room.info.ratingGte - 0.1) * 100) / 100;
-      room.info.ratingGte = Math.round((room.info.ratingLte - 0.5) * 100) / 100;
-      room.info.page = 1;
+      info.ratingLte = Math.round((room.info.ratingGte - 0.1) * 100) / 100;
+      info.ratingGte = Math.round((room.info.ratingLte - 0.5) * 100) / 100;
+      info.page = 1;
     }
 
     const { movies, totalPages } = await getMovies({
@@ -145,7 +155,10 @@ router.post("/api/room/:roomId/:movieId/:like", async (req, res) => {
       page: room.info.page
     });
 
+    room = await Room.findOne({ id: roomId }).exec();
+
     room.movies = [...room.movies, ...movies];
+    room.info = info;
     room.info.totalPages = totalPages;
     pusher.trigger(`room-${roomId}`, "new-movies", movies);
 
@@ -224,7 +237,7 @@ router.get("/api/room/:roomId", async (req, res) => {
     pusher.trigger(`room-${roomId}`, "users", room.users);
   }
 
-  room.matches = room.matches.slice(0, 4);
+  room.matches = room.matches.slice(0, 3);
 
   res.cookie("roomId", roomId, {
     maxAge: 365 * 24 * 60 * 60 * 1000
