@@ -151,7 +151,7 @@ class CreateRoom extends React.Component {
       <div className="root-container">
         <Topbar backbtn={this.backbtn} newRoomPage={true} />
         <Headline className="description-container">
-          Create the room for you and your friends. They'll join later.
+          Create the room for you and your friends.
         </Headline>
         <PageWidth>
           <div className="mm-content-padding">

@@ -9,7 +9,7 @@
   "join-btn": "Join",
   "ask-room-number": "Ask your friend for the room number",
 
-  "healine-create-room": "Create the room for you and your friends. They'll join later.",
+  "healine-create-room": "Create the room for you and your friends.",
   "from-year": "Movies from year",
   "rating": "Rating",
   "bad-movies": "Bad Movies",
@@ -41,7 +41,7 @@
   "invalid-years": "Invalid years.",
   "creating-room": "Creating room",
 
-  "share-headline": "Share the room with friends. They can join any time.",
+  "share-headline": "Share the room with friends.",
   "alone-in-room": "You are alone in the room.",
   "you-have": "You have",
   "one-friend-room": "friend in the room.",
