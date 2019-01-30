@@ -11,9 +11,12 @@ class CreateRoom extends React.Component {
     super(props);
 
     const years = [];
-    for (let i = 1900; i <= 2019; i++) {
+    for (let i = 1950; i <= 2020; i = i + 10) {
       years.push(i);
     }
+
+    // TODO Make it smart
+    years[years.length - 1] = 2019;
 
     const ratings = [
       { id: 0, label: "Bad movies" },
@@ -49,7 +52,7 @@ class CreateRoom extends React.Component {
 
     const errorMessages = [];
 
-    if (this.state.startYear > this.state.endYear) {
+    if (this.state.startYear >= this.state.endYear) {
       errorMessages.push("Invalid years.");
     }
 

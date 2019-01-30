@@ -141,7 +141,6 @@ class Index extends React.Component {
     });
 
     this.channel.bind("new-movies", movies => {
-      console.log(movies);
       movies = movies.filter(movie => {
         return !movie.usersSeen.includes(userId);
       });
