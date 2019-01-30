@@ -15,7 +15,6 @@ class Matches extends React.Component {
       loading: true,
       room: {}
     };
-    this.backbtn = this.backbtn.bind(this);
   }
 
   async componentDidMount() {
@@ -36,15 +35,10 @@ class Matches extends React.Component {
     return { roomId: query.id, namespacesRequired: ["common"] };
   }
 
-  backbtn() {
-    Router.replace(`/room?id=${this.props.roomId}`);
-  }
-
   render() {
     return (
       <div>
         <Topbar
-          backbtn={this.backbtn}
           matchesPage={true}
           activetab="room"
           roomId={this.props.roomId}

@@ -104,7 +104,12 @@ class ShareRoom extends React.Component {
   render() {
     return (
       <div>
-        <Topbar backbtn={this.backbtn} newRoomPage={true} activetab="room" />
+        <Topbar
+          backbtn={this.backbtn}
+          roomId={this.props.roomId}
+          roomPage={true}
+          activetab="room"
+        />
         <Headline>
           Share the room with friends. They can join any time.
         </Headline>

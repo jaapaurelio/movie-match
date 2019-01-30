@@ -26,7 +26,6 @@ class Index extends React.Component {
     this.noLike = this.noLike.bind(this);
     this.onClickMatches = this.onClickMatches.bind(this);
     this.onClickKeepPlaying = this.onClickKeepPlaying.bind(this);
-    this.backbtn = this.backbtn.bind(this);
 
     this.state = {
       movie: null,
@@ -236,20 +235,11 @@ class Index extends React.Component {
     return { roomId, namespacesRequired: ["common"] };
   }
 
-  backbtn() {
-    return Router.replace(`/start`);
-  }
-
   render() {
     const { movie, showMatchPopup } = this.state;
     return (
       <div>
-        <Topbar
-          backbtn={this.backbtn}
-          roomPage={true}
-          activetab="room"
-          roomId={this.props.roomId}
-        />
+        <Topbar roomPage={true} activetab="room" roomId={this.props.roomId} />
         {this.state.info.genres && <RoomInfoBar room={this.state.room} />}
         {movie && movie.fullyLoaded && (
           <div>

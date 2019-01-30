@@ -2,11 +2,12 @@ import PageWidth from "./page-width";
 import Link from "next/link";
 
 export default ({
-  newRoomPage = "",
-  roomPage = "",
-  matchesPage = "",
+  newRoomPage = false,
+  roomPage = false,
   roomId,
-  backbtn
+  backbtn,
+  matchesPage = false,
+  title = ""
 }) => (
   <nav>
     <PageWidth>
@@ -18,12 +19,7 @@ export default ({
         {backbtn && (
           <i onClick={backbtn} className="navigation-icon fas fa-angle-left" />
         )}
-
-        {!roomId && (
-          <Link href={`/start`}>
-            <div className="page-title">Movie Match</div>
-          </Link>
-        )}
+        <div className="page-title">{title || "Movie Match"}</div>
         <div className="space-between" />
         <div className="top-icons-container">
           <Link href={`/start`}>
@@ -50,6 +46,7 @@ export default ({
               </div>
             </Link>
           )}
+
           {roomId && (
             <Link href={`/matches?id=${roomId}`}>
               <div className="sublink">
@@ -152,7 +149,6 @@ export default ({
         }
 
         .sublink-btn {
-          border-bottom: 1px solid #fff;
           padding: 2px;
         }
 
