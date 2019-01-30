@@ -23,8 +23,7 @@ class Matches extends React.Component {
 
     const matches = room.matches.map(movieId => {
       return {
-        ...room.movies.find(m => movieId === m.id),
-        release_date: "2131-12-23"
+        ...room.movies.find(m => movieId === m.id)
       };
     });
 
@@ -66,22 +65,24 @@ class Matches extends React.Component {
                 </div>
               </PageWidth>
 
-              <div className="other-options">
-                <PageWidth>
-                  <h1 className="title">Alternative matches</h1>
-                  {this.state.matches.map((movie, i) => {
-                    {
-                      return (
-                        i != 0 && (
-                          <div className="movie-container" key={movie.id}>
-                            <MovieHead movie={movie} />
-                          </div>
-                        )
-                      );
-                    }
-                  })}
-                </PageWidth>
-              </div>
+              {!!this.state.matches[1] && (
+                <div className="other-options">
+                  <PageWidth>
+                    <h1 className="title">Alternative matches</h1>
+                    {this.state.matches.map((movie, i) => {
+                      {
+                        return (
+                          i != 0 && (
+                            <div className="movie-container" key={movie.id}>
+                              <MovieHead movie={movie} />
+                            </div>
+                          )
+                        );
+                      }
+                    })}
+                  </PageWidth>
+                </div>
+              )}
             </div>
           </div>
         )}
