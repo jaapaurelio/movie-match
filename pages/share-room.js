@@ -98,7 +98,7 @@ class ShareRoom extends React.Component {
   }
 
   backbtn() {
-    return Router.replace(`/create-room`);
+    return Router.replace(`/start`);
   }
 
   render() {
