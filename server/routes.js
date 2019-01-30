@@ -77,8 +77,14 @@ const getMovies = async function({
       id: movie.id,
       usersLike: [],
       usersSeen: [],
-      ...movie,
-      genres
+      genres,
+      title: movie.title,
+      original_title: movie.original_title,
+      poster_path: movie.poster_path,
+      runtime: movie.runtime,
+      release_date: movie.release_date,
+      vote_average: movie.vote_average,
+      original_language: movie.vote_average
     });
 
     return acc;
@@ -141,8 +147,9 @@ router.post("/api/room/:roomId/:movieId/:like", async (req, res) => {
 
     room.movies = [...room.movies, ...movies];
     room.info.totalPages = totalPages;
-
     pusher.trigger(`room-${roomId}`, "new-movies", movies);
+
+    await room.save();
   }
 
   res.send({});

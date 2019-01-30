@@ -6,7 +6,6 @@ const MovieSchema = new mongoose.Schema({
   usersSeen: [String],
   matched: { type: Boolean, default: false },
   title: String,
-  overview: String,
   original_title: String,
   poster_path: String,
   runtime: Number,
