@@ -148,8 +148,6 @@ class Index extends React.Component {
         movies
       });
 
-      console.log(this.state);
-
       if (!this.state.movie) {
         this.getNewMovie(movies);
       }

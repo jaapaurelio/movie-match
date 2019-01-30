@@ -26,8 +26,6 @@ class Start extends React.Component {
   }
 
   onChangeId(event) {
-    console.log(event.target.value);
-
     this.setState({ roomId: event.target.value });
   }
 
