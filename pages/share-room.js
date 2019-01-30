@@ -110,9 +110,7 @@ class ShareRoom extends React.Component {
           roomPage={true}
           activetab="room"
         />
-        <Headline>
-          Share the room with friends. They can join any time.
-        </Headline>
+        <Headline>Room created.</Headline>
         <PageWidth>
           <div className="title">room</div>
           <div className="room-number">{this.props.roomId}</div>
