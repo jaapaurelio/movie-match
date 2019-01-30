@@ -43,7 +43,9 @@ class Matches extends React.Component {
           activetab="room"
           roomId={this.props.roomId}
         />
-        {!this.state.loading && <RoomInfoBar room={this.state.room} />}
+        {!this.state.loading && (
+          <RoomInfoBar users={this.state.room.users} room={this.state.room} />
+        )}
 
         {this.state.loading && <Loader />}
         {!!this.state.matches.length && (

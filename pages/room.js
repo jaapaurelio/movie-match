@@ -141,6 +141,7 @@ class Index extends React.Component {
     });
 
     this.channel.bind("new-movies", movies => {
+      console.log(movies);
       movies = movies.filter(movie => {
         return !movie.usersSeen.includes(userId);
       });
@@ -240,7 +241,9 @@ class Index extends React.Component {
     return (
       <div>
         <Topbar roomPage={true} activetab="room" roomId={this.props.roomId} />
-        {this.state.info.genres && <RoomInfoBar room={this.state.room} />}
+        {this.state.info.genres && (
+          <RoomInfoBar users={this.state.users} room={this.state.room} />
+        )}
         {movie && movie.fullyLoaded && (
           <div>
             <SwipeArea>

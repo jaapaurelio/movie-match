@@ -1,12 +1,12 @@
 import PageWidth from "./page-width";
 
-export default ({ room }) => {
+export default ({ room, users }) => {
   return (
     <div className="room-info">
       <PageWidth className="mm-content-padding">
         <div className="eli">
           <i className="fas fa-user room-info-icon" />
-          <span className="room-info-text">{room.users.length}</span>
+          <span className="room-info-text">{users.length}</span>
           <i className="fas fa-info-circle room-info-icon" />
           {room.info.startYear}-{room.info.endYear}&nbsp;
           {room.info.genres.map(g => g.name + ", ")}
