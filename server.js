@@ -10,6 +10,7 @@ const mongoose = require("mongoose");
 const nextI18NextMiddleware = require("next-i18next/middleware");
 const nextI18next = require("./i18n");
 const enforce = require("express-sslify");
+const compression = require("compression");
 
 require("./server/models/genre.model");
 require("./server/models/room.model");
@@ -49,6 +50,7 @@ app
     const server = express();
 
     server.use(cors());
+    server.use(compression());
 
     if (process.env.NODE_ENV === "production") {
       server.use(enforce.HTTPS({ trustProtoHeader: true }));
