@@ -54,13 +54,13 @@ app
     server.use(compression());
 
     if (process.env.NODE_ENV === "production") {
-      server.use(
+      /*server.use(
         nakedRedirect({
           reverse: true,
           https: true,
           status: 301
         })
-      );
+      );*/
       server.use(enforce.HTTPS({ trustProtoHeader: true }));
     }
 
