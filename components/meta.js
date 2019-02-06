@@ -28,6 +28,10 @@ export default () => (
         name="Description"
         content="Movie Match helps you find the perfect movie to watch with friends."
       />
+      <meta
+        name="google-site-verification"
+        content="FRcG65B1vuHfxMOYHCH3PuLjbZ8UKxLc8kO1m2cGshs"
+      />
     </Head>
     <ResetCss />
     <AppCss />
