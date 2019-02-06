@@ -1,8 +1,15 @@
 {
   "short_name": "Movie Match",
-  "name": "Movie Match - Find the right movie",
+  "name": "Movie Match - Find the perfect movie",
   "start_url": "/",
-  "background_color": "#FFF",
-  "theme_color": "##15bba9",
-  "display": "standalone"
+  "background_color": "#333",
+  "theme_color": "#333",
+  "display": "standalone",
+  "icons": [
+    {
+      "src": "mmicon.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ]
 }
