@@ -9,6 +9,7 @@ const userMiddleware = require("./server/user-middleware");
 const mongoose = require("mongoose");
 const nextI18NextMiddleware = require("next-i18next/middleware");
 const nextI18next = require("./i18n");
+const enforce = require("express-sslify");
 
 require("./server/models/genre.model");
 require("./server/models/room.model");
@@ -48,6 +49,11 @@ app
     const server = express();
 
     server.use(cors());
+
+    if (process.env.NODE_ENV === "production") {
+      server.use(enforce.HTTPS({ trustProtoHeader: true }));
+    }
+
     server.use(bodyParser.json());
     server.use(bodyParser.urlencoded({ extended: true }));
     server.use(cookieParser());
