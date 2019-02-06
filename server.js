@@ -11,6 +11,7 @@ const nextI18NextMiddleware = require("next-i18next/middleware");
 const nextI18next = require("./i18n");
 const enforce = require("express-sslify");
 const compression = require("compression");
+const nakedRedirect = require("express-naked-redirect");
 
 require("./server/models/genre.model");
 require("./server/models/room.model");
@@ -53,6 +54,13 @@ app
     server.use(compression());
 
     if (process.env.NODE_ENV === "production") {
+      server.use(
+        nakedRedirect({
+          reverse: true,
+          https: true,
+          status: 301
+        })
+      );
       server.use(enforce.HTTPS({ trustProtoHeader: true }));
     }
 
