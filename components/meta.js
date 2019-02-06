@@ -6,6 +6,7 @@ export default () => (
   <div>
     <Head>
       <link rel="manifest" href="/static/manifest.json" />
+      <link rel="icon" type="image/x-icon" href="/static/favicon.png" />
       <link
         rel="stylesheet"
         href="https://use.fontawesome.com/releases/v5.5.0/css/all.css"
@@ -22,6 +23,11 @@ export default () => (
         content="width=device-width, initial-scale=1, minimum-scale=1.0, user-scalable=no"
       />
       <meta charSet="utf-8" />
+      <title>Movie Match - Find the perfect movie</title>
+      <meta
+        name="Description"
+        content="Movie Match helps you find the perfect movie to watch with friends."
+      />
     </Head>
     <ResetCss />
     <AppCss />
