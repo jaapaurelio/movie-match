@@ -38,10 +38,10 @@
     "react-visibility-sensor": "^5.0.2",
     "shuffle-array": "^1.0.1",
     "uniqid": "^5.0.3",
-    "webpack-pwa-manifest": "^4.0.0"
+    "webpack-pwa-manifest": "^4.0.0",
+    "next-workbox-webpack-plugin": "^1.1.0"
   },
   "devDependencies": {
-    "next-workbox-webpack-plugin": "^1.1.0",
     "nodemon": "^1.18.7"
   }
 }
