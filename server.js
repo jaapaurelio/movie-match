@@ -12,6 +12,7 @@ const nextI18next = require("./i18n");
 const enforce = require("express-sslify");
 const compression = require("compression");
 const nakedRedirect = require("express-naked-redirect");
+const { join } = require("path");
 
 require("./server/models/genre.model");
 require("./server/models/room.model");
@@ -71,7 +72,14 @@ app
     nextI18NextMiddleware(nextI18next, app, server);
 
     server.get("*", (req, res) => {
-      return handler(req, res);
+      if (req.url.includes("/sw")) {
+        const filePath = join(__dirname, "static", "workbox", "sw.js");
+        app.serveStatic(req, res, filePath);
+      } else if (req.url.startsWith("static/workbox/")) {
+        app.serveStatic(req, res, join(__dirname, req.url));
+      } else {
+        handler(req, res);
+      }
     });
 
     server.listen(port, async err => {
