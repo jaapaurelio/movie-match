@@ -37,8 +37,7 @@ module.exports = {
     };
     config.plugins.push(
       new NextWorkboxPlugin({
-        buildId,
-        ...workboxOptions
+        buildId
       })
     );
 
