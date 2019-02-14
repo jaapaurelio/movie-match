@@ -12,20 +12,7 @@ module.exports = {
     config.plugins.push(new webpack.DefinePlugin(env));
 
     const workboxOptions = {
-      clientsClaim: true,
-      skipWaiting: true,
-      globPatterns: [".next/static/*", ".next/static/commons/*"],
-      modifyUrlPrefix: {
-        ".next": "/_next"
-      },
       runtimeCaching: [
-        {
-          urlPattern: "/",
-          handler: "networkFirst",
-          options: {
-            cacheName: "html-cache"
-          }
-        },
         {
           urlPattern: /.*\.(?:png|jpg|jpeg|svg|gif)/,
           handler: "cacheFirst",
