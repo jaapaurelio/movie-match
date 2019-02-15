@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "io.moviematch",
+      "sha256_cert_fingerprints": [
+        "8B:0B:D0:34:CD:AB:F7:94:62:2B:A3:89:B2:7B:76:40:66:36:F3:FD:49:ED:3C:B7:F3:2D:43:DA:EC:4E:21:AF"
+      ]
+    }
+  }
+]

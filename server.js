@@ -77,6 +77,14 @@ app
         app.serveStatic(req, res, filePath);
       } else if (req.url.startsWith("static/workbox/")) {
         app.serveStatic(req, res, join(__dirname, req.url));
+      } else if (req.url.includes(".well-known/assetlinks.json")) {
+        const filePath = join(
+          __dirname,
+          "static",
+          ".well-known",
+          "assetlinks.json"
+        );
+        app.serveStatic(req, res, filePath);
       } else {
         handler(req, res);
       }
