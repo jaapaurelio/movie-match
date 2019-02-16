@@ -59,7 +59,6 @@ export default ({
           top: 0;
           z-index: 1;
           color: #333;
-          border-bottom: 1px solid #eaeaea;
         }
 
         .navigation-icon {

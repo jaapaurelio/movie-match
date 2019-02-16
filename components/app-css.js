@@ -41,7 +41,7 @@ export default () => (
 
       .join-title {
         text-align: center;
-        margin: 40px 0 10px;
+        margin: 0px 0 10px;
         font-size: 16px;
       }
 
@@ -54,11 +54,6 @@ export default () => (
         box-sizing: border-box;
         text-transform: uppercase;
       }
-
-      .join-btn {
-        margin-top: 10px;
-      }
-
       .mm-btn {
         display: inline-block;
         padding: 12px;
@@ -77,8 +72,12 @@ export default () => (
       }
 
       .options-container {
-        padding: 0 20px;
+        margin: 0px 20px;
+        padding: 40px 0;
         text-align: center;
+      }
+      .join-btn {
+        margin-top: 10px;
       }
 
       strong {
