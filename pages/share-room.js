@@ -116,7 +116,7 @@ class ShareRoom extends React.Component {
           <div className="room-number">{this.props.roomId}</div>
 
           {this.state.showShareButton && (
-            <div className="options-container">
+            <div className="share-container">
               <button onClick={this.share} className="mm-btn share-btn">
                 Share
               </button>
@@ -178,11 +178,11 @@ class ShareRoom extends React.Component {
             width: auto;
             padding: 6px 15px;
             border: 0;
-            border-bottom: 1px solid #00b9a7;
+            border: 1px solid #fedc6e;
             background: transparent;
-            border-radius: 0;
-            color: #00b9a7;
+            color: #333;
             margin-top: 10px;
+            border-radius: 4px;
           }
 
           .info {
@@ -206,6 +206,10 @@ class ShareRoom extends React.Component {
           .room-data {
             font-weight: bold;
             margin-bottom: 10px;
+          }
+
+          .share-container {
+            text-align: center;
           }
         `}</style>
       </div>
