@@ -288,6 +288,7 @@ class CreateRoom extends React.Component {
               padding: 10px;
               box-sizing: border-box;
               font-size: 14px;
+              color: #333;
             }
 
             .genres-container {
@@ -365,7 +366,7 @@ class CreateRoom extends React.Component {
               left: 0;
               bottom: 0;
               right: 0;
-              background: #ffc818d4;
+              background: #ffd651;
               display: flex;
               justify-content: center;
               align-items: center;

@@ -15,11 +15,12 @@ export default ({ room, users }) => {
       <style jsx>
         {`
           .room-info {
-            background: #424242;
-            color: #fff;
+            background: #fff;
+            color: #333;
             font-size: 12px;
             text-align: center;
             padding: 10px 0;
+            border-bottom: 1px solid #eaeaea;
           }
 
           .eli {

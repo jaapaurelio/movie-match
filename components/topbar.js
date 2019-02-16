@@ -6,7 +6,6 @@ export default ({
   roomPage = false,
   roomId,
   backbtn,
-  matchesPage = false,
   title = ""
 }) => (
   <nav>
@@ -19,7 +18,9 @@ export default ({
         {backbtn && (
           <i onClick={backbtn} className="navigation-icon fas fa-angle-left" />
         )}
-        <div className="page-title">{title || "Movie Match"}</div>
+        <Link href={`/start`}>
+          <div className="page-title">{title || "Movie Match"}</div>
+        </Link>
         <div className="space-between" />
         <div className="top-icons-container">
           <Link href={`/start`}>
@@ -53,10 +54,12 @@ export default ({
     <style jsx>
       {`
         nav {
-          background: #333;
+          background: #fff;
           position: sticky;
           top: 0;
           z-index: 1;
+          color: #333;
+          border-bottom: 1px solid #eaeaea;
         }
 
         .navigation-icon {
@@ -84,7 +87,6 @@ export default ({
           height: 45px;
           padding: 0px 20px;
           align-items: center;
-          color: #ffffff;
           position: relative;
           top: 0;
           left: 0;
@@ -100,7 +102,7 @@ export default ({
         }
 
         .page-title {
-          font-size: 12px;
+          font-size: 13px;
           text-transform: uppercase;
           cursor: pointer;
         }
@@ -125,9 +127,8 @@ export default ({
         }
 
         .sublink {
-          font-size: 10px;
+          font-size: 12px;
           margin-left: 10px;
-          color: #fff;
           display: flex;
           height: 100%;
           align-items: center;
@@ -136,11 +137,11 @@ export default ({
 
         .sublink-btn {
           padding: 2px;
+          border: 1px solid transparent;
         }
 
         .sublink-btn-active {
-          color: #ffc818;
-          border-color: #ffc818;
+          border-bottom: 1px solid #ffc818;
         }
 
         .room-id-top {
