@@ -5,7 +5,6 @@ export default () => (
         font-family: "Raleway", sans-serif;
         color: #333;
         line-height: 1.4;
-        background: #fdfdfd;
       }
 
       .mm-big-message {
@@ -62,18 +61,19 @@ export default () => (
 
       .mm-btn {
         display: inline-block;
-        padding: 10px;
+        padding: 12px;
         border: 1px solid #ffc818;
         border-radius: 6px;
         text-decoration: none;
         color: #333;
         font-size: 14px;
         cursor: pointer;
-        background: #ffc818;
+        background: #ffd651;
         width: 170px;
         box-sizing: border-box;
         line-height: 1;
         outline: none;
+        font-family: Raleway, sans-serif;
       }
 
       .options-container {

@@ -40,7 +40,6 @@ class Matches extends React.Component {
         {!this.state.loading && (
           <RoomInfoBar users={this.state.room.users} room={this.state.room} />
         )}
-
         {this.state.loading && <Loader />}
         {!!this.state.matches.length && (
           <div className="container">
@@ -92,9 +91,8 @@ class Matches extends React.Component {
           .title {
             font-size: 14px;
             padding: 20px 20px 10px 20px;
-            text-align: center;
-            font-weight: bold;
             text-align: right;
+            font-weight: bold;
           }
 
           .movie-info {
@@ -111,8 +109,9 @@ class Matches extends React.Component {
           }
 
           .other-options {
-            background: #efefef;
+            background: #fafafa;
             margin-top: 20px;
+            border-top: 1px solid #eaeaea;
           }
 
           .info-message {

@@ -63,11 +63,9 @@ class Start extends React.Component {
 
             <div className="create-room-btn-container">
               <Link prefetch href={`/create-room`}>
-                <a className="mm-btn">Create a Room</a>
+                <a className="mm-btn">Create</a>
               </Link>
             </div>
-
-            <div className="info">Friends will join you later</div>
           </div>
           <div className="options-container">
             <div className="join-title">Others join him/her</div>
@@ -88,6 +86,7 @@ class Start extends React.Component {
             <div className="info">Ask your friend for the room number</div>
           </div>
         </PageWidth>
+
         <style jsx>{`
           .info {
             font-size: 12px;
