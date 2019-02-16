@@ -48,7 +48,7 @@ export default ({ movie }) => {
           }
 
           .main-info-bg {
-            background: #f3e077;
+            background: #f9dc7f;
           }
 
           .movie-description {
