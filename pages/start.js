@@ -102,7 +102,7 @@ class Start extends React.Component {
           }
 
           .create-room-container {
-            border-bottom: 1px solid #d6d6d6;
+            border-bottom: 1px solid whitesmoke;
           }
 
           .create-room-btn-container {
