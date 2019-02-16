@@ -58,7 +58,7 @@ class Start extends React.Component {
           })}
         </Headline>
         <PageWidth>
-          <div className="options-container">
+          <div className="options-container create-room-container">
             <div className="join-title">One creates the room</div>
 
             <div className="create-room-btn-container">
@@ -99,6 +99,10 @@ class Start extends React.Component {
           }
           .step-details:not(:first-child) {
             margin-top: 10px;
+          }
+
+          .create-room-container {
+            border-bottom: 1px solid #d6d6d6;
           }
 
           .create-room-btn-container {
