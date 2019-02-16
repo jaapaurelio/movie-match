@@ -58,13 +58,13 @@ export default () => (
       .mm-btn {
         display: inline-block;
         padding: 12px;
-        border: 1px solid #f9dc7f;
+        border: 1px solid #ffdb6e;
         border-radius: 6px;
         text-decoration: none;
         color: #333;
         font-size: 14px;
         cursor: pointer;
-        background: #f9dc7f;
+        background: #ffdb6e;
         width: 170px;
         box-sizing: border-box;
         line-height: 1;
