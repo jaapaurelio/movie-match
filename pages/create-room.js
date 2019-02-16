@@ -325,8 +325,8 @@ class CreateRoom extends React.Component {
             }
 
             .checkbox-m label.selected {
-              background: #ffe37c;
-              border-color: #ffc800;
+              background: #fff5bc;
+              border-color: #f3e077;
             }
 
             .create-room-btn-container {

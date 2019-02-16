@@ -127,7 +127,7 @@ export default ({
         }
 
         .sublink {
-          font-size: 12px;
+          font-size: 11px;
           margin-left: 10px;
           display: flex;
           height: 100%;

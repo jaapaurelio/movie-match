@@ -20,7 +20,6 @@ export default ({ room, users }) => {
             font-size: 12px;
             text-align: center;
             padding: 10px 0;
-            border-bottom: 1px solid #eaeaea;
           }
 
           .eli {
