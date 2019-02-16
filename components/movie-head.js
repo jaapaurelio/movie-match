@@ -89,7 +89,7 @@ export default ({ movie }) => {
           .movie-poster {
             width: 100px;
             margin-left: 10px;
-            border-radius: 6px;
+            border-radius: 4px;
           }
 
           .main-info {

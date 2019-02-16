@@ -18,11 +18,7 @@ class Start extends React.Component {
     this.onChangeId = this.onChangeId.bind(this);
     this.join = this.join.bind(this);
 
-    this.steps = [
-      "Create or join a room.",
-      "Say yes to movies you want to watch.",
-      "Find the perfect movie."
-    ];
+    this.steps = ["Create a room", "Invite friends", "Find the perfect movie"];
   }
 
   onChangeId(event) {
