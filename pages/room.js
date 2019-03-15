@@ -22,6 +22,7 @@ class Index extends React.Component {
     this.noLike = this.noLike.bind(this);
     this.onClickMatches = this.onClickMatches.bind(this);
     this.onClickKeepPlaying = this.onClickKeepPlaying.bind(this);
+    this.share = this.share.bind(this);
 
     this.state = {
       movie: null,
