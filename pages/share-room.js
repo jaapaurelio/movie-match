@@ -55,7 +55,7 @@ class ShareRoom extends React.Component {
       const url = `${location.origin}/room?id=${this.props.roomId}`;
       navigator.share({
         title: "Movie Match",
-        text: "Movie match room",
+        text: `Room ${this.props.roomId}`,
         url
       });
     }

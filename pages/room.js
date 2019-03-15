@@ -31,7 +31,8 @@ class Index extends React.Component {
       showMatchPopup: false,
       users: [],
       info: {},
-      room: {}
+      room: {},
+      showShareButton: false
     };
   }
 
@@ -113,7 +114,22 @@ class Index extends React.Component {
     window.scrollTo(0, 0);
   }
 
+  share() {
+    if (navigator.share) {
+      const url = `${location.origin}/room?id=${this.props.roomId}`;
+      navigator.share({
+        title: "Movie Match",
+        text: `Room ${this.props.roomId}`,
+        url
+      });
+    }
+  }
+
   componentDidMount() {
+    if (navigator.share) {
+      this.setState({ showShareButton: true });
+    }
+
     this.pusher = new Pusher(process.env.PUSHER_APP_KEY, {
       cluster: process.env.PUSHER_APP_CLUSTER,
       encrypted: true
@@ -246,7 +262,12 @@ class Index extends React.Component {
       <div>
         <Topbar roomPage={true} activetab="room" roomId={this.props.roomId} />
         {this.state.info.genres && (
-          <RoomInfoBar users={this.state.users} room={this.state.room} />
+          <RoomInfoBar
+            shareBtn={this.share}
+            showShare={this.state.showShareButton}
+            users={this.state.users}
+            room={this.state.room}
+          />
         )}
         {movie && movie.fullyLoaded && (
           <div>
