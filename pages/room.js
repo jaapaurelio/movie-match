@@ -270,6 +270,14 @@ class Index extends React.Component {
             room={this.state.room}
           />
         )}
+        {this.state.users.length == 1 && (
+          <div className="alone-msg">
+            <PageWidth className="mm-content-padding">
+              You're alone in the room. <br />
+              Share with a friend to start matching.
+            </PageWidth>
+          </div>
+        )}
         {movie && movie.fullyLoaded && (
           <div>
             <SwipeArea>
@@ -360,6 +368,14 @@ class Index extends React.Component {
               font-weight: bold;
               border-radius: 4px;
               box-shadow: 0px 1px 2px 0px #00000094;
+            }
+
+            .alone-msg {
+              padding-top: 4px;
+              padding-bottom: 4px;
+              background: #a0e3ff;
+              font-size: 12px;
+              text-align: center;
             }
           `}
         </style>
