@@ -82,6 +82,13 @@ class Start extends React.Component {
             <div className="info">Ask your friend for the room number</div>
           </div>
         </PageWidth>
+        <footer>
+          Movie details provided by{" "}
+          <a href="https://www.themoviedb.org" target="_blank">
+            themoviedb
+          </a>
+          .
+        </footer>
 
         <style jsx>{`
           .info {
@@ -104,6 +111,21 @@ class Start extends React.Component {
           .create-room-btn-container {
             padding: 0 10px;
             text-align: center;
+          }
+
+          footer {
+            text-align: center;
+            font-size: 12px;
+            margin-top: 40px;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #ffffff;
+            padding: 5px;
+          }
+
+          footer a {
+            color: #000;
           }
         `}</style>
       </div>
