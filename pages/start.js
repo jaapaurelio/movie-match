@@ -55,7 +55,7 @@ class Start extends React.Component {
         </Headline>
         <PageWidth>
           <div className="options-container create-room-container">
-            <div className="join-title">One creates the room</div>
+            <div className="join-title">Create a room</div>
 
             <div className="create-room-btn-container">
               <Link prefetch href={`/create-room`}>
@@ -64,7 +64,7 @@ class Start extends React.Component {
             </div>
           </div>
           <div className="options-container">
-            <div className="join-title">Others join him/her</div>
+            <div className="join-title">Join a room</div>
             <div>
               <input
                 className="room-input"
