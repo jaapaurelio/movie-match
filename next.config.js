@@ -1,8 +1,9 @@
 const webpack = require("webpack");
 const NextWorkboxPlugin = require("next-workbox-webpack-plugin");
 require("dotenv").config();
+const withTM = require("next-transpile-modules");
 
-module.exports = {
+module.exports = withTM({
   webpack: (config, { isServer, buildId, dev }) => {
     const env = Object.keys(process.env).reduce((acc, curr) => {
       acc[`process.env.${curr}`] = JSON.stringify(process.env[curr]);
@@ -42,5 +43,6 @@ module.exports = {
     );
 
     return config;
-  }
-};
+  },
+  transpileModules: ["moviedb-promise"]
+});
