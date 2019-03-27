@@ -21,7 +21,6 @@ class Index extends React.Component {
     this.like = this.like.bind(this);
     this.noLike = this.noLike.bind(this);
     this.onClickMatches = this.onClickMatches.bind(this);
-    this.onClickKeepPlaying = this.onClickKeepPlaying.bind(this);
     this.share = this.share.bind(this);
 
     this.state = {
@@ -226,10 +225,6 @@ class Index extends React.Component {
   onClickMatches() {
     this.setState({ showMatchPopup: false });
     Router.push(`/matches?id=${this.props.roomId}`);
-  }
-
-  onClickKeepPlaying() {
-    this.setState({ showMatchPopup: false });
   }
 
   preloadImages(movie) {

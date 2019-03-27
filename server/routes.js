@@ -234,6 +234,10 @@ router.get("/api/room/:roomId", async (req, res) => {
 
   const room = await Room.findOne({ id: roomId }).exec();
 
+  if (!room) {
+    res.send({ noRoom: true });
+  }
+
   if (room && !room.users.find(id => id === userId)) {
     room.users.push(userId);
     await room.save();
