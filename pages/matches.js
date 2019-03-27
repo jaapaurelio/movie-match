@@ -5,6 +5,7 @@ import Headline from "../components/headline";
 import MovieHead from "../components/movie-head";
 import Loader from "../components/loader";
 import RoomInfoBar from "../components/room-info-bar";
+import Router from "next/router";
 
 class Matches extends React.Component {
   constructor(props) {
@@ -12,13 +13,22 @@ class Matches extends React.Component {
     this.state = {
       matches: [],
       loading: true,
-      room: {}
+      room: {},
+      hasRoom: true
     };
   }
 
   async componentDidMount() {
+    if (!this.props.roomId) {
+      return this.setState({ hasRoom: false });
+    }
+
     const moviesR = await axios.get(`/api/room/${this.props.roomId}`);
     let { room } = moviesR.data;
+
+    if (!room) {
+      return this.setState({ hasRoom: false });
+    }
 
     const matches = room.matches.map(movieId => {
       return {
@@ -37,55 +47,62 @@ class Matches extends React.Component {
     return (
       <div>
         <Topbar roomPage={true} activetab="room" roomId={this.props.roomId} />
-        {!this.state.loading && (
-          <RoomInfoBar users={this.state.room.users} room={this.state.room} />
-        )}
-        {this.state.loading && <Loader />}
-        {!!this.state.matches.length && (
-          <div className="container">
-            <Headline>
-              We found the perfect match for you. <br />
-              Have a nice movie!
-            </Headline>
+        {this.state.hasRoom && (
+          <div>
+            {!this.state.loading && (
+              <RoomInfoBar
+                users={this.state.room.users}
+                room={this.state.room}
+              />
+            )}
+            {this.state.loading && <Loader />}
+            {!!this.state.matches.length && (
+              <div className="container">
+                <Headline>
+                  We found the perfect match for you. <br />
+                  Have a nice movie!
+                </Headline>
 
-            <div>
-              <PageWidth>
-                <h1 className="title">Perfect match</h1>
-              </PageWidth>
-
-              <PageWidth>
-                <div className="movie-container perfect-match">
-                  <MovieHead movie={this.state.matches[0]} />
-                </div>
-              </PageWidth>
-
-              {!!this.state.matches[1] && (
-                <div className="other-options">
+                <div>
                   <PageWidth>
-                    <h1 className="title">Alternative matches</h1>
-                    {this.state.matches.map((movie, i) => {
-                      {
-                        return (
-                          i != 0 && (
-                            <div className="movie-container" key={movie.id}>
-                              <MovieHead movie={movie} />
-                            </div>
-                          )
-                        );
-                      }
-                    })}
+                    <h1 className="title">Perfect match</h1>
                   </PageWidth>
+
+                  <PageWidth>
+                    <div className="movie-container perfect-match">
+                      <MovieHead movie={this.state.matches[0]} />
+                    </div>
+                  </PageWidth>
+
+                  {!!this.state.matches[1] && (
+                    <div className="other-options">
+                      <PageWidth>
+                        <h1 className="title">Alternative matches</h1>
+                        {this.state.matches.map((movie, i) => {
+                          {
+                            return (
+                              i != 0 && (
+                                <div className="movie-container" key={movie.id}>
+                                  <MovieHead movie={movie} />
+                                </div>
+                              )
+                            );
+                          }
+                        })}
+                      </PageWidth>
+                    </div>
+                  )}
                 </div>
-              )}
-            </div>
+              </div>
+            )}
           </div>
         )}
 
-        <PageWidth>
-          {!this.state.loading && !this.state.matches.length && (
-            <div className="info-message">No matches yet. Keep trying.</div>
-          )}
-        </PageWidth>
+        {!this.state.hasRoom && (
+          <div className="room-not-found">
+            Room {this.props.roomId} does not exist.
+          </div>
+        )}
 
         <style jsx>{`
           .title {
@@ -117,6 +134,11 @@ class Matches extends React.Component {
           .info-message {
             text-align: center;
             padding-top: 20px;
+          }
+
+          .room-not-found {
+            text-align: center;
+            margin-top: 20px;
           }
         `}</style>
       </div>
