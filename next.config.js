@@ -17,8 +17,6 @@ module.exports = withOffline(
     },
     generateInDevMode: true,
     workboxOpts: {
-      globPatterns: ["static/**/*"],
-      globDirectory: ".",
       runtimeCaching: [
         {
           urlPattern: "/",
