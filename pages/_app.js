@@ -3,7 +3,6 @@ import App, { Container } from "next/app";
 import Meta from "../components/meta";
 import MainAppContainer from "../components/main-app-container";
 import { appWithTranslation } from "../i18n";
-import OfflineSupport from "../components/offlineSupport";
 
 class MyApp extends App {
   static async getInitialProps({ Component, router, ctx }) {
@@ -23,7 +22,6 @@ class MyApp extends App {
       <Container>
         <MainAppContainer>
           <Meta />
-          <OfflineSupport />
           <Component {...pageProps} />
         </MainAppContainer>
       </Container>

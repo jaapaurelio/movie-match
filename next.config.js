@@ -1,18 +1,24 @@
 const webpack = require("webpack");
-const NextWorkboxPlugin = require("next-workbox-webpack-plugin");
+const withOffline = require("next-offline");
 require("dotenv").config();
 const withTM = require("next-transpile-modules");
 
-module.exports = withTM({
-  webpack: (config, { isServer, buildId, dev }) => {
-    const env = Object.keys(process.env).reduce((acc, curr) => {
-      acc[`process.env.${curr}`] = JSON.stringify(process.env[curr]);
-      return acc;
-    }, {});
+module.exports = withOffline(
+  withTM({
+    webpack: (config, { isServer, buildId, dev }) => {
+      const env = Object.keys(process.env).reduce((acc, curr) => {
+        acc[`process.env.${curr}`] = JSON.stringify(process.env[curr]);
+        return acc;
+      }, {});
 
-    config.plugins.push(new webpack.DefinePlugin(env));
+      config.plugins.push(new webpack.DefinePlugin(env));
 
-    const workboxOptions = {
+      return config;
+    },
+    generateInDevMode: true,
+    workboxOpts: {
+      globPatterns: ["static/**/*"],
+      globDirectory: ".",
       runtimeCaching: [
         {
           urlPattern: "/",
@@ -49,16 +55,7 @@ module.exports = withTM({
           }
         }
       ]
-    };
-
-    config.plugins.push(
-      new NextWorkboxPlugin({
-        buildId,
-        ...workboxOptions
-      })
-    );
-
-    return config;
-  },
-  transpileModules: ["moviedb-promise"]
-});
+    },
+    transpileModules: ["moviedb-promise"]
+  })
+);
