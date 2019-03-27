@@ -13,7 +13,7 @@ export default ({ showShare, shareBtn, room, users }) => {
         </div>
         {showShare && (
           <button onClick={shareBtn} className="mm-btn share-btn">
-            Share
+            Send Invite
           </button>
         )}
       </div>

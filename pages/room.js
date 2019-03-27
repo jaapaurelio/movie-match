@@ -269,7 +269,16 @@ class Index extends React.Component {
           <div className="alone-msg">
             <PageWidth className="mm-content-padding">
               You're alone in the room. <br />
-              Share with a friend to start matching.
+              Invite a friend to start matching movies.
+              <div className="room-code-alone">
+                Room code: {this.props.roomId}
+                <br />
+                {this.state.showShareButton && (
+                  <button onClick={this.share} className="mm-btn share-btn">
+                    Send Invite
+                  </button>
+                )}
+              </div>
             </PageWidth>
           </div>
         )}
@@ -313,6 +322,24 @@ class Index extends React.Component {
 
         <style jsx>
           {`
+            .share-btn {
+              width: auto;
+              padding: 2px 4px;
+              border: 0;
+              border: 1px solid #fedc6e;
+              color: #333;
+              border-radius: 4px;
+              font-size: 12px;
+              flex-shrink: 0;
+              margin-bottom: 0px;
+              margin-top: 6px;
+            }
+
+            .room-code-alone {
+              margin-top: 6px;
+              font-weight: bold;
+            }
+
             .room-id {
               background: #333333;
               color: #72a3b3;
@@ -366,8 +393,8 @@ class Index extends React.Component {
             }
 
             .alone-msg {
-              padding-top: 4px;
-              padding-bottom: 4px;
+              padding-top: 6px;
+              padding-bottom: 6px;
               background: #a0e3ff;
               font-size: 12px;
               text-align: center;

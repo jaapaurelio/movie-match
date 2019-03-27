@@ -118,13 +118,13 @@ class ShareRoom extends React.Component {
           {this.state.showShareButton && (
             <div className="share-container">
               <button onClick={this.share} className="mm-btn share-btn">
-                Share
+                Send Invite
               </button>
             </div>
           )}
 
           <div className="options-container">
-            <div className="join-title">Share and join the room</div>
+            <div className="join-title">Invite a friend and join the room</div>
             <input
               className="room-input"
               type="text"
