@@ -15,6 +15,20 @@ module.exports = withTM({
     const workboxOptions = {
       runtimeCaching: [
         {
+          urlPattern: "/",
+          handler: "networkFirst",
+          options: {
+            cacheName: "html-cache"
+          }
+        },
+        {
+          urlPattern: /api/,
+          handler: "networkOnly",
+          options: {
+            cacheName: "internal-api"
+          }
+        },
+        {
           urlPattern: /.*\.(?:png|jpg|jpeg|svg|gif)/,
           handler: "cacheFirst",
           options: {
@@ -36,9 +50,11 @@ module.exports = withTM({
         }
       ]
     };
+
     config.plugins.push(
       new NextWorkboxPlugin({
-        buildId
+        buildId,
+        ...workboxOptions
       })
     );
 
