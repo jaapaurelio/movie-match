@@ -45,13 +45,12 @@ class Start extends React.Component {
           title="Movie Match"
         />
         <Headline>
-          {this.steps.map((step, i) => {
-            return (
-              <div key={i} className="step-details">
-                {i + 1}. {step}
-              </div>
-            );
-          })}
+          Find the perfect movie.{" "}
+          <span className="how-to-link">
+            <Link href="/intro">
+              <a>How to use?</a>
+            </Link>
+          </span>
         </Headline>
         <PageWidth>
           <div className="options-container create-room-container">
@@ -82,6 +81,7 @@ class Start extends React.Component {
             <div className="info">Ask your friend for the room number</div>
           </div>
         </PageWidth>
+
         <footer>
           Movie details provided by{" "}
           <a href="https://www.themoviedb.org" target="_blank">
@@ -125,7 +125,14 @@ class Start extends React.Component {
           }
 
           footer a {
-            color: #000;
+            color: #333;
+          }
+
+          .how-to-link {
+          }
+
+          .how-to-link a {
+            color: #333;
           }
         `}</style>
       </div>
