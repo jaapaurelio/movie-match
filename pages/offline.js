@@ -1,10 +1,5 @@
 import Topbar from "../components/topbar";
-import Link from "next/link";
-import Router from "next/router";
-import PageWidth from "../components/page-width";
-import Headline from "../components/headline";
 import { withNamespaces } from "../i18n";
-import jsCookie from "js-cookie";
 
 class Offline extends React.Component {
   constructor(props) {
