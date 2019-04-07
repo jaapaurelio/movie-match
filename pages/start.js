@@ -108,7 +108,7 @@ class Start extends React.Component {
             margin-top: 10px;
           }
 
-          .create-room-container {
+          .options-container {
             border-bottom: 1px solid whitesmoke;
           }
 
@@ -134,10 +134,12 @@ class Start extends React.Component {
 
           .how-to-link {
             text-align: center;
+            margin-top: 40px;
           }
 
           .how-to-link a {
             color: #333;
+            font-size: 12px;
           }
         `}</style>
       </div>
