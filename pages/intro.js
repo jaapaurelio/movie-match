@@ -1,5 +1,6 @@
 import { withNamespaces } from "../i18n";
 import Router from "next/router";
+import jsCookie from "js-cookie";
 
 const SLIDES = [
   {
@@ -40,6 +41,10 @@ class Intro extends React.Component {
 
   skip() {
     Router.push("/start");
+  }
+
+  componentDidMount() {
+    jsCookie.set("intro-visited", true);
   }
 
   render() {
