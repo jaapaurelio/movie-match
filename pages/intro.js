@@ -58,6 +58,19 @@ class Intro extends React.Component {
             <div className="description">
               {SLIDES[this.state.currentSlide].description}
             </div>
+            <div className="dots-container">
+              {SLIDES.map((slide, index) => (
+                <span
+                  className={
+                    index === this.state.currentSlide
+                      ? "dot dot-selected"
+                      : "dot"
+                  }
+                >
+                  {" "}
+                </span>
+              ))}
+            </div>
           </div>
           <div className="button-container">
             <div onClick={this.skip} className="skip-btn">
@@ -70,6 +83,23 @@ class Intro extends React.Component {
         </div>
         <style jsx>
           {`
+            .dots-container {
+              text-align: center;
+            }
+
+            .dot {
+              background: #d1e1ee;
+              display: inline-block;
+              width: 10px;
+              height: 10px;
+              margin: 6px;
+              border-radius: 50%;
+            }
+
+            .dot-selected {
+              background: #3c8bce;
+            }
+
             .image-container {
               text-align: center;
             }
@@ -114,6 +144,7 @@ class Intro extends React.Component {
               display: flex;
               flex-direction: column;
               justify-content: center;
+              width: 100%;
             }
 
             .button-container {
