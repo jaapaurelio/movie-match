@@ -50,14 +50,7 @@ class Start extends React.Component {
           newRoomPage={true}
           title="Movie Match"
         />
-        <Headline>
-          Find the perfect movie.{" "}
-          <span className="how-to-link">
-            <Link href="/intro">
-              <a>How to use?</a>
-            </Link>
-          </span>
-        </Headline>
+        <Headline>Find the perfect movie.</Headline>
         <PageWidth>
           <div className="options-container create-room-container">
             <div className="join-title">Create a room</div>
@@ -85,6 +78,11 @@ class Start extends React.Component {
               </div>
             </div>
             <div className="info">Ask your friend for the room number</div>
+          </div>
+          <div className="how-to-link">
+            <Link href="/intro">
+              <a>How to use?</a>
+            </Link>
           </div>
         </PageWidth>
 
@@ -135,6 +133,7 @@ class Start extends React.Component {
           }
 
           .how-to-link {
+            text-align: center;
           }
 
           .how-to-link a {
