@@ -34,12 +34,6 @@ class Start extends React.Component {
   componentDidMount() {
     const lastRoomId = jsCookie.get("roomId");
     this.setState({ lastRoomId });
-
-    const introVisited = jsCookie.get("intro-visited");
-
-    if (!introVisited) {
-      Router.push("/intro");
-    }
   }
 
   render() {
