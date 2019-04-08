@@ -38,33 +38,10 @@ const generateRoomId = async function() {
   return roomId;
 };
 
-const getMovies = async function({
-  selectedGenres,
-  startYear,
-  endYear,
-  ratingGte,
-  ratingLte,
-  page
-}) {
-  const baseQuery = {
-    "vote_count.gte": 500,
-    "primary_release_date.gte": `${startYear}-01-01`,
-    "primary_release_date.lte": `${endYear}-12-30`,
-    "vote_average.gte": ratingGte,
-    "vote_average.lte": ratingLte,
-    with_genres: selectedGenres.join("|")
-  };
-
+async function mapMovies(movies) {
   const allGenres = await Genre.find({}).exec();
 
-  const moviesListResponse = await moviedb.discoverMovie({
-    ...baseQuery,
-    page
-  });
-
-  const moviesList = moviesListResponse.results;
-
-  const movies = moviesList.reduce((acc, movie) => {
+  return movies.reduce((acc, movie) => {
     const genres = movie.genre_ids.map(mgId => {
       const genre = allGenres.find(g => g.id === mgId);
 
@@ -90,6 +67,33 @@ const getMovies = async function({
 
     return acc;
   }, []);
+}
+
+const getMovies = async function({
+  selectedGenres,
+  startYear,
+  endYear,
+  ratingGte,
+  ratingLte,
+  page
+}) {
+  const baseQuery = {
+    "vote_count.gte": 500,
+    "primary_release_date.gte": `${startYear}-01-01`,
+    "primary_release_date.lte": `${endYear}-12-30`,
+    "vote_average.gte": ratingGte,
+    "vote_average.lte": ratingLte,
+    with_genres: selectedGenres.join("|")
+  };
+
+  const moviesListResponse = await moviedb.discoverMovie({
+    ...baseQuery,
+    page
+  });
+
+  const moviesList = moviesListResponse.results;
+
+  const movies = await mapMovies(moviesList);
 
   return { movies, totalPages: moviesListResponse.total_pages };
 };
@@ -132,6 +136,33 @@ router.post("/api/room/:roomId/:movieId/:like", async (req, res) => {
         });
       }
     }
+
+    // get movies like this one
+    moviedb.movieRecommendations({ id: movieId }).then(async recomendations => {
+      let roomForRecomendation = await Room.findOne({ id: roomId }).exec();
+
+      if (recomendations && recomendations.results) {
+        let notInRoom = recomendations.results.filter(
+          movie =>
+            !roomForRecomendation.movies.find(
+              roomMovie => movie.id === roomMovie.id
+            )
+        );
+
+        notInRoom = notInRoom.slice(0, 10);
+
+        notInRoom = await mapMovies(notInRoom);
+
+        roomForRecomendation.movies = [
+          ...roomForRecomendation.movies,
+          ...notInRoom
+        ];
+
+        roomForRecomendation.save();
+
+        pusher.trigger(`room-${roomId}`, "new-movies", notInRoom);
+      }
+    });
   }
 
   room.movies[movieIndex] = movie;
@@ -160,10 +191,14 @@ router.post("/api/room/:roomId/:movieId/:like", async (req, res) => {
 
     room = await Room.findOne({ id: roomId }).exec();
 
-    room.movies = [...room.movies, ...movies];
+    let moviesNotInRoom = movies.filter(
+      movie => !room.movies.find(roomMovie => movie.id === roomMovie.id)
+    );
+
+    room.movies = [...room.movies, ...moviesNotInRoom];
     room.info = info;
     room.info.totalPages = totalPages;
-    pusher.trigger(`room-${roomId}`, "new-movies", movies);
+    pusher.trigger(`room-${roomId}`, "new-movies", moviesNotInRoom);
 
     await room.save();
   }
