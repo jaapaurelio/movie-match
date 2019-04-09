@@ -17,6 +17,7 @@ const { parse } = require("url");
 
 require("./server/models/genre.model");
 require("./server/models/room.model");
+require("./server/models/user.model");
 
 const appRoutes = require("./server/routes");
 var Genre = mongoose.model("Genre");

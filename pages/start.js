@@ -3,8 +3,10 @@ import Link from "next/link";
 import Router from "next/router";
 import PageWidth from "../components/page-width";
 import Headline from "../components/headline";
+import UserPop from "../components/user-popup";
 import { withNamespaces } from "../i18n";
 import jsCookie from "js-cookie";
+import { connect } from "react-redux";
 
 class Start extends React.Component {
   constructor(props) {
@@ -12,7 +14,8 @@ class Start extends React.Component {
 
     this.state = {
       roomId: undefined,
-      lastRoomId: undefined
+      lastRoomId: undefined,
+      username: ""
     };
 
     this.onChangeId = this.onChangeId.bind(this);
@@ -33,7 +36,9 @@ class Start extends React.Component {
 
   componentDidMount() {
     const lastRoomId = jsCookie.get("roomId");
-    this.setState({ lastRoomId });
+    var username = localStorage.getItem("username");
+
+    this.setState({ lastRoomId, username });
   }
 
   render() {
@@ -44,7 +49,13 @@ class Start extends React.Component {
           newRoomPage={true}
           title="Movie Match"
         />
-        <Headline>Find the perfect movie.</Headline>
+        <Headline>
+          Hi{" "}
+          <span onClick={this.changeName} className="username">
+            {this.state.username}
+          </span>
+          , let's find the perfect movie.
+        </Headline>
         <PageWidth>
           <div className="options-container create-room-container">
             <div className="join-title">Create a room</div>
@@ -88,7 +99,13 @@ class Start extends React.Component {
           .
         </footer>
 
+        <UserPop />
+
         <style jsx>{`
+          .username {
+            text-decoration: underline;
+          }
+
           .info {
             font-size: 12px;
             text-align: center;
@@ -147,4 +164,12 @@ class Start extends React.Component {
   }
 }
 
-export default withNamespaces("common")(Start);
+function mapStateToProps(state) {
+  const { user } = state;
+  return { userName: user.name };
+}
+
+export default connect(
+  mapStateToProps,
+  null
+)(withNamespaces("common")(Start));
