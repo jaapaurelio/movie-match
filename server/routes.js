@@ -6,6 +6,7 @@ const randomstring = require("randomstring");
 const mongoose = require("mongoose");
 const Genre = mongoose.model("Genre");
 const Room = mongoose.model("Room");
+const User = mongoose.model("User");
 const shuffle = require("shuffle-array");
 
 const pusher = new Pusher({
@@ -218,6 +219,20 @@ router.post("/api/room/:roomId/:movieId/:like", async (req, res) => {
   }
 
   res.send({});
+});
+
+router.post("/api/user/", async (req, res) => {
+  const userId = req.cookies.userId;
+  const name = req.body.name;
+
+  console.log("userId", userId, name);
+
+  let query = { id: userId };
+  let update = { id: userId, name };
+  let options = { upsert: true, new: true, setDefaultsOnInsert: true };
+  let model = await User.findOneAndUpdate(query, update, options);
+
+  return res.send({ success: true });
 });
 
 router.post("/api/rooms/", async (req, res) => {
