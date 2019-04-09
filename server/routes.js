@@ -98,6 +98,44 @@ const getMovies = async function({
   return { movies, totalPages: moviesListResponse.total_pages };
 };
 
+function getRecomendationForMovie(movieId, roomId) {
+  return moviedb
+    .movieRecommendations({ id: movieId })
+    .then(async recomendations => {
+      let roomForRecomendation = await Room.findOne({ id: roomId }).exec();
+
+      if (recomendations && recomendations.results) {
+        let notInRoom = recomendations.results.filter(
+          movie =>
+            !roomForRecomendation.movies.find(
+              roomMovie => movie.id === roomMovie.id
+            )
+        );
+
+        notInRoom = notInRoom.slice(0, 6);
+
+        notInRoom = await mapMovies(notInRoom);
+
+        roomForRecomendation.movies = [
+          ...roomForRecomendation.movies,
+          ...notInRoom
+        ];
+
+        roomForRecomendation.save();
+
+        pusher.trigger(`room-${roomId}`, "new-movies", notInRoom);
+      }
+    });
+}
+
+router.post("/api/room/similar/:roomId/:movieId", async (req, res) => {
+  const { movieId, roomId } = req.params;
+
+  console.log("recomendation");
+  getRecomendationForMovie(movieId, roomId);
+  res.send({});
+});
+
 router.post("/api/room/:roomId/:movieId/:like", async (req, res) => {
   const { movieId, roomId } = req.params;
   const { userId } = req.cookies;
@@ -138,31 +176,7 @@ router.post("/api/room/:roomId/:movieId/:like", async (req, res) => {
     }
 
     // get movies like this one
-    moviedb.movieRecommendations({ id: movieId }).then(async recomendations => {
-      let roomForRecomendation = await Room.findOne({ id: roomId }).exec();
-
-      if (recomendations && recomendations.results) {
-        let notInRoom = recomendations.results.filter(
-          movie =>
-            !roomForRecomendation.movies.find(
-              roomMovie => movie.id === roomMovie.id
-            )
-        );
-
-        notInRoom = notInRoom.slice(0, 10);
-
-        notInRoom = await mapMovies(notInRoom);
-
-        roomForRecomendation.movies = [
-          ...roomForRecomendation.movies,
-          ...notInRoom
-        ];
-
-        roomForRecomendation.save();
-
-        pusher.trigger(`room-${roomId}`, "new-movies", notInRoom);
-      }
-    });
+    getRecomendationForMovie(movieId, roomId);
   }
 
   room.movies[movieIndex] = movie;
@@ -287,5 +301,4 @@ router.get("/api/room/:roomId", async (req, res) => {
 
   res.send({ room });
 });
-
 module.exports = router;

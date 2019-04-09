@@ -22,6 +22,7 @@ class Index extends React.Component {
     this.noLike = this.noLike.bind(this);
     this.onClickMatches = this.onClickMatches.bind(this);
     this.share = this.share.bind(this);
+    this.addMoreLikeThis = this.addMoreLikeThis.bind(this);
 
     this.state = {
       movie: null,
@@ -32,7 +33,8 @@ class Index extends React.Component {
       users: [],
       info: {},
       room: {},
-      showShareButton: false
+      showShareButton: false,
+      showAddMoreBtn: true
     };
   }
 
@@ -48,7 +50,8 @@ class Index extends React.Component {
 
     this.setState({
       movie,
-      movies
+      movies,
+      showAddMoreBtn: true
     });
 
     // first movie has no data
@@ -114,6 +117,14 @@ class Index extends React.Component {
     window.scrollTo(0, 0);
   }
 
+  addMoreLikeThis() {
+    this.setState({
+      showAddMoreBtn: false
+    });
+
+    axios.post(`api/room/similar/${this.props.roomId}/${this.state.movie.id}`);
+  }
+
   share() {
     if (navigator.share) {
       const url = `${location.origin}/room?id=${this.props.roomId}`;
@@ -157,8 +168,8 @@ class Index extends React.Component {
         return !movie.usersSeen.includes(userId);
       });
 
-      movies = shuffle(movies);
       movies = [...movies, ...this.state.movies];
+      movies = shuffle(movies);
 
       this.setState({
         movies
@@ -285,7 +296,11 @@ class Index extends React.Component {
         {movie && movie.fullyLoaded && (
           <div>
             <SwipeArea>
-              <MovieInfo movie={movie} />
+              <MovieInfo
+                movie={movie}
+                showAddMoreBtn={this.state.showAddMoreBtn}
+                onClickAddMore={this.addMoreLikeThis}
+              />
               <PageWidth>
                 <Cast cast={movie.credits.cast.slice(0, 5)} />
               </PageWidth>
