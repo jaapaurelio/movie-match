@@ -168,8 +168,9 @@ class Index extends React.Component {
         return !movie.usersSeen.includes(userId);
       });
 
-      movies = [...movies, ...this.state.movies];
       movies = shuffle(movies);
+
+      movies = [...movies, ...this.state.movies];
 
       this.setState({
         movies
