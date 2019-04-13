@@ -65,7 +65,7 @@ class UserPopup extends React.Component {
                   bottom: 0;
                   right: 0;
                   display: flex;
-                  z-index: 2;
+                  z-index: 4;
                   align-items: center;
                   justify-content: center;
                 }

@@ -5,12 +5,15 @@ import MatchPopup from "../components/match-popup";
 import SwipeArea from "../components/swipe-area";
 import Loader from "../components/loader";
 import axios from "axios";
-import Pusher from "pusher-js";
 import Router from "next/router";
 import PageWidth from "../components/page-width";
 import RoomInfoBar from "../components/room-info-bar";
 import shuffle from "shuffle-array";
 import jsCookie from "js-cookie";
+import { ROOM_STATES } from "../lib/constants";
+import { pusherConnection } from "../lib/pusher-connection";
+import validateRoom from "../lib/room-redirect";
+import UserPop from "../components/user-popup";
 
 const MovieDb = require("moviedb-promise");
 const moviedb = new MovieDb("284941729ae99106f71e56126227659b");
@@ -34,7 +37,8 @@ class Index extends React.Component {
       info: {},
       room: {},
       showShareButton: false,
-      showAddMoreBtn: true
+      showAddMoreBtn: true,
+      loaded: false
     };
   }
 
@@ -136,15 +140,23 @@ class Index extends React.Component {
     }
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     if (navigator.share) {
       this.setState({ showShareButton: true });
     }
 
-    this.pusher = new Pusher(process.env.PUSHER_APP_KEY, {
-      cluster: process.env.PUSHER_APP_CLUSTER,
-      encrypted: true
+    const moviesR = await axios.get(`/api/room/${this.props.roomId}`);
+    let { room } = moviesR.data;
+
+    if (!validateRoom(room, ROOM_STATES.MATCHING)) {
+      return;
+    }
+
+    this.setState({
+      loaded: true
     });
+
+    this.pusher = pusherConnection();
 
     const userId = jsCookie.get("userId");
 
@@ -181,56 +193,42 @@ class Index extends React.Component {
       }
     });
 
-    this.pusher.connection.bind("connected", async () => {
-      const moviesR = await axios.get(`/api/room/${this.props.roomId}`);
-      let { room } = moviesR.data;
+    const matched = room.state === ROOM_STATES.MATCHED;
+    let movies = room.movies;
 
-      if (!room) {
-        return Router.push(`/start`);
-      }
+    this.setState({
+      matched,
+      users: room.users,
+      info: {
+        genres: room.info.genres,
+        startYear: room.info.startYear,
+        endYear: room.info.endYear
+      },
+      room
+    });
 
-      const matched = room.matched;
+    if (!movies) {
+      return;
+    }
 
-      if (matched) {
-        return Router.replace(`/matches?id=${this.props.roomId}`);
-      }
+    movies = movies.filter(movie => {
+      return !movie.usersSeen.includes(userId);
+    });
 
-      let movies = room.movies;
+    movies = shuffle(movies);
 
-      this.setState({
-        matched,
-        users: room.users,
-        info: {
-          genres: room.info.genres,
-          startYear: room.info.startYear,
-          endYear: room.info.endYear
-        },
-        room
-      });
+    this.setState({ movies });
 
-      if (!movies) {
-        return;
-      }
+    await this.getNewMovie(movies);
 
-      movies = movies.filter(movie => {
-        return !movie.usersSeen.includes(userId);
-      });
-
-      movies = shuffle(movies);
-
-      this.setState({ movies });
-
-      await this.getNewMovie(movies);
-
-      this.setState({
-        loading: false
-      });
+    this.setState({
+      loading: false
     });
   }
 
   componentWillUnmount() {
     if (this.pusher) {
-      this.pusher.disconnect();
+      this.pusher.unsubscribe(`room-${this.props.roomId}`);
     }
   }
 
@@ -266,9 +264,23 @@ class Index extends React.Component {
 
   render() {
     const { movie, showMatchPopup } = this.state;
+    const TopBarForPage = (
+      <Topbar roomPage={true} activetab="room" roomId={this.props.roomId} />
+    );
+
+    if (!this.state.loaded) {
+      return (
+        <div>
+          {TopBarForPage}
+          <Loader />
+          <UserPop />
+        </div>
+      );
+    }
+
     return (
       <div>
-        <Topbar roomPage={true} activetab="room" roomId={this.props.roomId} />
+        {TopBarForPage}
         {this.state.info.genres && (
           <RoomInfoBar
             shareBtn={this.share}
@@ -280,17 +292,11 @@ class Index extends React.Component {
         {this.state.users.length == 1 && (
           <div className="alone-msg">
             <PageWidth className="mm-content-padding">
-              You're alone in the room. <br />
-              Invite a friend to start matching movies.
-              <div className="room-code-alone">
-                Room code: {this.props.roomId}
-                <br />
-                {this.state.showShareButton && (
-                  <button onClick={this.share} className="mm-btn share-btn">
-                    Send Invite
-                  </button>
-                )}
-              </div>
+              You're alone in the room.
+              <br />
+              Movie Match works better with friends
+              <br />
+              No matches will be done.
             </PageWidth>
           </div>
         )}

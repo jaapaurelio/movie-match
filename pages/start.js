@@ -7,6 +7,7 @@ import UserPop from "../components/user-popup";
 import { withNamespaces } from "../i18n";
 import jsCookie from "js-cookie";
 import { connect } from "react-redux";
+import axios from "axios";
 
 class Start extends React.Component {
   constructor(props) {
@@ -20,6 +21,7 @@ class Start extends React.Component {
 
     this.onChangeId = this.onChangeId.bind(this);
     this.join = this.join.bind(this);
+    this.createRoom = this.createRoom.bind(this);
 
     this.steps = ["Create a room", "Invite friends", "Find the perfect movie"];
   }
@@ -30,7 +32,7 @@ class Start extends React.Component {
 
   join() {
     if (this.state.roomId) {
-      Router.push(`/room?id=${this.state.roomId}`);
+      Router.push(`/waiting-room?id=${this.state.roomId}`);
     }
   }
 
@@ -39,6 +41,16 @@ class Start extends React.Component {
     var username = localStorage.getItem("username");
 
     this.setState({ lastRoomId, username });
+  }
+
+  async createRoom() {
+    if (this.state.creatingRoom) return;
+
+    this.setState({ creatingRoom: true });
+    const roomResponse = await axios.post("/api/create-room");
+    this.setState({ creatingRoom: false });
+
+    Router.push(`/waiting-room?id=${roomResponse.data.roomId}`);
   }
 
   render() {
@@ -61,9 +73,9 @@ class Start extends React.Component {
             <div className="join-title">Create a room</div>
 
             <div className="create-room-btn-container">
-              <Link prefetch href={`/create-room`}>
-                <a className="mm-btn">Create</a>
-              </Link>
+              <button onClick={this.createRoom} className="mm-btn">
+                Create
+              </button>
             </div>
           </div>
           <div className="options-container">

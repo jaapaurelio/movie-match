@@ -8,6 +8,7 @@ const Genre = mongoose.model("Genre");
 const Room = mongoose.model("Room");
 const User = mongoose.model("User");
 const shuffle = require("shuffle-array");
+const { ROOM_STATES } = require("../lib/constants");
 
 const pusher = new Pusher({
   appId: process.env.PUSHER_APP_ID,
@@ -129,10 +130,108 @@ function getRecomendationForMovie(movieId, roomId) {
     });
 }
 
+function createRoomConfigFromUser(configs) {
+  const initialConfig = {
+    genres: [],
+    startYear: 2020,
+    endYear: 1000,
+    ratingGte: 2,
+    ratingLte: 10,
+    rating: 2
+  };
+
+  const finalConfig = configs.reduce(function(acc, config) {
+    acc.genres = [...new Set([...acc.genres, ...config.selectedGenres])];
+
+    if (config.startYear < acc.startYear) {
+      acc.startYear = config.startYear;
+    }
+
+    if (config.endYear > acc.endYear) {
+      acc.endYear = config.endYear;
+    }
+
+    return acc;
+  }, initialConfig);
+
+  return finalConfig;
+}
+
+router.post("/api/room/user-configuration/:roomId", async (req, res) => {
+  const { userId } = req.cookies;
+  const { roomId } = req.params;
+  const { selectedGenres, startYear, endYear, rating } = req.body;
+
+  let room = await Room.findOne({ id: roomId }).exec();
+
+  if (!room || room.state !== ROOM_STATES.CONFIGURING) {
+    return res.send({
+      success: false,
+      error: "No room with this id in configuring phase"
+    });
+  }
+
+  const userConfig = room.configurationByUser.find(
+    config => config.userId === userId
+  );
+
+  if (userConfig) {
+    return res.send({
+      success: false,
+      error: "User already with config for this room"
+    });
+  }
+
+  room.configurationByUser.push({
+    userId,
+    selectedGenres,
+    startYear,
+    endYear,
+    rating
+  });
+
+  pusher.trigger(`room-${roomId}`, "configuration-done-user", { room });
+
+  await room.save();
+
+  // All users set configurations. Get movies.
+  if (room.configurationByUser.length === room.users.length) {
+    const info = createRoomConfigFromUser(room.configurationByUser);
+
+    getMovies({
+      selectedGenres: info.genres,
+      startYear: info.startYear,
+      endYear: info.endYear,
+      ratingGte: info.ratingGte,
+      ratingLte: info.ratingLte,
+      page: 1
+    }).then(async function({ movies, totalPages }) {
+      room = await Room.findOne({ id: roomId }).exec();
+
+      let moviesNotInRoom = movies.filter(
+        movie => !room.movies.find(roomMovie => movie.id === roomMovie.id)
+      );
+
+      room.movies = [...room.movies, ...moviesNotInRoom];
+      room.state = ROOM_STATES.MATCHING;
+
+      room.info = info;
+      room.info.totalPages = totalPages;
+
+      await room.save();
+
+      pusher.trigger(`room-${roomId}`, "configuration-done", {});
+    });
+  }
+
+  return res.send({
+    success: true
+  });
+});
+
 router.post("/api/room/similar/:roomId/:movieId", async (req, res) => {
   const { movieId, roomId } = req.params;
 
-  console.log("recomendation");
   getRecomendationForMovie(movieId, roomId);
   res.send({});
 });
@@ -143,6 +242,7 @@ router.post("/api/room/:roomId/:movieId/:like", async (req, res) => {
   const like = req.params.like === "like";
 
   let room = await Room.findOne({ id: roomId }).exec();
+
   const movieIndex = room.movies.findIndex(movie => movie.id == movieId);
   const movie = room.movies[movieIndex];
 
@@ -167,12 +267,16 @@ router.post("/api/room/:roomId/:movieId/:like", async (req, res) => {
         .map(m => m.id);
 
       if (matches.length >= 3) {
-        room.matched = true;
         room.matches = shuffle(matches);
+        room.state = ROOM_STATES.MATCHED;
 
         pusher.trigger(`room-${roomId}`, "movie-matched", {
           matches: room.matches
         });
+
+        await room.save();
+
+        return res.send({});
       }
     }
 
@@ -181,8 +285,6 @@ router.post("/api/room/:roomId/:movieId/:like", async (req, res) => {
   }
 
   room.movies[movieIndex] = movie;
-
-  room = await room.save();
 
   // Get more movies
   if (numberSeenMovies + 2 == room.movies.length) {
@@ -196,7 +298,7 @@ router.post("/api/room/:roomId/:movieId/:like", async (req, res) => {
     }
 
     const { movies, totalPages } = await getMovies({
-      selectedGenres: room.info.genres.map(g => g.id),
+      selectedGenres: room.info.genres,
       startYear: room.info.startYear,
       endYear: room.info.endYear,
       ratingGte: room.info.ratingGte,
@@ -225,71 +327,55 @@ router.post("/api/user/", async (req, res) => {
   const userId = req.cookies.userId;
   const name = req.body.name;
 
-  console.log("userId", userId, name);
-
   let query = { id: userId };
   let update = { id: userId, name };
   let options = { upsert: true, new: true, setDefaultsOnInsert: true };
-  let model = await User.findOneAndUpdate(query, update, options);
+  await User.findOneAndUpdate(query, update, options);
 
   return res.send({ success: true });
 });
 
-router.post("/api/rooms/", async (req, res) => {
-  const { selectedGenres, startYear, endYear, rating } = req.body;
+router.post("/api/create-room", async (req, res) => {
   const roomId = await generateRoomId();
-
-  let ratingGte = 1;
-  let ratingLte = 10;
-
-  if (rating == 0) {
-    ratingGte = 1;
-    ratingLte = 5;
-  }
-
-  if (rating == 1) {
-    ratingGte = 5;
-    ratingLte = 10;
-  }
-
-  if (rating == 2) {
-    ratingGte = 7;
-    ratingLte = 10;
-  }
-
-  const genres = await Genre.find().exec();
-  const { movies, totalPages } = await getMovies({
-    selectedGenres,
-    startYear,
-    endYear,
-    ratingGte,
-    ratingLte,
-    page: 1
-  });
-
-  const roomGenres = selectedGenres.map(genreId =>
-    genres.find(g => g.id === genreId)
-  );
 
   const room = new Room({
     id: roomId,
-    movies,
-    users: [],
-    info: {
-      genres: roomGenres,
-      startYear,
-      endYear,
-      rating,
-      ratingGte,
-      ratingLte,
-      page: 1,
-      totalPages
-    }
+    users: []
   });
 
   await room.save();
 
   return res.send({ success: true, roomId: roomId });
+});
+
+router.post("/api/room/ready/:roomId", async (req, res) => {
+  const roomId = req.params.roomId;
+  const userId = req.cookies.userId;
+  let room = await Room.findOne({ id: roomId }).exec();
+
+  if (!room || room.state !== ROOM_STATES.WAITING_ROOM) {
+    return res.send({ success: false, message: "Not not accepting users" });
+  }
+
+  const exists = room.readies.find(u => u === userId);
+
+  if (exists) {
+    return res.send({ success: true, message: "Already in the room" });
+  }
+
+  room.readies.push(userId);
+
+  room.save().then(async () => {
+    room = await Room.findOne({ id: roomId }).exec();
+
+    if (room.readies.length === room.users.length) {
+      room.state = ROOM_STATES.CONFIGURING;
+      await room.save();
+      pusher.trigger(`room-${roomId}`, "room-ready", {});
+    }
+  });
+
+  return res.send({ success: true });
 });
 
 router.get("/api/room/:roomId", async (req, res) => {
@@ -299,11 +385,23 @@ router.get("/api/room/:roomId", async (req, res) => {
   const room = await Room.findOne({ id: roomId }).exec();
 
   if (!room) {
-    res.send({ noRoom: true });
+    return res.send({ message: "No room" });
   }
 
-  if (room && !room.users.find(id => id === userId)) {
-    room.users.push(userId);
+  const user = await User.findOne({ id: userId }).exec();
+
+  if (!user) {
+    return res.send({ message: "No user" });
+  }
+
+  const userInRoom = room.users.find(user => user.id === userId);
+
+  if (room.state !== ROOM_STATES.WAITING_ROOM && !userInRoom) {
+    return res.send({ message: "User not in room" });
+  }
+
+  if (room.state === ROOM_STATES.WAITING_ROOM && !userInRoom) {
+    room.users.push(user);
     await room.save();
     pusher.trigger(`room-${roomId}`, "users", room.users);
   }
