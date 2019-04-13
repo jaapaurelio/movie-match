@@ -144,11 +144,13 @@ class WaitingRoom extends React.Component {
           <div className="continue-container">
             {!this.state.ready && (
               <PageWidth className="mm-content-padding ">
-                <div className="alone-message">
-                  <b>You're alone.</b>
-                  <br /> Movie match is better with friends, make sure they are
-                  in before continue.
-                </div>
+                {this.state.users.length === 1 && (
+                  <div className="alone-message">
+                    <b>You're alone.</b>
+                    <br /> Movie match is better with friends, make sure they
+                    are in before continue.
+                  </div>
+                )}
                 <button onClick={this.setReady} className="continue-button">
                   room is ready
                 </button>
