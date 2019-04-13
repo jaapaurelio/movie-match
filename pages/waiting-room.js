@@ -112,15 +112,15 @@ class WaitingRoom extends React.Component {
               <PageWidth className="mm-content-padding ">
                 <RoomNumber roomId={this.props.roomId} />
                 <div className="share-info">
-                  Invite friends to the room.
+                  {this.props.t("invite-friends-to-room")}
                   <br />
-                  Share the room number or use the invite button
+                  {this.props.t("share-the-room-number-or-use-invite")}
                 </div>
 
                 <button onClick={this.shareRoom} className="mm-small-btn">
                   {this.state.showShareTooltip && (
                     <span className="mm-tooltip share-tooltip ">
-                      Link copied. Send to friends.
+                      {this.props.t("link-copied-send-friends")}
                     </span>
                   )}
                   Invite friends
@@ -130,7 +130,7 @@ class WaitingRoom extends React.Component {
             <PageWidth className="mm-content-padding ">
               <div className="align-center">
                 <div className="room-users">
-                  <div>People in the room</div>
+                  <div>{this.props.t("people-in-the-room")}</div>
                   {this.state.users.map(user => (
                     <div className="user-info" key={user.id}>
                       {user.name}
@@ -146,22 +146,24 @@ class WaitingRoom extends React.Component {
               <PageWidth className="mm-content-padding ">
                 {this.state.users.length === 1 && (
                   <div className="alone-message">
-                    <b>You're alone.</b>
-                    <br /> Movie match is better with friends, make sure they
-                    are in before continue.
+                    <b>{this.props.t("you-are-alone")}</b>
+                    <br />
+                    {this.props.t("mm-is-better-with-friends")}
                   </div>
                 )}
                 <button onClick={this.setReady} className="continue-button">
-                  room is ready
+                  {this.props.t("room-is-ready")}
                 </button>
                 <div className="continue-information">
-                  After everyone is in, press the button.
+                  {this.props.t("after-everyone-press-button")}
                 </div>
               </PageWidth>
             )}
 
             {this.state.ready && (
-              <div className="continue-information">Waiting for others...</div>
+              <div className="continue-information">
+                {this.props.t("waiting-for-friends")}
+              </div>
             )}
           </div>
         </div>

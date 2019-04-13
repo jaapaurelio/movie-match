@@ -7,6 +7,7 @@ import Loader from "../components/loader";
 import RoomInfoBar from "../components/room-info-bar";
 import { ROOM_STATES } from "../lib/constants";
 import UserPop from "../components/user-popup";
+import { withNamespaces } from "../i18n";
 import validateRoom from "../lib/room-redirect";
 
 class Matches extends React.Component {
@@ -71,13 +72,14 @@ class Matches extends React.Component {
           {!!this.state.matches.length && (
             <div className="container">
               <Headline>
-                We found the perfect match for you. <br />
-                Have a nice movie!
+                {this.props.t("we-found-perfect-match")}
+                <br />
+                {this.props.t("have-nice-movie")}
               </Headline>
 
               <div>
                 <PageWidth>
-                  <h1 className="title">Perfect match</h1>
+                  <h1 className="title">{this.props.t("perfect-match")}</h1>
                 </PageWidth>
 
                 <PageWidth>
@@ -89,7 +91,9 @@ class Matches extends React.Component {
                 {!!this.state.matches[1] && (
                   <div className="other-options">
                     <PageWidth>
-                      <h1 className="title">Alternative matches</h1>
+                      <h1 className="title">
+                        {this.props.t("alternative-matches")}
+                      </h1>
                       {this.state.matches.map((movie, i) => {
                         {
                           return (
@@ -146,4 +150,4 @@ class Matches extends React.Component {
   }
 }
 
-export default Matches;
+export default withNamespaces("common")(Matches);

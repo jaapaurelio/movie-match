@@ -1,11 +1,13 @@
-export default ({ show, onClickMatches }) => (
+import { withNamespaces } from "../i18n";
+
+export default withNamespaces("common")(({ show, onClickMatches, t }) => (
   <div className={`popup-container ${show ? "show" : ""}`}>
     <div className="popup-content">
-      <h1>It's a match!</h1>
-      <div className="desc">We found the perfect match for you.</div>
+      <h1>{t("its-a-match")}</h1>
+      <div className="desc">{t("pop-up-we-found-perfect-match")}</div>
       <div className="btn-container">
         <div onClick={onClickMatches} className="match-btn">
-          Check matches
+          {t("check-matches")}
         </div>
       </div>
     </div>
@@ -71,4 +73,4 @@ export default ({ show, onClickMatches }) => (
       `}
     </style>
   </div>
-);
+));

@@ -1,6 +1,7 @@
 import React from "react";
 import Topbar from "../components/topbar";
 import Link from "next/link";
+import { withNamespaces } from "../i18n";
 
 class ErrorPage extends React.Component {
   static getInitialProps({ res, err }) {
@@ -12,10 +13,10 @@ class ErrorPage extends React.Component {
     return (
       <div>
         <Topbar />
-        <div className="error">Sorry, page not found</div>
+        <div className="error">{this.props.t("sorry-page-not-found")}</div>
         <div className="home-link">
           <div className="mm-btn">
-            <Link href={`/start`}>Go to Home </Link>
+            <Link href={`/start`}>{this.props.t("go-to-home-btn")}</Link>
           </div>
         </div>
         <style jsx>{`
@@ -34,4 +35,4 @@ class ErrorPage extends React.Component {
   }
 }
 
-export default ErrorPage;
+export default withNamespaces("common")(ErrorPage);

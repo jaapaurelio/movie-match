@@ -22,8 +22,6 @@ class Start extends React.Component {
     this.onChangeId = this.onChangeId.bind(this);
     this.join = this.join.bind(this);
     this.createRoom = this.createRoom.bind(this);
-
-    this.steps = ["Create a room", "Invite friends", "Find the perfect movie"];
   }
 
   onChangeId(event) {
@@ -62,24 +60,24 @@ class Start extends React.Component {
           title="Movie Match"
         />
         <Headline>
-          Hi{" "}
+          {this.props.t("hi")}{" "}
           <span onClick={this.changeName} className="username">
             {this.state.username}
           </span>
-          , let's find the perfect movie.
+          {this.props.t("lets-find-the-perfect-movie")}
         </Headline>
         <PageWidth>
           <div className="options-container create-room-container">
-            <div className="join-title">Create a room</div>
+            <div className="join-title">{this.props.t("create-a-room")}</div>
 
             <div className="create-room-btn-container">
               <button onClick={this.createRoom} className="mm-btn">
-                Create
+                {this.props.t("create-room-btn")}
               </button>
             </div>
           </div>
           <div className="options-container">
-            <div className="join-title">Join a room</div>
+            <div className="join-title">{this.props.t("join-a-room")}</div>
             <div>
               <input
                 className="room-input"
@@ -90,21 +88,21 @@ class Start extends React.Component {
               />
               <div>
                 <button className="join-btn mm-btn" onClick={this.join}>
-                  Join
+                  {this.props.t("join-btn")}
                 </button>
               </div>
             </div>
-            <div className="info">Ask your friend for the room number</div>
+            <div className="info">{this.props.t("ask-room-number")}</div>
           </div>
           <div className="how-to-link">
             <Link href="/intro">
-              <a>How to use?</a>
+              <a>{this.props.t("How to use?")}</a>
             </Link>
           </div>
         </PageWidth>
 
         <footer>
-          Movie details provided by{" "}
+          {this.props.t("movie-details-provided-by")}{" "}
           <a href="https://www.themoviedb.org" target="_blank">
             themoviedb
           </a>

@@ -1,6 +1,7 @@
 import { connect } from "react-redux";
 import { setUser } from "../state-manager/actions";
 import axios from "axios";
+import { withNamespaces } from "../i18n";
 
 class UserPopup extends React.Component {
   constructor(props) {
@@ -41,7 +42,8 @@ class UserPopup extends React.Component {
         {this.state.showPopup && (
           <section className="container">
             <div className="content">
-              What's your name?
+              {this.props.t("whats-you-name")}
+
               <div>
                 <input
                   className="name-input"
@@ -51,7 +53,7 @@ class UserPopup extends React.Component {
               </div>
               <div>
                 <button className="mm-btn" onClick={this.handleClick}>
-                  Save
+                  {this.props.t("save-btn")}
                 </button>
               </div>
             </div>
@@ -105,4 +107,4 @@ const mapDispatchToProps = { setUser };
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(UserPopup);
+)(withNamespaces("common")(UserPopup));

@@ -2,23 +2,6 @@ import { withNamespaces } from "../i18n";
 import Router from "next/router";
 import jsCookie from "js-cookie";
 
-const SLIDES = [
-  {
-    img: "/static/blabla.png",
-    description:
-      "Tired of wasting time trying to find the best movie to watch with friends?"
-  },
-  {
-    img: "/static/yesyes.png",
-    description: "Create a room, invite your friends and give some likes."
-  },
-  {
-    img: "/static/match.png",
-    description:
-      "Movie Match will find the perfect movie for you based on your likes. Easy!"
-  }
-];
-
 class Intro extends React.Component {
   constructor(props) {
     super(props);
@@ -26,7 +9,21 @@ class Intro extends React.Component {
     this.skip = this.skip.bind(this);
 
     this.state = {
-      currentSlide: 0
+      currentSlide: 0,
+      slides: [
+        {
+          img: "/static/blabla.png",
+          description: this.props.t("intro-1")
+        },
+        {
+          img: "/static/yesyes.png",
+          description: this.props.t("intro-2")
+        },
+        {
+          img: "/static/match.png",
+          description: this.props.t("intro-3")
+        }
+      ]
     };
   }
 
@@ -53,13 +50,13 @@ class Intro extends React.Component {
         <div className="tutorial-content">
           <div className="slider-container">
             <div className="image-container">
-              <img src={SLIDES[this.state.currentSlide].img} />
+              <img src={this.state.slides[this.state.currentSlide].img} />
             </div>
             <div className="description">
-              {SLIDES[this.state.currentSlide].description}
+              {this.state.slides[this.state.currentSlide].description}
             </div>
             <div className="dots-container">
-              {SLIDES.map((slide, index) => (
+              {this.state.slides.map((slide, index) => (
                 <span
                   className={
                     index === this.state.currentSlide
@@ -74,10 +71,10 @@ class Intro extends React.Component {
           </div>
           <div className="button-container">
             <div onClick={this.skip} className="skip-btn">
-              Close
+              {this.props.t("close-btn")}
             </div>
             <div onClick={this.next} className="skip-btn">
-              Next
+              {this.props.t("intro-next-btn")}
             </div>
           </div>
         </div>

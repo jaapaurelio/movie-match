@@ -16,12 +16,13 @@ class Offline extends React.Component {
       <div>
         <Topbar />
         <div className="offline">
-          You're offline.
-          <br /> Please connect to the internet and try again.
+          {this.props.t("intro-1")}
+          <br />
+          {this.props.t("please-try-again")}
         </div>
         <div className="try-button">
           <button onClick={this.reload} className="mm-btn">
-            Try again
+            {this.props.t("try-again-btn")}
           </button>
         </div>
 
