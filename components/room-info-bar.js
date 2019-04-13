@@ -1,6 +1,6 @@
 import PageWidth from "./page-width";
 
-export default ({ showShare, shareBtn, room, users }) => {
+export default ({ room, users }) => {
   return (
     <PageWidth className="mm-content-padding">
       <div className="room-info">
@@ -8,14 +8,8 @@ export default ({ showShare, shareBtn, room, users }) => {
           <i className="fas fa-user room-info-icon" />
           <span className="room-info-text">{users.length}</span>
           <i className="fas fa-info-circle room-info-icon" />
-          {room.info.startYear}-{room.info.endYear}&nbsp;
-          {room.info.genres.map(g => g.name + ", ")}
+          {users.map(u => u.name).join(", ")}
         </div>
-        {showShare && (
-          <button onClick={shareBtn} className="mm-btn share-btn">
-            Send Invite
-          </button>
-        )}
       </div>
       <style jsx>
         {`
@@ -41,18 +35,6 @@ export default ({ showShare, shareBtn, room, users }) => {
 
           .room-info-text {
             margin-right: 10px;
-          }
-
-          .share-btn {
-            width: auto;
-            padding: 2px 4px;
-            border: 0;
-            border: 1px solid #fedc6e;
-            background: transparent;
-            color: #333;
-            border-radius: 4px;
-            font-size: 12px;
-            flex-shrink: 0;
           }
         `}
       </style>
