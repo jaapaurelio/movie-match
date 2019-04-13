@@ -14,6 +14,7 @@ import { ROOM_STATES } from "../lib/constants";
 import { pusherConnection } from "../lib/pusher-connection";
 import validateRoom from "../lib/room-redirect";
 import UserPop from "../components/user-popup";
+import { withNamespaces } from "../i18n";
 
 const MovieDb = require("moviedb-promise");
 const moviedb = new MovieDb("284941729ae99106f71e56126227659b");
@@ -292,11 +293,11 @@ class Index extends React.Component {
         {this.state.users.length == 1 && (
           <div className="alone-msg">
             <PageWidth className="mm-content-padding">
-              You're alone in the room.
+              {this.props.t("you-are-alone-room")}
               <br />
-              Movie Match works better with friends
+              {this.props.t("mm-better-with-friends")}
               <br />
-              No matches will be done.
+              {this.props.t("no-matches-will-be-done")}
             </PageWidth>
           </div>
         )}
@@ -309,7 +310,7 @@ class Index extends React.Component {
                 onClickAddMore={this.addMoreLikeThis}
               />
               <PageWidth>
-                <Cast cast={movie.credits.cast.slice(0, 5)} />
+                <Cast t={this.props.t} cast={movie.credits.cast.slice(0, 5)} />
               </PageWidth>
             </SwipeArea>
             <div className="buttons-container-space" />
@@ -320,10 +321,10 @@ class Index extends React.Component {
                     onClick={this.noLike}
                     className="button-choice button-no"
                   >
-                    Not today
+                    {this.props.t("not-today-btn")}
                   </div>
                   <div onClick={this.like} className="button-choice button-yes">
-                    Yes
+                    {this.props.t("yes-btn")}
                   </div>
                 </div>
               </PageWidth>
@@ -334,7 +335,9 @@ class Index extends React.Component {
 
         <PageWidth>
           {!movie && !this.state.loading && (
-            <div className="mm-big-message">No more movies to show</div>
+            <div className="mm-big-message">
+              {this.props.t("no-more-movies-to-show")}
+            </div>
           )}
         </PageWidth>
         <MatchPopup
@@ -428,4 +431,4 @@ class Index extends React.Component {
   }
 }
 
-export default Index;
+export default withNamespaces("common")(Index);

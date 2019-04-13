@@ -1,6 +1,8 @@
-export default ({ roomId }) => (
+import { withNamespaces } from "../i18n";
+
+export default withNamespaces("common")(({ roomId, t }) => (
   <section className="container">
-    <div className="room-number-desc">Room</div>
+    <div className="room-number-desc">{t("room")}</div>
     <div className="room-number">{roomId}</div>
     <style jsx>
       {`
@@ -21,4 +23,4 @@ export default ({ roomId }) => (
       `}
     </style>
   </section>
-);
+));

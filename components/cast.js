@@ -1,6 +1,6 @@
-export default ({ cast }) => (
+export default ({ cast, t }) => (
   <div className="actors-container">
-    <h3 className="mm-content-padding">Cast</h3>
+    <h3 className="mm-content-padding">{t("cast")}</h3>
     <div className="actors">
       {cast.map(actor => (
         <div key={actor.id} className="actor-container">

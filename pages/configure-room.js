@@ -12,6 +12,7 @@ import { ROOM_STATES } from "../lib/constants";
 import Loader from "../components/loader";
 import UserPop from "../components/user-popup";
 import jsCookie from "js-cookie";
+import { withNamespaces } from "../i18n";
 
 class CreateRoom extends React.Component {
   constructor(props) {
@@ -38,7 +39,6 @@ class CreateRoom extends React.Component {
       startYear: 2000,
       endYear: 2019,
       rating: 2,
-      creatingRoom: false,
       waitingUsers: false,
       loaded: false
     };
@@ -61,11 +61,11 @@ class CreateRoom extends React.Component {
     const errorMessages = [];
 
     if (this.state.startYear >= this.state.endYear) {
-      errorMessages.push("Invalid years.");
+      errorMessages.push(this.props.t("invalid-years"));
     }
 
     if (!selectedGenres.length) {
-      errorMessages.push("Please select at least one genre.");
+      errorMessages.push(this.props.t("please-select-genre"));
     }
 
     if (errorMessages.length > 0) {
@@ -98,23 +98,11 @@ class CreateRoom extends React.Component {
 
   createRoom({ selectedGenres, startYear, endYear, rating }) {
     const roomId = this.props.roomId;
-
-    this.setState({
-      //creatingRoom: true
-    });
-
     const data = { selectedGenres, startYear, endYear, rating };
 
-    axios
-      .post(`/api/room/user-configuration/${roomId}`, data)
-      .then(room => {
-        this.setState({ waitingUsers: true });
-      })
-      .finally(() => {
-        this.setState({
-          creatingRoom: false
-        });
-      });
+    axios.post(`/api/room/user-configuration/${roomId}`, data).then(room => {
+      this.setState({ waitingUsers: true });
+    });
   }
 
   toggleGenre(id) {
@@ -207,11 +195,11 @@ class CreateRoom extends React.Component {
         {!this.state.waitingUsers && (
           <div>
             <Headline className="description-container">
-              What kind of movie you like?
+              {this.props.t("what-kind-of-movie-you-like")}
             </Headline>
             <PageWidth>
               <div className="mm-content-padding">
-                <div className="form-title">Movie genres</div>
+                <div className="form-title">{this.props.t("movie-genres")}</div>
                 <div className="genres-container">
                   {this.state.genres.map(genre => {
                     return (
@@ -227,7 +215,7 @@ class CreateRoom extends React.Component {
                   })}
                 </div>
 
-                <div className="form-title">Rating</div>
+                <div className="form-title">{this.props.t("rating")}</div>
                 <div className="two-selects-row">
                   <select
                     className="select-m"
@@ -246,7 +234,7 @@ class CreateRoom extends React.Component {
                   </select>
                 </div>
 
-                <div className="form-title">From year</div>
+                <div className="form-title">{this.props.t("from-year")}</div>
                 <div className="two-selects-row">
                   <select
                     className="select-m"
@@ -263,7 +251,7 @@ class CreateRoom extends React.Component {
                       );
                     })}
                   </select>
-                  <span className="two-to">to</span>
+                  <span className="two-to">{this.props.t("to")}</span>
                   <select
                     className="select-m"
                     defaultValue={this.state.endYear}
@@ -297,7 +285,7 @@ class CreateRoom extends React.Component {
                     onClick={this.submitForm}
                     className="mm-btn create-room-btn"
                   >
-                    Next
+                    {this.props.t("next-btn")}
                   </button>
                 </div>
               </div>
@@ -309,14 +297,13 @@ class CreateRoom extends React.Component {
           <div className="waiting-users-container">
             <PageWidth>
               <RoomNumber roomId={this.props.roomId} />
-              <div className="waiting-title">Waiting for friends taste...</div>
+              <div className="waiting-title">
+                {this.props.t("waiting-for-friends-config")}
+              </div>
             </PageWidth>
           </div>
         )}
 
-        {this.state.creatingRoom && (
-          <div className="creating-room"> Creating room </div>
-        )}
         <style jsx>
           {`
             .waiting-users-container {
@@ -431,20 +418,6 @@ class CreateRoom extends React.Component {
               box-sizing: content-box;
               width: 80%;
             }
-
-            .creating-room {
-              position: fixed;
-              top: 0;
-              left: 0;
-              bottom: 0;
-              right: 0;
-              background: #ffd651;
-              display: flex;
-              justify-content: center;
-              align-items: center;
-              color: #fff;
-              z-index: 2;
-            }
           `}
         </style>
       </div>
@@ -452,4 +425,4 @@ class CreateRoom extends React.Component {
   }
 }
 
-export default CreateRoom;
+export default withNamespaces("common")(CreateRoom);
