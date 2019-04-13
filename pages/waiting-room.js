@@ -112,8 +112,9 @@ class WaitingRoom extends React.Component {
               <PageWidth className="mm-content-padding ">
                 <RoomNumber roomId={this.props.roomId} />
                 <div className="share-info">
-                  Invite friends to the room. Share the room number or use the
-                  invite button
+                  Invite friends to the room.
+                  <br />
+                  Share the room number or use the invite button
                 </div>
 
                 <button onClick={this.shareRoom} className="mm-small-btn">
@@ -142,14 +143,19 @@ class WaitingRoom extends React.Component {
           </div>
           <div className="continue-container">
             {!this.state.ready && (
-              <div>
+              <PageWidth className="mm-content-padding ">
+                <div className="alone-message">
+                  <b>You're alone.</b>
+                  <br /> Movie match is better with friends, make sure they are
+                  in before continue.
+                </div>
                 <button onClick={this.setReady} className="continue-button">
                   room is ready
                 </button>
                 <div className="continue-information">
-                  After having everyone in the room, press the button.
+                  After everyone is in, press the button.
                 </div>
-              </div>
+              </PageWidth>
             )}
 
             {this.state.ready && (
@@ -158,6 +164,12 @@ class WaitingRoom extends React.Component {
           </div>
         </div>
         <style jsx>{`
+          .alone-message {
+            background: aliceblue;
+            padding: 10px;
+            font-size: 14px;
+          }
+
           .share-info {
             font-size: 14px;
           }
