@@ -16,7 +16,7 @@ const MovieSchema = new mongoose.Schema({
 });
 
 const InfoSchema = new mongoose.Schema({
-  genres: [{ id: Number, name: String }],
+  genres: [Number],
   startYear: Number,
   endYear: Number,
   ratingGte: Number,
@@ -27,14 +27,17 @@ const InfoSchema = new mongoose.Schema({
 });
 
 var RoomSchema = new mongoose.Schema({
+  timestamps: {},
   id: String,
+  state: { type: String, default: "WAITING_ROOM" },
+  configurationByUser: { type: [Object], default: [] },
   movies: [MovieSchema],
   name: String,
   likes: Object,
-  users: [String],
+  users: [Object],
+  readies: { type: [String], default: [] },
   info: InfoSchema,
-  matches: { type: [Number], default: [] },
-  matched: { type: Boolean, default: false }
+  matches: { type: [Number], default: [] }
 });
 
 mongoose.model("Room", RoomSchema);

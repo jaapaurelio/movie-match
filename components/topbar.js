@@ -5,49 +5,44 @@ export default ({
   newRoomPage = false,
   roomPage = false,
   roomId,
-  backbtn,
-  title = ""
+  title = "",
+  showMenu = true
 }) => (
   <nav>
     <PageWidth>
-      <div
-        className={
-          backbtn ? "container container-with-navigation" : "container"
-        }
-      >
-        {backbtn && (
-          <i onClick={backbtn} className="navigation-icon fas fa-angle-left" />
-        )}
+      <div className="container">
         <Link href={`/start`}>
           <div className="page-title">{title || "Movie Match"}</div>
         </Link>
         <div className="space-between" />
-        <div className="top-icons-container">
-          <Link href={`/start`}>
-            <div className="sublink">
-              <div
-                className={
-                  `sublink-btn ` + (newRoomPage && "sublink-btn-active")
-                }
-              >
-                New Room
-              </div>
-            </div>
-          </Link>
-          {roomId && (
-            <Link href={`/room?id=${roomId}`}>
+        {showMenu && (
+          <div className="top-icons-container">
+            <Link href={`/start`}>
               <div className="sublink">
                 <div
                   className={
-                    `sublink-btn ` + (roomPage && "sublink-btn-active")
+                    `sublink-btn ` + (newRoomPage && "sublink-btn-active")
                   }
                 >
-                  Room <span className="room-id-top">{roomId}</span>
+                  New Room
                 </div>
               </div>
             </Link>
-          )}
-        </div>
+            {roomId && (
+              <Link href={`/room?id=${roomId}`}>
+                <div className="sublink">
+                  <div
+                    className={
+                      `sublink-btn ` + (roomPage && "sublink-btn-active")
+                    }
+                  >
+                    Room <span className="room-id-top">{roomId}</span>
+                  </div>
+                </div>
+              </Link>
+            )}
+          </div>
+        )}
       </div>
     </PageWidth>
 

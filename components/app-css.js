@@ -72,6 +72,33 @@ export default () => (
         font-family: Raleway, sans-serif;
       }
 
+      .mm-small-btn {
+        width: auto;
+        padding: 6px 15px;
+        border: 0;
+        border: 1px solid #333;
+        background: transparent;
+        color: #333;
+        margin-top: 10px;
+        border-radius: 4px;
+        position: relative;
+        outline: none;
+        cursor: pointer;
+      }
+
+      .mm-tooltip {
+        position: absolute;
+        background: #000000cf;
+        color: #fff;
+        display: block;
+        padding: 10px;
+        border-radius: 2px;
+        left: 50%;
+        -webkit-transform: translateX(-50%);
+        transform: translateX(-50%);
+        white-space: nowrap;
+      }
+
       .options-container {
         margin: 0px 20px;
         padding: 40px 0;
