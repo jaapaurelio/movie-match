@@ -285,6 +285,7 @@ router.post("/api/room/:roomId/:movieId/:like", async (req, res) => {
   }
 
   room.movies[movieIndex] = movie;
+  await room.save();
 
   // Get more movies
   if (numberSeenMovies + 2 == room.movies.length) {
