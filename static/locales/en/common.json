@@ -5,7 +5,7 @@
   "create-room-btn": "Create a Room",
   "join-a-room": "Join a room",
   "join-btn": "Join",
-  "ask-room-number": "Ask your friend for the room number",
+  "ask-room-number": "Ask your friend for the room code",
   "how-to-use": "How to use?",
   "movie-details-provided-by": "Movie details provided by",
 
@@ -17,7 +17,7 @@
 
   "room": "Room",
   "invite-friends-to-room": "Invite friends to the room.",
-  "share-the-room-number-or-use-invite": "Share the number or use the invite button",
+  "share-the-room-number-or-use-invite": "Share the code or use the invite button",
   "link-copied-send-friends": " Link copied. Send to friends.",
   "invite-friends-btn": "Invite friends",
   "people-in-the-room": "People in the room",
