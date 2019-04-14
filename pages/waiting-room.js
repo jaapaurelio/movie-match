@@ -123,7 +123,7 @@ class WaitingRoom extends React.Component {
                       {this.props.t("link-copied-send-friends")}
                     </span>
                   )}
-                  Invite friends
+                  {this.props.t("invite-friends-btn")}
                 </button>
               </PageWidth>
             </div>

@@ -27,9 +27,9 @@ class CreateRoom extends React.Component {
     years[years.length - 1] = 2019;
 
     const ratings = [
-      { id: 0, label: "Bad movies" },
-      { id: 1, label: "Good movies" },
-      { id: 2, label: "Best movies" }
+      { id: 0, label: this.props.t("bad-movies") },
+      { id: 1, label: this.props.t("good-movies") },
+      { id: 2, label: this.props.t("best-movies") }
     ];
 
     this.state = {

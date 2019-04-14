@@ -19,6 +19,7 @@
   "invite-friends-to-room": "Invite friends to the room.",
   "share-the-room-number-or-use-invite": "Share the room number or use the invite button",
   "link-copied-send-friends": " Link copied. Send to friends.",
+  "invite-friends-btn": "Invite friends",
   "people-in-the-room": "People in the room",
   "you-are-alone": "You're alone.",
   "mm-is-better-with-friends": "Movie match is better with friends, make sure they are in before continue.",
@@ -35,6 +36,9 @@
   "invalid-years": "Invalid years.",
   "please-select-genre": "Please select at least one genre.",
   "waiting-for-friends-config": "Waiting for friends taste...",
+  "bad-movies": "Bad movies",
+  "good-movies": "Good movies",
+  "best-movies": "Best movies",
 
   "you-are-alone-room": "You're alone in the room.",
   "mm-better-with-friends": "Movie Match works better with friends",
