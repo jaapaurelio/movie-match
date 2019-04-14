@@ -13,15 +13,24 @@ class Start extends React.Component {
   constructor(props) {
     super(props);
 
+    const language = jsCookie.get("i18next") || "en";
+
     this.state = {
       roomId: undefined,
       lastRoomId: undefined,
-      username: ""
+      username: "",
+      language
     };
 
     this.onChangeId = this.onChangeId.bind(this);
     this.join = this.join.bind(this);
     this.createRoom = this.createRoom.bind(this);
+    this.changeLanguage = this.changeLanguage.bind(this);
+  }
+
+  changeLanguage(event) {
+    jsCookie.set("i18next", event.target.value);
+    location.reload();
   }
 
   onChangeId(event) {
@@ -101,6 +110,14 @@ class Start extends React.Component {
           </div>
         </PageWidth>
 
+        <div className="language-container">
+          <select value={this.state.language} onChange={this.changeLanguage}>
+            <option value="en">English</option>
+            <option value="es">Espanõl</option>
+            <option value="pt">Português</option>
+          </select>
+        </div>
+
         <footer>
           {this.props.t("movie-details-provided-by")}{" "}
           <a href="https://www.themoviedb.org" target="_blank">
@@ -161,6 +178,10 @@ class Start extends React.Component {
           .how-to-link a {
             color: #333;
             font-size: 12px;
+          }
+          .language-container {
+            text-align: center;
+            margin-top: 40px;
           }
         `}</style>
       </div>
