@@ -8,13 +8,13 @@ import axios from "axios";
 import Router from "next/router";
 import PageWidth from "../components/page-width";
 import RoomInfoBar from "../components/room-info-bar";
-import shuffle from "shuffle-array";
 import jsCookie from "js-cookie";
 import { ROOM_STATES } from "../lib/constants";
 import { pusherConnection } from "../lib/pusher-connection";
 import validateRoom from "../lib/room-redirect";
 import UserPop from "../components/user-popup";
 import { withNamespaces } from "../i18n";
+import { sortMovies } from "../lib/sort-movies";
 
 const MovieDb = require("moviedb-promise");
 const moviedb = new MovieDb("284941729ae99106f71e56126227659b");
@@ -44,7 +44,7 @@ class Index extends React.Component {
   }
 
   async getNewMovie(movies) {
-    const movie = movies.pop();
+    const movie = movies.shift();
 
     if (!movie) {
       return this.setState({
@@ -103,6 +103,18 @@ class Index extends React.Component {
       });
   }
 
+  getRecomendations(movieId) {
+    return moviedb
+      .movieRecommendations({ id: movieId })
+      .then(recomendations => {
+        if (recomendations && recomendations.results) {
+          axios.post(`/api/room/add-movies/${this.props.roomId}`, {
+            movies: recomendations.results
+          });
+        }
+      });
+  }
+
   postLike(like) {
     const movieId = this.state.movie.id;
     like = like ? "like" : "nolike";
@@ -111,6 +123,8 @@ class Index extends React.Component {
 
   like() {
     this.postLike(true);
+    this.getRecomendations(this.state.movie.id);
+
     this.getNewMovie(this.state.movies);
     window.scrollTo(0, 0);
   }
@@ -128,6 +142,30 @@ class Index extends React.Component {
     });
 
     axios.post(`api/room/similar/${this.props.roomId}/${this.state.movie.id}`);
+  }
+
+  addNewMovies(newMovies) {
+    const userId = jsCookie.get("userId");
+
+    const allMoviesMap = this.state.movies.reduce((acc, movie) => {
+      acc[movie.id] = movie;
+      return acc;
+    }, {});
+
+    // update new
+    Object.values(newMovies).forEach(movie => {
+      allMoviesMap[movie.id] = movie;
+    });
+
+    const movies = sortMovies(allMoviesMap, userId, this.state.movie);
+
+    this.setState({
+      movies
+    });
+
+    if (!this.state.movie) {
+      this.getNewMovie(movies);
+    }
   }
 
   share() {
@@ -176,23 +214,7 @@ class Index extends React.Component {
       });
     });
 
-    this.channel.bind("new-movies", async movies => {
-      movies = movies.filter(movie => {
-        return !movie.usersSeen.includes(userId);
-      });
-
-      movies = shuffle(movies);
-
-      movies = [...movies, ...this.state.movies];
-
-      this.setState({
-        movies
-      });
-
-      if (!this.state.movie) {
-        this.getNewMovie(movies);
-      }
-    });
+    this.channel.bind("new-movies", this.addNewMovies.bind(this));
 
     const matched = room.state === ROOM_STATES.MATCHED;
     let movies = room.movies;
@@ -200,11 +222,6 @@ class Index extends React.Component {
     this.setState({
       matched,
       users: room.users,
-      info: {
-        genres: room.info.genres,
-        startYear: room.info.startYear,
-        endYear: room.info.endYear
-      },
       room
     });
 
@@ -212,11 +229,7 @@ class Index extends React.Component {
       return;
     }
 
-    movies = movies.filter(movie => {
-      return !movie.usersSeen.includes(userId);
-    });
-
-    movies = shuffle(movies);
+    movies = sortMovies(movies, userId, this.state.movie);
 
     this.setState({ movies });
 
@@ -282,14 +295,12 @@ class Index extends React.Component {
     return (
       <div>
         {TopBarForPage}
-        {this.state.info.genres && (
-          <RoomInfoBar
-            shareBtn={this.share}
-            showShare={this.state.showShareButton}
-            users={this.state.users}
-            room={this.state.room}
-          />
-        )}
+        <RoomInfoBar
+          shareBtn={this.share}
+          showShare={this.state.showShareButton}
+          users={this.state.users}
+          room={this.state.room}
+        />
         {this.state.users.length == 1 && (
           <div className="alone-msg">
             <PageWidth className="mm-content-padding">
