@@ -28,8 +28,7 @@ class CreateRoom extends React.Component {
 
     const ratings = [
       { id: 0, label: this.props.t("bad-movies") },
-      { id: 1, label: this.props.t("good-movies") },
-      { id: 2, label: this.props.t("best-movies") }
+      { id: 1, label: this.props.t("good-movies") }
     ];
 
     this.state = {
@@ -38,7 +37,7 @@ class CreateRoom extends React.Component {
       errorMessages: [],
       startYear: 2000,
       endYear: 2019,
-      rating: 2,
+      rating: 1,
       waitingUsers: false,
       loaded: false
     };
@@ -96,12 +95,45 @@ class CreateRoom extends React.Component {
     });
   }
 
-  createRoom({ selectedGenres, startYear, endYear, rating }) {
+  async createRoom({ selectedGenres, startYear, endYear, rating }) {
     const roomId = this.props.roomId;
     const data = { selectedGenres, startYear, endYear, rating };
+    let ratingGte = 1;
+    let ratingLte = 10;
 
-    axios.post(`/api/room/user-configuration/${roomId}`, data).then(room => {
-      this.setState({ waitingUsers: true });
+    if (rating == 0) {
+      ratingLte = 6;
+    }
+
+    if (rating == 1) {
+      ratingGte = 7;
+    }
+
+    const baseQuery = {
+      "vote_count.gte": 500,
+      "primary_release_date.gte": `${startYear}-01-01`,
+      "primary_release_date.lte": `${endYear}-12-30`,
+      "vote_average.gte": ratingGte,
+      "vote_average.lte": ratingLte,
+      with_genres: selectedGenres.join("|")
+    };
+
+    this.setState({ waitingUsers: true });
+
+    const moviesListResponse = await moviedb.discoverMovie({
+      ...baseQuery,
+      page: 1
+    });
+
+    const movies = moviesListResponse.results.map(movie => {
+      return {
+        id: movie.id,
+        title: movie.title
+      };
+    });
+
+    axios.post(`/api/room/add-movies-configuration/${roomId}`, {
+      movies
     });
   }
 

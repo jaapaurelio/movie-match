@@ -9,6 +9,8 @@ import { ROOM_STATES } from "../lib/constants";
 import UserPop from "../components/user-popup";
 import { withNamespaces } from "../i18n";
 import validateRoom from "../lib/room-redirect";
+const MovieDb = require("moviedb-promise");
+const moviedb = new MovieDb("284941729ae99106f71e56126227659b");
 
 class Matches extends React.Component {
   constructor(props) {
@@ -33,11 +35,11 @@ class Matches extends React.Component {
       loaded: true
     });
 
-    const matches = room.matches.map(movieId => {
-      return {
-        ...room.movies.find(m => movieId === m.id)
-      };
+    const wait = room.matches.map(movieId => {
+      return moviedb.movieInfo(movieId);
     });
+
+    const matches = await Promise.all(wait);
 
     this.setState({ room, matches, loading: false });
   }
