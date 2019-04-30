@@ -27,6 +27,7 @@ class Index extends React.Component {
     this.onClickMatches = this.onClickMatches.bind(this);
     this.share = this.share.bind(this);
     this.addMoreLikeThis = this.addMoreLikeThis.bind(this);
+    this.loadMoreMovies = this.loadMoreMovies.bind(this);
 
     this.state = {
       movie: null,
@@ -39,8 +40,55 @@ class Index extends React.Component {
       room: {},
       showShareButton: false,
       showAddMoreBtn: true,
-      loaded: false
+      loaded: false,
+      userConfiguration: {}
     };
+  }
+
+  async loadMoreMovies() {
+    const baseQuery = {
+      "vote_count.gte": 500,
+      "primary_release_date.gte": `${
+        this.state.userConfiguration.startYear
+      }-01-01`,
+      "primary_release_date.lte": `${
+        this.state.userConfiguration.endYear
+      }-12-30`,
+      "vote_average.gte": this.state.userConfiguration.ratingGte,
+      "vote_average.lte": this.state.userConfiguration.ratingLte,
+      with_genres: this.state.userConfiguration.selectedGenres.join("|")
+    };
+    const page = this.state.userConfiguration.page + 1;
+
+    this.loadingMoreMovies = true;
+
+    const moviesListResponse = await moviedb.discoverMovie({
+      ...baseQuery,
+      page
+    });
+
+    const movies = moviesListResponse.results.map(movie => {
+      return {
+        id: movie.id,
+        title: movie.title
+      };
+    });
+
+    await axios.post(`/api/room/add-movies/${this.props.roomId}`, {
+      movies,
+      page,
+      totalPages: moviesListResponse.total_pages
+    });
+
+    this.setState({
+      userConfiguration: { ...this.state.userConfiguration, page: page }
+    });
+
+    this.loadingMoreMovies = false;
+  }
+
+  moviesForUser(movies, userId) {
+    return movies.filter(movie => movie.usersRecomendation.includes(userId));
   }
 
   async getNewMovie(movies) {
@@ -70,6 +118,15 @@ class Index extends React.Component {
           movie: { ...this.state.movie, ...movieInfo, fullyLoaded: true }
         });
       }
+    }
+
+    const userId = jsCookie.get("userId");
+
+    if (
+      this.moviesForUser(movies, userId).length < 5 &&
+      !this.loadingMoreMovies
+    ) {
+      this.loadMoreMovies();
     }
 
     const nextMovie = movies[movies.length - 1];
@@ -222,7 +279,8 @@ class Index extends React.Component {
     this.setState({
       matched,
       users: room.users,
-      room
+      room,
+      userConfiguration: room.configurationByUser[userId]
     });
 
     if (!movies) {
