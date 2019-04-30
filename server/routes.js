@@ -75,7 +75,7 @@ function addMoviesToRoom(room, movies, userId) {
 router.post("/api/room/add-movies-configuration/:roomId", async (req, res) => {
   const { userId } = req.cookies;
   const { roomId } = req.params;
-  const { movies } = req.body;
+  const { movies, config } = req.body;
 
   let room = await Room.findOne({ id: roomId });
 
@@ -86,9 +86,7 @@ router.post("/api/room/add-movies-configuration/:roomId", async (req, res) => {
     });
   }
 
-  const userConfig = room.configurationByUser.find(
-    configUserId => configUserId === userId
-  );
+  const userConfig = room.configurationByUser[userId];
 
   if (userConfig) {
     return res.send({
@@ -102,14 +100,14 @@ router.post("/api/room/add-movies-configuration/:roomId", async (req, res) => {
   room = await Room.findOneAndUpdate(
     { id: roomId },
     {
-      $push: {
-        configurationByUser: userId
+      [`configurationByUser.${userId}`]: {
+        ...config
       }
     },
     { new: true }
   );
 
-  if (room.configurationByUser.length === room.users.length) {
+  if (Object.keys(room.configurationByUser).length === room.users.length) {
     room.state = ROOM_STATES.MATCHING;
 
     await Room.findOneAndUpdate({ id: roomId }, room);
@@ -125,11 +123,24 @@ router.post("/api/room/add-movies-configuration/:roomId", async (req, res) => {
 router.post("/api/room/add-movies/:roomId", async (req, res) => {
   const { userId } = req.cookies;
   const { roomId } = req.params;
-  const { movies } = req.body;
+  const { movies, page, totalPages } = req.body;
 
   let room = await Room.findOne({ id: roomId });
 
   await addMoviesToRoom(room, movies, userId);
+
+  if (page) {
+    room = await Room.findOneAndUpdate(
+      { id: roomId },
+      {
+        [`configurationByUser.${userId}.page`]: page,
+        [`configurationByUser.${userId}.totalPages`]: totalPages
+      },
+      { new: true }
+    );
+  }
+
+  room = await Room.findOne({ id: roomId });
 
   // send updated movies to clients
   const movieToSend = {};
@@ -137,6 +148,7 @@ router.post("/api/room/add-movies/:roomId", async (req, res) => {
   movies.forEach(movie => {
     movieToSend[movie.id] = room.movies[movie.id];
   });
+
   pusher.trigger(`room-${roomId}`, "new-movies", movieToSend);
 
   return res.send({
@@ -173,8 +185,6 @@ router.post("/api/room/:roomId/:movieId/:like", async (req, res) => {
       },
       { new: true }
     );
-
-    console.log("after save", room.movies[movieId]);
 
     const movie = room.movies[movieId];
 
@@ -241,9 +251,7 @@ router.post("/api/create-room", async (req, res) => {
   const roomId = await generateRoomId();
 
   const room = new Room({
-    id: roomId,
-    users: [],
-    movies: {}
+    id: roomId
   });
 
   await room.save();

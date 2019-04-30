@@ -32,7 +32,7 @@ var RoomSchema = new mongoose.Schema(
   {
     id: String,
     state: { type: String, default: "WAITING_ROOM" },
-    configurationByUser: { type: [String], default: [] },
+    configurationByUser: { type: Object, default: {} },
     movies: {
       type: Object,
       default: {}
@@ -44,7 +44,7 @@ var RoomSchema = new mongoose.Schema(
     info: InfoSchema,
     matches: { type: [Number], default: [] }
   },
-  { timestamps: true }
+  { timestamps: true, minimize: false }
 );
 
 mongoose.model("Room", RoomSchema);

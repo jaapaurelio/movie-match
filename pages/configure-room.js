@@ -97,7 +97,6 @@ class CreateRoom extends React.Component {
 
   async createRoom({ selectedGenres, startYear, endYear, rating }) {
     const roomId = this.props.roomId;
-    const data = { selectedGenres, startYear, endYear, rating };
     let ratingGte = 1;
     let ratingLte = 10;
 
@@ -133,7 +132,16 @@ class CreateRoom extends React.Component {
     });
 
     axios.post(`/api/room/add-movies-configuration/${roomId}`, {
-      movies
+      movies,
+      config: {
+        ratingLte,
+        ratingGte,
+        startYear,
+        endYear,
+        selectedGenres,
+        page: 1,
+        totalPages: moviesListResponse.total_pages
+      }
     });
   }
 
@@ -166,9 +174,7 @@ class CreateRoom extends React.Component {
       loaded: true
     });
 
-    const userHasConfig = room.configurationByUser.find(
-      config => config.userId === userId
-    );
+    const userHasConfig = room.configurationByUser[userId];
 
     if (userHasConfig) {
       return this.setState({
