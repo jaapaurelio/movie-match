@@ -1,7 +1,7 @@
 export default ({ children }) => (
-  <section>
-    {children}
+    <section>
+        {children}
 
-    <style jsx>{``}</style>
-  </section>
-);
+        <style jsx>{``}</style>
+    </section>
+)

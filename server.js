@@ -14,12 +14,19 @@ const compression = require("compression");
 const nakedRedirect = require("express-naked-redirect");
 const { join } = require("path");
 const { parse } = require("url");
+const passport = require('passport');
+const session = require('express-session');
 
 require("./server/models/genre.model");
 require("./server/models/room.model");
 require("./server/models/user.model");
+const authInit = require('./auth/init');
+require('./auth/google');
 
+authInit();
 const appRoutes = require("./server/routes");
+const appAuthRoutes = require("./server/auth-routes");
+
 var Genre = mongoose.model("Genre");
 
 const MovieDb = require("moviedb-promise");
@@ -69,8 +76,16 @@ app
     server.use(bodyParser.json());
     server.use(bodyParser.urlencoded({ extended: true }));
     server.use(cookieParser());
+    server.use(session({
+      secret: 'keyboard cat',
+      resave: true,
+      saveUninitialized: true
+    }));
+    server.use(passport.initialize());
+    server.use(passport.session());
     server.use(userMiddleware);
     server.use(appRoutes);
+    server.use(appAuthRoutes);
     nextI18NextMiddleware(nextI18next, app, server);
 
     server.get("*", (req, res) => {
