@@ -1,5 +1,5 @@
 import React from "react";
-import App, { Container } from "next/app";
+import App from "next/app";
 import Meta from "../components/meta";
 import MainAppContainer from "../components/main-app-container";
 import withReduxStore from "../lib/with-redux-store";
@@ -25,14 +25,12 @@ class MyApp extends App {
     const { Component, pageProps, reduxStore } = this.props;
 
     return (
-      <Container>
-        <Provider store={reduxStore}>
+      <Provider store={reduxStore}>
           <MainAppContainer>
             <Meta />
             <Component {...pageProps} />
           </MainAppContainer>
-        </Provider>
-      </Container>
+          </Provider>
     );
   }
 }
