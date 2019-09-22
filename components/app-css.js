@@ -7,6 +7,20 @@ export default () => (
                 line-height: 1.4;
             }
 
+            .mm-title-container {
+                margin: 40px 20px;
+            }
+
+            .mm-title {
+                font-size: 24px;
+                font-weight:800;
+            }
+
+            .mm-subtitle {
+                font-size: 14px;
+                font-weight:normal;
+            }
+
             .mm-big-message {
                 text-align: center;
                 padding: 20px;
@@ -62,7 +76,7 @@ export default () => (
                 border-radius: 6px;
                 text-decoration: none;
                 color: #333;
-                font-size: 14px;
+                font-size: 16px;
                 cursor: pointer;
                 background: #ffdb6e;
                 width: 170px;
@@ -99,11 +113,6 @@ export default () => (
                 white-space: nowrap;
             }
 
-            .options-container {
-                margin: 0px 20px;
-                padding: 40px 0;
-                text-align: center;
-            }
             .join-btn {
                 margin-top: 10px;
             }

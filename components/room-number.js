@@ -2,23 +2,20 @@ import { withNamespaces } from '../i18n'
 
 export default withNamespaces('common')(({ roomId, t }) => (
     <section className="container">
-        <div className="room-number-desc">{t('room')}</div>
-        <div className="room-number">{roomId}</div>
+        <span className="room-number-desc"><span className="group-url">moviematch.io/{roomId}</span></span>
         <style jsx>
             {`
+            .container {
+                margin-top: 10px;
+            }
                 .room-number-desc {
                     text-align: center;
                     margin-bottom: 10px;
                     font-size: 14px;
                 }
 
-                .room-number {
-                    text-align: center;
-                    font-size: 40px;
-                    color: #333;
-                    line-height: 1;
+                .group-url {
                     font-weight: bold;
-                    margin-bottom: 20px;
                 }
             `}
         </style>

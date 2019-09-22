@@ -9,6 +9,8 @@ import { pusherConnection } from '../lib/pusher-connection'
 import validateRoom from '../lib/room-redirect'
 import { ROOM_STATES } from '../lib/constants'
 import Loader from '../components/loader'
+import Title from '../components/title'
+import jsCookie from 'js-cookie';
 
 import copy from 'copy-to-clipboard'
 
@@ -81,7 +83,7 @@ class WaitingRoom extends React.Component {
 
         setTimeout(() => {
             this.setState({ showShareTooltip: false })
-        }, 1000)
+        }, 3000)
     }
 
     setReady() {
@@ -91,7 +93,7 @@ class WaitingRoom extends React.Component {
     }
 
     render() {
-        const TopBarForPage = <Topbar showMenu={false} />
+        const TopBarForPage = <Topbar showMenu={true} roomId={this.props.roomId} roomPage={true} />
 
         if (!this.state.loaded) {
             return (
@@ -108,17 +110,15 @@ class WaitingRoom extends React.Component {
                 <div className="page-container">
                     {TopBarForPage}
                     <div className="page-content">
+                        <PageWidth>
+                        <Title
+                            title="Who will watch the movie with you?"
+                            subtitle="It's time to invite some friends to the group.">
+                        </Title>
+
+                        </PageWidth>
                         <div className="align-center top-area">
                             <PageWidth className="mm-content-padding ">
-                                <RoomNumber roomId={this.props.roomId} />
-                                <div className="share-info">
-                                    {this.props.t('invite-friends-to-room')}
-                                    <br />
-                                    {this.props.t(
-                                        'share-the-room-number-or-use-invite'
-                                    )}
-                                </div>
-
                                 <button
                                     onClick={this.shareRoom}
                                     className="mm-small-btn"
@@ -130,52 +130,51 @@ class WaitingRoom extends React.Component {
                                             )}
                                         </span>
                                     )}
-                                    {this.props.t('invite-friends-btn')}
+                                    Invite
                                 </button>
+                                <RoomNumber roomId={this.props.roomId} />
                             </PageWidth>
                         </div>
                         <PageWidth className="mm-content-padding ">
-                            <div className="align-center">
+                            <div>
                                 <div className="room-users">
-                                    <div>
-                                        {this.props.t('people-in-the-room')}
-                                    </div>
-                                    {this.state.users.map(user => (
-                                        <div
+                                    {this.state.users.length} participant(s):
+                                    {this.state.users.map((user, index) => (
+                                        <span
                                             className="user-info"
                                             key={user.id}
                                         >
-                                            {user.name}
-                                        </div>
+                                        {index != 0 ? ', ': ' '}
+                                        { user.id == jsCookie.get('userId') ? 'You': `${user.name}`}
+                                        </span>
                                     ))}
                                 </div>
                             </div>
-                            <div />
+
                         </PageWidth>
                     </div>
+
                     <div className="continue-container">
+
+                    {this.state.users.length === 1 && (
+                                <div className="alone-message">
+                                    <b>{this.props.t('you-are-alone')}</b>
+                                    <br />
+                                    {this.props.t(
+                                        'mm-is-better-with-friends'
+                                    )}
+                                </div>
+                            )}
+
+
                         {!this.state.ready && (
                             <PageWidth className="mm-content-padding ">
-                                {this.state.users.length === 1 && (
-                                    <div className="alone-message">
-                                        <b>{this.props.t('you-are-alone')}</b>
-                                        <br />
-                                        {this.props.t(
-                                            'mm-is-better-with-friends'
-                                        )}
-                                    </div>
-                                )}
                                 <button
                                     onClick={this.setReady}
                                     className="continue-button"
                                 >
-                                    {this.props.t('room-is-ready')}
+                                    Continue
                                 </button>
-                                <div className="continue-information">
-                                    {this.props.t(
-                                        'after-everyone-press-button'
-                                    )}
-                                </div>
                             </PageWidth>
                         )}
 
@@ -194,6 +193,7 @@ class WaitingRoom extends React.Component {
                     }
 
                     .share-info {
+                        margin-top: 10px;
                         font-size: 14px;
                     }
 
@@ -213,14 +213,12 @@ class WaitingRoom extends React.Component {
                         font-size: 14px;
                     }
 
-                    b {
-                        font-weight: bold;
+                    .mm-small-btn {
+                        margin-top: 0;
                     }
 
-                    .title {
-                        font-size: 20px;
-                        margin-bottom: 20px;
-                        margin-top: 20px;
+                    b {
+                        font-weight: bold;
                     }
 
                     .room-users {
@@ -244,6 +242,7 @@ class WaitingRoom extends React.Component {
                         border-radius: 4px;
                         color: #333;
                         text-transform: uppercase;
+                        margin-bottom: 40px;
                     }
 
                     .continue-container {
@@ -265,8 +264,7 @@ class WaitingRoom extends React.Component {
                     }
 
                     .top-area {
-                        background: #ffdb6e;
-                        padding: 20px;
+                        padding: 0 20px 40px 20px;
                     }
                 `}</style>
             </div>

@@ -18,7 +18,13 @@ class MyApp extends App {
             pageProps = await Component.getInitialProps(ctx)
         }
 
-        return { pageProps, namespacesRequired: ['common'] }
+        if (ctx.req && ctx.req.session.passport) {
+            pageProps.user = ctx.req.session.passport.user;
+        }
+
+        pageProps.namespacesRequired = ['common'];
+
+        return { pageProps };
     }
 
     render() {
