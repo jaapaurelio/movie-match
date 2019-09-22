@@ -2,7 +2,7 @@ import { withNamespaces } from '../i18n'
 
 export default withNamespaces('common')(({ groupId, t }) => (
     <section className="container">
-        <span className="group-number-desc"><span className="group-url">Your group name is {groupId}</span></span>
+        <span className="group-number-desc"><span className="group-url">{t('group-name')} {groupId}</span></span>
         <style jsx>
             {`
             .container {

@@ -112,8 +112,12 @@ class WaitingGroup extends React.Component {
                     <div className="page-content">
                         <PageWidth>
                         <Title
-                            title="Who will watch the movie with you?"
-                            subtitle="It's time to invite some friends to the group. You can use the button or share the group name with them.">
+                            title={this.props.t(
+                                'who-will-watch'
+                            )}
+                            subtitle={this.props.t(
+                                'time-to-invite'
+                            )} >
                         </Title>
 
                         </PageWidth>
@@ -130,7 +134,8 @@ class WaitingGroup extends React.Component {
                                             )}
                                         </span>
                                     )}
-                                    Invite
+
+                                    {this.props.t('invite')}
                                 </button>
                                 <GroupNumber groupId={this.props.groupId} />
                             </PageWidth>
@@ -138,14 +143,14 @@ class WaitingGroup extends React.Component {
                         <PageWidth className="mm-content-padding ">
                             <div>
                                 <div className="group-users">
-                                    <div className="sub-title">People in the group</div>
+                                    <div className="sub-title">{this.props.t('people-in-group')}</div>
                                     {this.state.users.map((user, index) => (
                                         <span
                                             className="user-info"
                                             key={user.id}
                                         >
                                         {index != 0 ? ', ': ' '}
-                                        { user.id == jsCookie.get('userId') ? 'You': `${user.name}`}
+                                        { user.id == jsCookie.get('userId') ? this.props.t('you'): `${user.name}`}
                                         </span>
                                     ))}
                                 </div>
