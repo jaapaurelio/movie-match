@@ -4,7 +4,6 @@ import { withNamespaces } from '../i18n'
 
 export default withNamespaces('common')(
     ({
-        newGroupPage = false,
         groupPage = false,
         groupId,
         title = '',
@@ -22,19 +21,6 @@ export default withNamespaces('common')(
                     <div className="space-between" />
                     {showMenu && (
                         <div className="top-icons-container">
-                            <Link href={`/start`}>
-                                <div className="sublink">
-                                    <div
-                                        className={
-                                            `sublink-btn ` +
-                                            (newGroupPage &&
-                                                'sublink-btn-active')
-                                        }
-                                    >
-                                        {t('topbar-new-group')}
-                                    </div>
-                                </div>
-                            </Link>
                             {groupId && (
                                 <Link href={`/group?id=${groupId}`}>
                                     <div className="sublink">
