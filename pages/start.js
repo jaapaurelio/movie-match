@@ -78,7 +78,7 @@ class Start extends React.Component {
                 <PageWidth>
 
                     <Title
-                        title={`${this.props.t('hi')} ${this.state.username} ${this.props.t('what-looking-for')}`}>
+                        title={`${this.props.t('hi')} ${this.state.username}${this.props.t('what-looking-for')}`}>
                     </Title>
 
                     <div className="options-container create-group-container">
