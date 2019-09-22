@@ -20,7 +20,6 @@ require("./server/models/genre.model");
 require("./server/models/room.model");
 require("./server/models/user.model");
 const authInit = require('./auth/init');
-require('./auth/google');
 
 authInit();
 const appRoutes = require("./server/routes");

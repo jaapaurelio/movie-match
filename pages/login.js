@@ -23,6 +23,12 @@ class Start extends React.Component {
                     </Link>
 
                     <div className="login-btn-container">
+                        <a className="login-btn" href="/auth/facebook">
+                            Sign In with Facebook
+                        </a>
+                    </div>
+
+                    <div className="login-btn-container">
                         <a className="login-btn" href="/auth/google">
                             Sign In with Google
                         </a>

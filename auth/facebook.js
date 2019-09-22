@@ -1,23 +1,22 @@
 const passport = require('passport')
-const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy
+const FacebookStrategy = require('passport-facebook').Strategy;
 const mongoose = require('mongoose')
 const User = mongoose.model('User')
 
-// Use the GoogleStrategy within Passport.
+// Use the FacebookStrategy within Passport.
 //   Strategies in Passport require a `verify` function, which accept
 //   credentials (in this case, an accessToken, refreshToken, and Google
 //   profile), and invoke a callback with a user object.
 passport.use(
-    new GoogleStrategy(
+    new FacebookStrategy(
         {
-            clientID: process.env.GOOGLE_AUTH_CLIENT_ID,
-            clientSecret: process.env.GOOGLE_AUTH_CLIENT_SECRET,
-            callbackURL: 'http://localhost:3000/auth/google/callback',
+            clientID: process.env.FACEBOOK_AUTH_CLIENT_ID,
+            clientSecret: process.env.FACEBOOK_AUTH_CLIENT_SECRET,
+            callbackURL: 'http://localhost:3000/auth/facebook/callback',
+            profileFields: ['id', 'email', 'name', 'displayName']
         },
         function(accessToken, refreshToken, profile, done) {
-
-
-            User.findOne({ googleId: profile.id }, function(err, user) {
+            User.findOne({ facebookId: profile.id }, function(err, user) {
                 if (err) {
                     return done(err)
                 }
@@ -29,9 +28,9 @@ passport.use(
                 if (!user) {
                     User.create(
                         {
-                            googleId: profile.id,
+                            facebookId: profile.id,
                             name: profile.displayName,
-                            email: profile.emails[0].value
+                            email: profile.emails && profile.emails[0] && profile.emails[0].value
                         },
                         function(err, user) {
                             return done(err, user)
