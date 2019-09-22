@@ -7,11 +7,11 @@ import Loader from '../components/loader'
 import axios from 'axios'
 import Router from 'next/router'
 import PageWidth from '../components/page-width'
-import RoomInfoBar from '../components/room-info-bar'
+import GroupInfoBar from '../components/group-info-bar'
 import jsCookie from 'js-cookie'
-import { ROOM_STATES } from '../lib/constants'
+import { GROUP_STATES } from '../lib/constants'
 import { pusherConnection } from '../lib/pusher-connection'
-import validateRoom from '../lib/room-redirect'
+import validateGroup from '../lib/group-redirect'
 import UserPop from '../components/user-popup'
 import { withNamespaces } from '../i18n'
 import { sortMovies } from '../lib/sort-movies'
@@ -37,7 +37,7 @@ class Index extends React.Component {
             showMatchPopup: false,
             users: [],
             info: {},
-            room: {},
+            group: {},
             showShareButton: false,
             showAddMoreBtn: true,
             loaded: false,
@@ -70,7 +70,7 @@ class Index extends React.Component {
             }
         })
 
-        await axios.post(`/api/room/add-movies/${this.props.roomId}`, {
+        await axios.post(`/api/group/add-movies/${this.props.groupId}`, {
             movies,
             page,
             totalPages: moviesListResponse.total_pages,
@@ -165,7 +165,7 @@ class Index extends React.Component {
             .movieRecommendations({ id: movieId })
             .then(recomendations => {
                 if (recomendations && recomendations.results) {
-                    axios.post(`/api/room/add-movies/${this.props.roomId}`, {
+                    axios.post(`/api/group/add-movies/${this.props.groupId}`, {
                         movies: recomendations.results,
                     })
                 }
@@ -175,7 +175,7 @@ class Index extends React.Component {
     postLike(like) {
         const movieId = this.state.movie.id
         like = like ? 'like' : 'nolike'
-        axios.post(`api/room/${this.props.roomId}/${movieId}/${like}`)
+        axios.post(`api/group/${this.props.groupId}/${movieId}/${like}`)
     }
 
     like() {
@@ -199,7 +199,7 @@ class Index extends React.Component {
         })
 
         axios.post(
-            `api/room/similar/${this.props.roomId}/${this.state.movie.id}`
+            `api/group/similar/${this.props.groupId}/${this.state.movie.id}`
         )
     }
 
@@ -229,10 +229,10 @@ class Index extends React.Component {
 
     share() {
         if (navigator.share) {
-            const url = `${location.origin}/room?id=${this.props.roomId}`
+            const url = `${location.origin}/group?id=${this.props.groupId}`
             navigator.share({
                 title: 'Movie Match',
-                text: `Room ${this.props.roomId}`,
+                text: `Group ${this.props.groupId}`,
                 url,
             })
         }
@@ -243,10 +243,10 @@ class Index extends React.Component {
             this.setState({ showShareButton: true })
         }
 
-        const moviesR = await axios.get(`/api/room/${this.props.roomId}`)
-        let { room } = moviesR.data
+        const moviesR = await axios.get(`/api/group/${this.props.groupId}`)
+        let { group } = moviesR.data
 
-        if (!validateRoom(room, ROOM_STATES.MATCHING)) {
+        if (!validateGroup(group, GROUP_STATES.MATCHING)) {
             return
         }
 
@@ -258,7 +258,7 @@ class Index extends React.Component {
 
         const userId = jsCookie.get('userId')
 
-        this.channel = this.pusher.subscribe(`room-${this.props.roomId}`)
+        this.channel = this.pusher.subscribe(`group-${this.props.groupId}`)
 
         this.channel.bind('movie-matched', matches => {
             this.setState({
@@ -275,14 +275,14 @@ class Index extends React.Component {
 
         this.channel.bind('new-movies', this.addNewMovies.bind(this))
 
-        const matched = room.state === ROOM_STATES.MATCHED
-        let movies = room.movies
+        const matched = group.state === GROUP_STATES.MATCHED
+        let movies = group.movies
 
         this.setState({
             matched,
-            users: room.users,
-            room,
-            userConfiguration: room.configurationByUser[userId],
+            users: group.users,
+            group,
+            userConfiguration: group.configurationByUser[userId],
         })
 
         if (!movies) {
@@ -302,13 +302,13 @@ class Index extends React.Component {
 
     componentWillUnmount() {
         if (this.pusher) {
-            this.pusher.unsubscribe(`room-${this.props.roomId}`)
+            this.pusher.unsubscribe(`group-${this.props.groupId}`)
         }
     }
 
     onClickMatches() {
         this.setState({ showMatchPopup: false })
-        Router.push(`/matches?id=${this.props.roomId}`)
+        Router.push(`/matches?id=${this.props.groupId}`)
     }
 
     preloadImages(movie) {
@@ -333,17 +333,17 @@ class Index extends React.Component {
     }
 
     static async getInitialProps({ query }) {
-        const roomId = query.id && query.id.toUpperCase()
-        return { roomId, namespacesRequired: ['common'] }
+        const groupId = query.id && query.id.toUpperCase()
+        return { groupId, namespacesRequired: ['common'] }
     }
 
     render() {
         const { movie, showMatchPopup } = this.state
         const TopBarForPage = (
             <Topbar
-                roomPage={true}
-                activetab="room"
-                roomId={this.props.roomId}
+                groupPage={true}
+                activetab="group"
+                groupId={this.props.groupId}
             />
         )
 
@@ -360,16 +360,16 @@ class Index extends React.Component {
         return (
             <div>
                 {TopBarForPage}
-                <RoomInfoBar
+                <GroupInfoBar
                     shareBtn={this.share}
                     showShare={this.state.showShareButton}
                     users={this.state.users}
-                    room={this.state.room}
+                    group={this.state.group}
                 />
                 {this.state.users.length == 1 && (
                     <div className="alone-msg">
                         <PageWidth className="mm-content-padding">
-                            {this.props.t('you-are-alone-room')}
+                            {this.props.t('you-are-alone-group')}
                             <br />
                             {this.props.t('mm-better-with-friends')}
                             <br />
@@ -442,12 +442,12 @@ class Index extends React.Component {
                             margin-top: 6px;
                         }
 
-                        .room-code-alone {
+                        .group-code-alone {
                             margin-top: 6px;
                             font-weight: bold;
                         }
 
-                        .room-id {
+                        .group-id {
                             background: #333333;
                             color: #72a3b3;
                             text-align: center;

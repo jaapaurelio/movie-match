@@ -18,7 +18,7 @@ const passport = require('passport');
 const session = require('express-session');
 
 require("./server/models/genre.model");
-require("./server/models/room.model");
+require("./server/models/group.model");
 require("./server/models/user.model");
 const authInit = require('./auth/init');
 

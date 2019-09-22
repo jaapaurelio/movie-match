@@ -28,10 +28,10 @@ const InfoSchema = new mongoose.Schema({
   totalPages: Number
 });
 
-var RoomSchema = new mongoose.Schema(
+var GroupSchema = new mongoose.Schema(
   {
     id: String,
-    state: { type: String, default: "WAITING_ROOM" },
+    state: { type: String, default: "WAITING_GROUP" },
     configurationByUser: { type: Object, default: {} },
     movies: {
       type: Object,
@@ -47,4 +47,4 @@ var RoomSchema = new mongoose.Schema(
   { timestamps: true, minimize: false }
 );
 
-mongoose.model("Room", RoomSchema);
+mongoose.model("Group", GroupSchema);
