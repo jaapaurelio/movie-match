@@ -73,7 +73,7 @@ class Start extends React.Component {
                 <PageWidth>
 
                     <Title
-                        title={`Hi ${this.state.username}, what are you looking for?`}>
+                        title={`${this.props.t('hi')} ${this.state.username} ${this.props.t('what-looking-for')}`}>
                     </Title>
 
                     <div className="options-container create-group-container">
@@ -84,9 +84,8 @@ class Start extends React.Component {
                                 onClick={this.createGroup}
                                 className="mm-btn start-btn "
                             >
-                                {//this.props.t('create-group-btn')
-                                }
-                                Find a movie to watch</button>
+                                {this.props.t('find-a-movie')}
+                                </button>
                         </div>
                     </div>
                     <div className="options-container">
@@ -104,15 +103,9 @@ class Start extends React.Component {
                                     className="mm-btn start-btn join-btn"
                                     onClick={this.join}
                                 >
-                                    { // this.props.t('join-btn')
-                                    }
-                                    Join a group
+                                    {this.props.t('join-a-group')}
                                 </button>
                             </div>
-                        </div>
-                        <div className="info">
-                            {//this.props.t('ask-group-number')
-                            }
                         </div>
                     </div>
 
