@@ -45,7 +45,7 @@ export default withNamespaces('common')(
                                                     'sublink-btn-active')
                                             }
                                         >
-                                            {t('topbar-room')}{' '}
+                                            Group{' '}
                                             <span className="room-id-top">
                                                 {roomId}
                                             </span>

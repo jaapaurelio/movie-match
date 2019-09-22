@@ -4,6 +4,7 @@ import Router from 'next/router'
 import PageWidth from '../components/page-width'
 import Headline from '../components/headline'
 import UserPop from '../components/user-popup'
+import Title from '../components/title'
 import { withNamespaces } from '../i18n'
 import jsCookie from 'js-cookie'
 import { connect } from 'react-redux'
@@ -68,58 +69,53 @@ class Start extends React.Component {
                     newRoomPage={true}
                     title="Movie Match"
                 />
-                <Headline>
-                    {this.props.t('hi')}{' '}
-                    <span onClick={this.changeName} className="username">
-                        {this.state.username}
-                    </span>
-                    {this.props.t('lets-find-the-perfect-movie')}
-                </Headline>
+
                 <PageWidth>
+
+                    <Title
+                        title={`Hi ${this.state.username}, what are you looking for?`}>
+                    </Title>
+
                     <div className="options-container create-room-container">
-                        <div className="join-title">
-                            {this.props.t('create-a-room')}
-                        </div>
+
 
                         <div className="create-room-btn-container">
                             <button
                                 onClick={this.createRoom}
-                                className="mm-btn"
+                                className="mm-btn start-btn "
                             >
-                                {this.props.t('create-room-btn')}
-                            </button>
+                                {//this.props.t('create-room-btn')
+                                }
+                                Find a movie to watch</button>
                         </div>
                     </div>
                     <div className="options-container">
-                        <div className="join-title">
-                            {this.props.t('join-a-room')}
-                        </div>
                         <div>
+                            {/*
                             <input
                                 className="room-input"
                                 type="text"
                                 placeholder="xxxx"
                                 maxLength="4"
                                 onChange={this.onChangeId}
-                            />
+                            />*/}
                             <div>
                                 <button
-                                    className="join-btn mm-btn"
+                                    className="mm-btn start-btn join-btn"
                                     onClick={this.join}
                                 >
-                                    {this.props.t('join-btn')}
+                                    { // this.props.t('join-btn')
+                                    }
+                                    Join a group
                                 </button>
                             </div>
                         </div>
                         <div className="info">
-                            {this.props.t('ask-room-number')}
+                            {//this.props.t('ask-room-number')
+                            }
                         </div>
                     </div>
-                    <div className="how-to-link">
-                        <Link href="/login">
-                            <a>{this.props.t('login')}</a>
-                        </Link>
-                    </div>
+
                     <div className="how-to-link">
                         <Link href="/intro">
                             <a>{this.props.t('how-to-use')}</a>
@@ -149,6 +145,15 @@ class Start extends React.Component {
                 <UserPop />
 
                 <style jsx>{`
+
+                    .start-btn {
+                        width: 250px;
+                    }
+
+                    .join-btn {
+                        background: transparent;
+                    }
+
                     .username {
                         text-decoration: underline;
                     }
@@ -167,11 +172,7 @@ class Start extends React.Component {
                     }
 
                     .options-container {
-                        border-bottom: 1px solid whitesmoke;
-                    }
-
-                    .create-room-btn-container {
-                        padding: 0 10px;
+                        margin: 40px 20px;
                         text-align: center;
                     }
 
@@ -191,6 +192,7 @@ class Start extends React.Component {
                     }
 
                     .how-to-link {
+                        margin-top: 80px;
                         text-align: center;
                     }
 
@@ -208,18 +210,10 @@ class Start extends React.Component {
     }
 
     static getInitialProps() {
-        return {
-            namespacesRequired: ['common'],
-        }
+        const pageProps = { namespacesRequired: ['common']};
+
+        return pageProps;
     }
 }
 
-function mapStateToProps(state) {
-    const { user } = state
-    return { userName: user.name }
-}
-
-export default connect(
-    mapStateToProps,
-    null
-)(withNamespaces('common')(Start))
+export default withNamespaces('common')(Start);
