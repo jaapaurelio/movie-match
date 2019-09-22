@@ -5,7 +5,6 @@ const next = require("next");
 const express = require("express");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
-const userMiddleware = require("./server/user-middleware");
 const mongoose = require("mongoose");
 const nextI18NextMiddleware = require("next-i18next/middleware");
 const nextI18next = require("./i18n");
@@ -83,7 +82,6 @@ app
     }));
     server.use(passport.initialize());
     server.use(passport.session());
-    server.use(userMiddleware);
     server.use(appRoutes);
     server.use(appAuthRoutes);
     nextI18NextMiddleware(nextI18next, app, server);
