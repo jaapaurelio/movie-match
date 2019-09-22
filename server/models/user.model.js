@@ -5,6 +5,7 @@ var UserSchema = new mongoose.Schema({
   id: String,
   name: String,
   googleId: String,
+  facebookId: String,
   email: String
 });
 
