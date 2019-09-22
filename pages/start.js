@@ -21,10 +21,12 @@ class Start extends React.Component {
             lastGroupId: undefined,
             username: '',
             language,
+            showGroupInput: false
         }
 
         this.onChangeId = this.onChangeId.bind(this)
         this.join = this.join.bind(this)
+        this.showGroupInput = this.showGroupInput.bind(this)
         this.createGroup = this.createGroup.bind(this)
         this.changeLanguage = this.changeLanguage.bind(this)
     }
@@ -42,6 +44,10 @@ class Start extends React.Component {
         if (this.state.groupId) {
             Router.push(`/waiting-group?id=${this.state.groupId}`)
         }
+    }
+
+    showGroupInput() {
+        this.setState({showGroupInput: true})
     }
 
     componentDidMount() {
@@ -66,7 +72,6 @@ class Start extends React.Component {
             <div>
                 <Topbar
                     groupId={this.state.lastGroupId}
-                    newGroupPage={false}
                     title="Movie Match"
                 />
 
@@ -89,24 +94,38 @@ class Start extends React.Component {
                         </div>
                     </div>
                     <div className="options-container">
-                        <div>
-                            {/*
+                        {!this.state.showGroupInput && <div>
+                            <button
+                                className="mm-btn start-btn join-btn"
+                                onClick={this.showGroupInput}
+                            >
+                                {this.props.t('join-a-group')}
+                            </button>
+                        </div>
+                        }
+
+                        {this.state.showGroupInput && <div>
+
+                            <div>
+                            <div className="group-name-label">{this.props.t('group-name')}</div>
                             <input
                                 className="group-input"
                                 type="text"
-                                placeholder="xxxx"
+                                placeholder="X X X X X"
                                 maxLength="4"
                                 onChange={this.onChangeId}
-                            />*/}
-                            <div>
-                                <button
-                                    className="mm-btn start-btn join-btn"
-                                    onClick={this.join}
-                                >
-                                    {this.props.t('join-a-group')}
-                                </button>
+                            />
                             </div>
+
+                            <button
+                                className="mm-btn start-btn join-btn"
+                                onClick={this.join}
+                            >
+                                {this.props.t('join-btn')}
+                            </button>
                         </div>
+                        }
+
                     </div>
 
                     <div className="how-to-link">
@@ -139,8 +158,14 @@ class Start extends React.Component {
 
                 <style jsx>{`
 
-                    .start-btn {
+                    .start-btn,
+                    .group-input {
                         width: 250px;
+                    }
+
+                    .group-name-label {
+                        font-size: 12px;
+                        margin-bottom: 6px;
                     }
 
                     .join-btn {

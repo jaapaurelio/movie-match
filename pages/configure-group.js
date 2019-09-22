@@ -229,7 +229,7 @@ class CreateGroup extends React.Component {
 
         return (
             <div className="root-container">
-                <Topbar newGroupPage={true} />
+                <Topbar groupPage={true} groupId={this.props.groupId} />
                 {!this.state.waitingUsers && (
                     <div>
                         <PageWidth>
