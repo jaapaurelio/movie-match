@@ -1,19 +1,19 @@
 import PageWidth from './page-width'
 
-export default ({ room, users }) => {
+export default ({ group, users }) => {
     return (
         <PageWidth className="mm-content-padding">
-            <div className="room-info">
+            <div className="group-info">
                 <div className="eli">
-                    <i className="fas fa-user room-info-icon" />
-                    <span className="room-info-text">{users.length}</span>
-                    <i className="fas fa-info-circle room-info-icon" />
+                    <i className="fas fa-user group-info-icon" />
+                    <span className="group-info-text">{users.length}</span>
+                    <i className="fas fa-info-circle group-info-icon" />
                     {users.map(u => u.name).join(', ')}
                 </div>
             </div>
             <style jsx>
                 {`
-                    .room-info {
+                    .group-info {
                         background: #fff;
                         color: #333;
                         font-size: 12px;
@@ -29,11 +29,11 @@ export default ({ room, users }) => {
                         text-overflow: ellipsis;
                     }
 
-                    .room-info-icon {
+                    .group-info-icon {
                         margin-right: 4px;
                     }
 
-                    .room-info-text {
+                    .group-info-text {
                         margin-right: 10px;
                     }
                 `}

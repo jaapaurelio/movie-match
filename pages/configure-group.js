@@ -4,17 +4,17 @@ const moviedb = new MovieDb('284941729ae99106f71e56126227659b')
 import axios from 'axios'
 import Router from 'next/router'
 import PageWidth from '../components/page-width'
-import Headline from '../components/headline'
-import RoomNumber from '../components/room-number'
+import Title from '../components/title'
+import GroupNumber from '../components/group-number'
 import { pusherConnection } from '../lib/pusher-connection'
-import validateRoom from '../lib/room-redirect'
-import { ROOM_STATES } from '../lib/constants'
+import validateGroup from '../lib/group-redirect'
+import { GROUP_STATES } from '../lib/constants'
 import Loader from '../components/loader'
 import UserPop from '../components/user-popup'
 import jsCookie from 'js-cookie'
 import { withNamespaces } from '../i18n'
 
-class CreateRoom extends React.Component {
+class CreateGroup extends React.Component {
     constructor(props) {
         super(props)
 
@@ -71,7 +71,7 @@ class CreateRoom extends React.Component {
             return this.showErrors(errorMessages)
         }
 
-        this.createRoom({
+        this.createGroup({
             selectedGenres,
             startYear: this.state.startYear,
             endYear: this.state.endYear,
@@ -95,8 +95,8 @@ class CreateRoom extends React.Component {
         })
     }
 
-    async createRoom({ selectedGenres, startYear, endYear, rating }) {
-        const roomId = this.props.roomId
+    async createGroup({ selectedGenres, startYear, endYear, rating }) {
+        const groupId = this.props.groupId
         let ratingGte = 1
         let ratingLte = 10
 
@@ -131,7 +131,7 @@ class CreateRoom extends React.Component {
             }
         })
 
-        axios.post(`/api/room/add-movies-configuration/${roomId}`, {
+        axios.post(`/api/group/add-movies-configuration/${groupId}`, {
             movies,
             config: {
                 ratingLte,
@@ -162,11 +162,11 @@ class CreateRoom extends React.Component {
 
     async componentDidMount() {
         const userId = jsCookie.get('userId')
-        const roomR = await axios.get(`/api/room/${this.props.roomId}`)
+        const groupR = await axios.get(`/api/group/${this.props.groupId}`)
 
-        let { room } = roomR.data
+        let { group } = groupR.data
 
-        if (!validateRoom(room, ROOM_STATES.CONFIGURING)) {
+        if (!validateGroup(group, GROUP_STATES.CONFIGURING)) {
             return
         }
 
@@ -174,7 +174,7 @@ class CreateRoom extends React.Component {
             loaded: true,
         })
 
-        const userHasConfig = room.configurationByUser[userId]
+        const userHasConfig = group.configurationByUser[userId]
 
         if (userHasConfig) {
             return this.setState({
@@ -184,17 +184,17 @@ class CreateRoom extends React.Component {
 
         this.pusher = pusherConnection()
 
-        this.channel = this.pusher.subscribe(`room-${this.props.roomId}`)
+        this.channel = this.pusher.subscribe(`group-${this.props.groupId}`)
 
         this.channel.bind('configuration-done', () => {
             this.setState({ loaded: false })
-            Router.push(`/room?id=${this.props.roomId}`)
+            Router.push(`/group?id=${this.props.groupId}`)
         })
     }
 
     componentWillUnmount() {
         if (this.pusher) {
-            this.pusher.unsubscribe(`room-${this.props.roomId}`)
+            this.pusher.unsubscribe(`group-${this.props.groupId}`)
         }
     }
     componentWillMount() {
@@ -203,7 +203,7 @@ class CreateRoom extends React.Component {
     }
 
     static async getInitialProps({ query }) {
-        const roomId = query.id && query.id.toUpperCase()
+        const groupId = query.id && query.id.toUpperCase()
         const genreMovieList = await moviedb.genreMovieList()
 
         const genres = genreMovieList.genres.map(genre => ({
@@ -211,7 +211,7 @@ class CreateRoom extends React.Component {
             selected: false,
         }))
 
-        return { genres, namespacesRequired: ['common'], roomId }
+        return { genres, namespacesRequired: ['common'], groupId }
     }
 
     render() {
@@ -229,13 +229,13 @@ class CreateRoom extends React.Component {
 
         return (
             <div className="root-container">
-                <Topbar newRoomPage={true} />
+                <Topbar newGroupPage={true} />
                 {!this.state.waitingUsers && (
                     <div>
-                        <Headline className="description-container">
-                            {this.props.t('what-kind-of-movie-you-like')}
-                        </Headline>
                         <PageWidth>
+                            <Title
+                                title={this.props.t('what-kind-of-movie-you-like')}>
+                            </Title>
                             <div className="mm-content-padding">
                                 <div className="form-title">
                                     {this.props.t('movie-genres')}
@@ -348,10 +348,10 @@ class CreateRoom extends React.Component {
                                         </div>
                                     </div>
                                 )}
-                                <div className="create-room-btn-container">
+                                <div className="create-group-btn-container">
                                     <button
                                         onClick={this.submitForm}
-                                        className="mm-btn create-room-btn"
+                                        className="mm-btn create-group-btn"
                                     >
                                         {this.props.t('next-btn')}
                                     </button>
@@ -364,7 +364,7 @@ class CreateRoom extends React.Component {
                 {this.state.waitingUsers && (
                     <div className="waiting-users-container">
                         <PageWidth>
-                            <RoomNumber roomId={this.props.roomId} />
+                            <GroupNumber groupId={this.props.groupId} />
                             <div className="waiting-title">
                                 {this.props.t('waiting-for-friends-config')}
                             </div>
@@ -456,11 +456,11 @@ class CreateRoom extends React.Component {
                             border-color: #f3e077;
                         }
 
-                        .create-room-btn-container {
+                        .create-group-btn-container {
                             text-align: right;
                         }
 
-                        .create-room-btn {
+                        .create-group-btn {
                             margin: 40px 0;
                             width: 100%;
                         }
@@ -493,4 +493,4 @@ class CreateRoom extends React.Component {
     }
 }
 
-export default withNamespaces('common')(CreateRoom)
+export default withNamespaces('common')(CreateGroup)

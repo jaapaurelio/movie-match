@@ -5,10 +5,10 @@ const moviedb = new MovieDb('284941729ae99106f71e56126227659b')
 const randomstring = require('randomstring')
 const mongoose = require('mongoose')
 const Genre = mongoose.model('Genre')
-const Room = mongoose.model('Room')
+const Group = mongoose.model('Group')
 const User = mongoose.model('User')
 const shuffle = require('shuffle-array')
-const { ROOM_STATES } = require('../lib/constants')
+const { GROUP_STATES } = require('../lib/constants')
 
 const pusher = new Pusher({
     appId: process.env.PUSHER_APP_ID,
@@ -18,34 +18,34 @@ const pusher = new Pusher({
     encrypted: true,
 })
 
-const generateRoomId = async function() {
-    const roomIdsMap = await Room.find(
+const generateGroupId = async function() {
+    const groupIdsMap = await Group.find(
         {},
         {
             _id: 0,
             id: 1,
         }
     ).exec()
-    const roomIds = roomIdsMap.map(r => r.id)
+    const groupIds = groupIdsMap.map(r => r.id)
 
     do {
-        roomId = randomstring.generate({
+        groupId = randomstring.generate({
             length: 4,
             charset: 'alphabetic',
             readable: true,
             capitalization: 'uppercase',
         })
-    } while (roomIds.some(id => roomId === id))
+    } while (groupIds.some(id => groupId === id))
 
-    return roomId
+    return groupId
 }
 
-function addMoviesToRoom(room, movies, userId) {
-    const roomId = room.id
+function addMoviesToGroup(group, movies, userId) {
+    const groupId = group.id
     const wait = movies.map(movie => {
-        if (room.movies[movie.id]) {
-            return Room.findOneAndUpdate(
-                { id: roomId },
+        if (group.movies[movie.id]) {
+            return Group.findOneAndUpdate(
+                { id: groupId },
                 {
                     $push: {
                         [`movies.${movie.id}.usersRecomendation`]: userId,
@@ -53,8 +53,8 @@ function addMoviesToRoom(room, movies, userId) {
                 }
             )
         } else {
-            return Room.findOneAndUpdate(
-                { id: roomId },
+            return Group.findOneAndUpdate(
+                { id: groupId },
                 {
                     [`movies.${movie.id}`]: {
                         id: movie.id,
@@ -72,33 +72,33 @@ function addMoviesToRoom(room, movies, userId) {
     return Promise.all(wait)
 }
 
-router.post('/api/room/add-movies-configuration/:roomId', async (req, res) => {
+router.post('/api/group/add-movies-configuration/:groupId', async (req, res) => {
     const { userId } = req.cookies
-    const { roomId } = req.params
+    const { groupId } = req.params
     const { movies, config } = req.body
 
-    let room = await Room.findOne({ id: roomId })
+    let group = await Group.findOne({ id: groupId })
 
-    if (!room || room.state !== ROOM_STATES.CONFIGURING) {
+    if (!group || group.state !== GROUP_STATES.CONFIGURING) {
         return res.send({
             success: false,
-            error: 'No room with this id in configuring phase',
+            error: 'No group with this id in configuring phase',
         })
     }
 
-    const userConfig = room.configurationByUser[userId]
+    const userConfig = group.configurationByUser[userId]
 
     if (userConfig) {
         return res.send({
             success: false,
-            error: 'User already with config for this room',
+            error: 'User already with config for this group',
         })
     }
 
-    await addMoviesToRoom(room, movies, userId)
+    await addMoviesToGroup(group, movies, userId)
 
-    room = await Room.findOneAndUpdate(
-        { id: roomId },
+    group = await Group.findOneAndUpdate(
+        { id: groupId },
         {
             [`configurationByUser.${userId}`]: {
                 ...config,
@@ -107,12 +107,12 @@ router.post('/api/room/add-movies-configuration/:roomId', async (req, res) => {
         { new: true }
     )
 
-    if (Object.keys(room.configurationByUser).length === room.users.length) {
-        room.state = ROOM_STATES.MATCHING
+    if (Object.keys(group.configurationByUser).length === group.users.length) {
+        group.state = GROUP_STATES.MATCHING
 
-        await Room.findOneAndUpdate({ id: roomId }, room)
+        await Group.findOneAndUpdate({ id: groupId }, group)
 
-        pusher.trigger(`room-${roomId}`, 'configuration-done', {})
+        pusher.trigger(`group-${groupId}`, 'configuration-done', {})
     }
 
     return res.send({
@@ -120,18 +120,18 @@ router.post('/api/room/add-movies-configuration/:roomId', async (req, res) => {
     })
 })
 
-router.post('/api/room/add-movies/:roomId', async (req, res) => {
+router.post('/api/group/add-movies/:groupId', async (req, res) => {
     const { userId } = req.cookies
-    const { roomId } = req.params
+    const { groupId } = req.params
     const { movies, page, totalPages } = req.body
 
-    let room = await Room.findOne({ id: roomId })
+    let group = await Group.findOne({ id: groupId })
 
-    await addMoviesToRoom(room, movies, userId)
+    await addMoviesToGroup(group, movies, userId)
 
     if (page) {
-        room = await Room.findOneAndUpdate(
-            { id: roomId },
+        group = await Group.findOneAndUpdate(
+            { id: groupId },
             {
                 [`configurationByUser.${userId}.page`]: page,
                 [`configurationByUser.${userId}.totalPages`]: totalPages,
@@ -140,16 +140,16 @@ router.post('/api/room/add-movies/:roomId', async (req, res) => {
         )
     }
 
-    room = await Room.findOne({ id: roomId })
+    group = await Group.findOne({ id: groupId })
 
     // send updated movies to clients
     const movieToSend = {}
 
     movies.forEach(movie => {
-        movieToSend[movie.id] = room.movies[movie.id]
+        movieToSend[movie.id] = group.movies[movie.id]
     })
 
-    pusher.trigger(`room-${roomId}`, 'new-movies', movieToSend)
+    pusher.trigger(`group-${groupId}`, 'new-movies', movieToSend)
 
     return res.send({
         success: true,
@@ -157,20 +157,20 @@ router.post('/api/room/add-movies/:roomId', async (req, res) => {
 })
 
 //todo remove
-router.post('/api/room/similar/:roomId/:movieId', async (req, res) => {
-    const { movieId, roomId } = req.params
+router.post('/api/group/similar/:groupId/:movieId', async (req, res) => {
+    const { movieId, groupId } = req.params
 
     res.send({})
 })
 
-router.post('/api/room/:roomId/:movieId/:like', async (req, res) => {
-    const { movieId, roomId } = req.params
+router.post('/api/group/:groupId/:movieId/:like', async (req, res) => {
+    const { movieId, groupId } = req.params
     const { userId } = req.cookies
     const like = req.params.like === 'like'
 
-    let room = await Room.findOne({ id: roomId }).exec()
+    let group = await Group.findOne({ id: groupId }).exec()
 
-    if (room.movies[movieId].usersSeen.find(u => u === userId)) {
+    if (group.movies[movieId].usersSeen.find(u => u === userId)) {
         return res.send({
             success: false,
             message: 'User already set movie like',
@@ -178,8 +178,8 @@ router.post('/api/room/:roomId/:movieId/:like', async (req, res) => {
     }
 
     if (like) {
-        room = await Room.findOneAndUpdate(
-            { id: roomId },
+        group = await Group.findOneAndUpdate(
+            { id: groupId },
             {
                 $push: {
                     [`movies.${movieId}.usersLike`]: userId,
@@ -189,31 +189,31 @@ router.post('/api/room/:roomId/:movieId/:like', async (req, res) => {
             { new: true }
         )
 
-        const movie = room.movies[movieId]
+        const movie = group.movies[movieId]
 
         if (
-            room.users.length >= 2 &&
-            movie.usersLike.length === room.users.length
+            group.users.length >= 2 &&
+            movie.usersLike.length === group.users.length
         ) {
-            const matches = Object.keys(room.movies).filter(movieId => {
+            const matches = Object.keys(group.movies).filter(movieId => {
                 return (
-                    room.movies[movieId].usersLike.length === room.users.length
+                    group.movies[movieId].usersLike.length === group.users.length
                 )
             })
 
             if (matches.length >= 3) {
-                room.matches = shuffle(matches)
-                room.state = ROOM_STATES.MATCHED
+                group.matches = shuffle(matches)
+                group.state = GROUP_STATES.MATCHED
 
-                pusher.trigger(`room-${roomId}`, 'movie-matched', {
-                    matches: room.matches,
+                pusher.trigger(`group-${groupId}`, 'movie-matched', {
+                    matches: group.matches,
                 })
 
-                room = await Room.findOneAndUpdate(
-                    { id: roomId },
+                group = await Group.findOneAndUpdate(
+                    { id: groupId },
                     {
                         matches: matches,
-                        state: ROOM_STATES.MATCHED,
+                        state: GROUP_STATES.MATCHED,
                         $push: { [`movies.${movieId}.usersLike`]: userId },
                     },
                     { new: true }
@@ -223,8 +223,8 @@ router.post('/api/room/:roomId/:movieId/:like', async (req, res) => {
             }
         }
     } else {
-        room = await Room.findOneAndUpdate(
-            { id: roomId },
+        group = await Group.findOneAndUpdate(
+            { id: groupId },
             {
                 $push: {
                     [`movies.${movieId}.usersDislike`]: userId,
@@ -235,7 +235,7 @@ router.post('/api/room/:roomId/:movieId/:like', async (req, res) => {
         )
     }
 
-    pusher.trigger(`room-${roomId}`, 'new-movies', [room.movies[movieId]])
+    pusher.trigger(`group-${groupId}`, 'new-movies', [group.movies[movieId]])
 
     res.send({})
 })
@@ -252,56 +252,56 @@ router.post('/api/user/', async (req, res) => {
     return res.send({ success: true })
 })
 
-router.post('/api/create-room', async (req, res) => {
-    const roomId = await generateRoomId()
+router.post('/api/create-group', async (req, res) => {
+    const groupId = await generateGroupId()
 
-    const room = new Room({
-        id: roomId,
+    const group = new Group({
+        id: groupId,
     })
 
-    await room.save()
+    await group.save()
 
-    return res.send({ success: true, roomId: roomId })
+    return res.send({ success: true, groupId: groupId })
 })
 
-router.post('/api/room/ready/:roomId', async (req, res) => {
-    const roomId = req.params.roomId
+router.post('/api/group/ready/:groupId', async (req, res) => {
+    const groupId = req.params.groupId
     const userId = req.cookies.userId
-    let room = await Room.findOne({ id: roomId }).exec()
+    let group = await Group.findOne({ id: groupId }).exec()
 
-    if (!room || room.state !== ROOM_STATES.WAITING_ROOM) {
+    if (!group || group.state !== GROUP_STATES.WAITING_GROUP) {
         return res.send({ success: false, message: 'Not not accepting users' })
     }
 
-    const exists = room.readies.find(u => u === userId)
+    const exists = group.readies.find(u => u === userId)
 
     if (exists) {
-        return res.send({ success: true, message: 'Already in the room' })
+        return res.send({ success: true, message: 'Already in the group' })
     }
 
-    room.readies.push(userId)
+    group.readies.push(userId)
 
-    room.save().then(async () => {
-        room = await Room.findOne({ id: roomId }).exec()
+    group.save().then(async () => {
+        group = await Group.findOne({ id: groupId }).exec()
 
-        if (room.readies.length === room.users.length) {
-            room.state = ROOM_STATES.CONFIGURING
-            await room.save()
-            pusher.trigger(`room-${roomId}`, 'room-ready', {})
+        if (group.readies.length === group.users.length) {
+            group.state = GROUP_STATES.CONFIGURING
+            await group.save()
+            pusher.trigger(`group-${groupId}`, 'group-ready', {})
         }
     })
 
     return res.send({ success: true })
 })
 
-router.get('/api/room/:roomId', async (req, res) => {
-    const roomId = req.params.roomId
+router.get('/api/group/:groupId', async (req, res) => {
+    const groupId = req.params.groupId
     const userId = req.cookies.userId
 
-    const room = await Room.findOne({ id: roomId }).exec()
+    const group = await Group.findOne({ id: groupId }).exec()
 
-    if (!room) {
-        return res.send({ message: 'No room' })
+    if (!group) {
+        return res.send({ message: 'No group' })
     }
 
     const user = await User.findOne({ id: userId }).exec()
@@ -310,26 +310,26 @@ router.get('/api/room/:roomId', async (req, res) => {
         return res.send({ message: 'No user' })
     }
 
-    const userInRoom = room.users.find(user => user.id === userId)
+    const userInGroup = group.users.find(user => user.id === userId)
 
-    if (room.state !== ROOM_STATES.WAITING_ROOM && !userInRoom) {
-        return res.send({ message: 'User not in room' })
+    if (group.state !== GROUP_STATES.WAITING_GROUP && !userInGroup) {
+        return res.send({ message: 'User not in group' })
     }
 
-    if (room.state === ROOM_STATES.WAITING_ROOM && !userInRoom) {
-        room.users.push(user)
-        await Room.findOneAndUpdate({ id: roomId }, room)
-        pusher.trigger(`room-${roomId}`, 'users', room.users)
+    if (group.state === GROUP_STATES.WAITING_GROUP && !userInGroup) {
+        group.users.push(user)
+        await Group.findOneAndUpdate({ id: groupId }, group)
+        pusher.trigger(`group-${groupId}`, 'users', group.users)
     }
 
-    room.matches = room.matches.slice(0, 3)
+    group.matches = group.matches.slice(0, 3)
 
-    res.cookie('roomId', roomId, {
+    res.cookie('groupId', groupId, {
         maxAge: 365 * 24 * 60 * 60 * 1000,
     })
 
-    room.movies = room.movies
+    group.movies = group.movies
 
-    res.send({ room })
+    res.send({ group })
 })
 module.exports = router

@@ -4,9 +4,9 @@ import { withNamespaces } from '../i18n'
 
 export default withNamespaces('common')(
     ({
-        newRoomPage = false,
-        roomPage = false,
-        roomId,
+        newGroupPage = false,
+        groupPage = false,
+        groupId,
         title = '',
         showMenu = true,
         t,
@@ -27,27 +27,27 @@ export default withNamespaces('common')(
                                     <div
                                         className={
                                             `sublink-btn ` +
-                                            (newRoomPage &&
+                                            (newGroupPage &&
                                                 'sublink-btn-active')
                                         }
                                     >
-                                        {t('topbar-new-room')}
+                                        {t('topbar-new-group')}
                                     </div>
                                 </div>
                             </Link>
-                            {roomId && (
-                                <Link href={`/room?id=${roomId}`}>
+                            {groupId && (
+                                <Link href={`/group?id=${groupId}`}>
                                     <div className="sublink">
                                         <div
                                             className={
                                                 `sublink-btn ` +
-                                                (roomPage &&
+                                                (groupPage &&
                                                     'sublink-btn-active')
                                             }
                                         >
                                             Group{' '}
-                                            <span className="room-id-top">
-                                                {roomId}
+                                            <span className="group-id-top">
+                                                {groupId}
                                             </span>
                                         </div>
                                     </div>
@@ -150,7 +150,7 @@ export default withNamespaces('common')(
                         border-bottom: 1px solid #ffc818;
                     }
 
-                    .room-id-top {
+                    .group-id-top {
                         letter-spacing: 1px;
                         text-transform: uppercase;
                     }

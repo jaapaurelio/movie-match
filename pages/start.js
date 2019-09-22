@@ -17,15 +17,15 @@ class Start extends React.Component {
         const language = jsCookie.get('i18next') || 'en'
 
         this.state = {
-            roomId: undefined,
-            lastRoomId: undefined,
+            groupId: undefined,
+            lastGroupId: undefined,
             username: '',
             language,
         }
 
         this.onChangeId = this.onChangeId.bind(this)
         this.join = this.join.bind(this)
-        this.createRoom = this.createRoom.bind(this)
+        this.createGroup = this.createGroup.bind(this)
         this.changeLanguage = this.changeLanguage.bind(this)
     }
 
@@ -35,38 +35,38 @@ class Start extends React.Component {
     }
 
     onChangeId(event) {
-        this.setState({ roomId: event.target.value })
+        this.setState({ groupId: event.target.value })
     }
 
     join() {
-        if (this.state.roomId) {
-            Router.push(`/waiting-room?id=${this.state.roomId}`)
+        if (this.state.groupId) {
+            Router.push(`/waiting-group?id=${this.state.groupId}`)
         }
     }
 
     componentDidMount() {
-        const lastRoomId = jsCookie.get('roomId')
+        const lastGroupId = jsCookie.get('groupId')
         var username = localStorage.getItem('username')
 
-        this.setState({ lastRoomId, username })
+        this.setState({ lastGroupId, username })
     }
 
-    async createRoom() {
-        if (this.state.creatingRoom) return
+    async createGroup() {
+        if (this.state.creatingGroup) return
 
-        this.setState({ creatingRoom: true })
-        const roomResponse = await axios.post('/api/create-room')
-        this.setState({ creatingRoom: false })
+        this.setState({ creatingGroup: true })
+        const groupResponse = await axios.post('/api/create-group')
+        this.setState({ creatingGroup: false })
 
-        Router.push(`/waiting-room?id=${roomResponse.data.roomId}`)
+        Router.push(`/waiting-group?id=${groupResponse.data.groupId}`)
     }
 
     render() {
         return (
             <div>
                 <Topbar
-                    roomId={this.state.lastRoomId}
-                    newRoomPage={true}
+                    groupId={this.state.lastGroupId}
+                    newGroupPage={false}
                     title="Movie Match"
                 />
 
@@ -76,15 +76,15 @@ class Start extends React.Component {
                         title={`Hi ${this.state.username}, what are you looking for?`}>
                     </Title>
 
-                    <div className="options-container create-room-container">
+                    <div className="options-container create-group-container">
 
 
-                        <div className="create-room-btn-container">
+                        <div className="create-group-btn-container">
                             <button
-                                onClick={this.createRoom}
+                                onClick={this.createGroup}
                                 className="mm-btn start-btn "
                             >
-                                {//this.props.t('create-room-btn')
+                                {//this.props.t('create-group-btn')
                                 }
                                 Find a movie to watch</button>
                         </div>
@@ -93,7 +93,7 @@ class Start extends React.Component {
                         <div>
                             {/*
                             <input
-                                className="room-input"
+                                className="group-input"
                                 type="text"
                                 placeholder="xxxx"
                                 maxLength="4"
@@ -111,7 +111,7 @@ class Start extends React.Component {
                             </div>
                         </div>
                         <div className="info">
-                            {//this.props.t('ask-room-number')
+                            {//this.props.t('ask-group-number')
                             }
                         </div>
                     </div>

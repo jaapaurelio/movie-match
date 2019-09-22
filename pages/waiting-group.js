@@ -4,21 +4,21 @@ import axios from 'axios'
 import Router from 'next/router'
 import UserPop from '../components/user-popup'
 import PageWidth from '../components/page-width'
-import RoomNumber from '../components/room-number'
+import GroupNumber from '../components/group-number'
 import { pusherConnection } from '../lib/pusher-connection'
-import validateRoom from '../lib/room-redirect'
-import { ROOM_STATES } from '../lib/constants'
+import validateGroup from '../lib/group-redirect'
+import { GROUP_STATES } from '../lib/constants'
 import Loader from '../components/loader'
 import Title from '../components/title'
 import jsCookie from 'js-cookie';
 
 import copy from 'copy-to-clipboard'
 
-class WaitingRoom extends React.Component {
+class WaitingGroup extends React.Component {
     constructor(props) {
         super(props)
 
-        this.shareRoom = this.shareRoom.bind(this)
+        this.shareGroup = this.shareGroup.bind(this)
         this.setReady = this.setReady.bind(this)
 
         this.state = {
@@ -30,10 +30,10 @@ class WaitingRoom extends React.Component {
     }
 
     async componentDidMount() {
-        const roomR = await axios.get(`/api/room/${this.props.roomId}`)
-        let { room } = roomR.data
+        const groupR = await axios.get(`/api/group/${this.props.groupId}`)
+        let { group } = groupR.data
 
-        if (!validateRoom(room, ROOM_STATES.WAITING_ROOM)) {
+        if (!validateGroup(group, GROUP_STATES.WAITING_GROUP)) {
             return
         }
 
@@ -43,7 +43,7 @@ class WaitingRoom extends React.Component {
 
         this.pusher = pusherConnection()
 
-        this.channel = this.pusher.subscribe(`room-${this.props.roomId}`)
+        this.channel = this.pusher.subscribe(`group-${this.props.groupId}`)
 
         this.channel.bind('users', users => {
             this.setState({
@@ -51,28 +51,28 @@ class WaitingRoom extends React.Component {
             })
         })
 
-        this.channel.bind('room-ready', () => {
-            Router.push(`/configure-room?id=${this.props.roomId}`)
+        this.channel.bind('group-ready', () => {
+            Router.push(`/configure-group?id=${this.props.groupId}`)
         })
 
         this.setState({
-            users: room.users,
+            users: group.users,
         })
     }
 
     componentWillUnmount() {
         if (this.pusher) {
-            //this.pusher.unsubscribe(`room-${this.props.roomId}`);
+            //this.pusher.unsubscribe(`group-${this.props.groupId}`);
         }
     }
 
-    shareRoom() {
-        const url = `${location.origin}/room?id=${this.props.roomId}`
+    shareGroup() {
+        const url = `${location.origin}/group?id=${this.props.groupId}`
 
         if (navigator.share) {
             return navigator.share({
                 title: 'Movie Match',
-                text: `Room ${this.props.roomId}`,
+                text: `Group ${this.props.groupId}`,
                 url,
             })
         }
@@ -89,11 +89,11 @@ class WaitingRoom extends React.Component {
     setReady() {
         this.setState({ ready: true })
 
-        axios.post(`/api/room/ready/${this.props.roomId}`)
+        axios.post(`/api/group/ready/${this.props.groupId}`)
     }
 
     render() {
-        const TopBarForPage = <Topbar showMenu={true} roomId={this.props.roomId} roomPage={true} />
+        const TopBarForPage = <Topbar showMenu={true} groupId={this.props.groupId} groupPage={true} />
 
         if (!this.state.loaded) {
             return (
@@ -113,14 +113,14 @@ class WaitingRoom extends React.Component {
                         <PageWidth>
                         <Title
                             title="Who will watch the movie with you?"
-                            subtitle="It's time to invite some friends to the group.">
+                            subtitle="It's time to invite some friends to the group. You can use the button or share the group name with them.">
                         </Title>
 
                         </PageWidth>
                         <div className="align-center top-area">
                             <PageWidth className="mm-content-padding ">
                                 <button
-                                    onClick={this.shareRoom}
+                                    onClick={this.shareGroup}
                                     className="mm-small-btn"
                                 >
                                     {this.state.showShareTooltip && (
@@ -132,13 +132,13 @@ class WaitingRoom extends React.Component {
                                     )}
                                     Invite
                                 </button>
-                                <RoomNumber roomId={this.props.roomId} />
+                                <GroupNumber groupId={this.props.groupId} />
                             </PageWidth>
                         </div>
                         <PageWidth className="mm-content-padding ">
                             <div>
-                                <div className="room-users">
-                                    {this.state.users.length} participant(s):
+                                <div className="group-users">
+                                    <div className="sub-title">People in the group</div>
                                     {this.state.users.map((user, index) => (
                                         <span
                                             className="user-info"
@@ -171,7 +171,7 @@ class WaitingRoom extends React.Component {
                             <PageWidth className="mm-content-padding ">
                                 <button
                                     onClick={this.setReady}
-                                    className="continue-button"
+                                    className="continue-button mm-btn"
                                 >
                                     Continue
                                 </button>
@@ -190,6 +190,11 @@ class WaitingRoom extends React.Component {
                         background: aliceblue;
                         padding: 10px;
                         font-size: 14px;
+                    }
+
+                    .sub-title {
+                     font-size: 22px;
+                     font-weight: bold;
                     }
 
                     .share-info {
@@ -221,28 +226,17 @@ class WaitingRoom extends React.Component {
                         font-weight: bold;
                     }
 
-                    .room-users {
+                    .group-users {
                         margin-top: 20px;
                     }
 
                     .user-info {
-                        font-weight: bold;
                     }
 
                     .continue-button {
-                        width: auto;
                         margin-top: 20px;
-                        font-weight: bold;
-                        border: 1px solid #ffdb6e;
-                        background: #ffdb6e;
-                        outline: none;
-                        cursor: pointer;
-                        padding: 10px;
-                        min-width: 200px;
-                        border-radius: 4px;
-                        color: #333;
-                        text-transform: uppercase;
                         margin-bottom: 40px;
+                        width: 100%;
                     }
 
                     .continue-container {
@@ -264,7 +258,7 @@ class WaitingRoom extends React.Component {
                     }
 
                     .top-area {
-                        padding: 0 20px 40px 20px;
+                        margin: 0 20px 40px 20px;
                     }
                 `}</style>
             </div>
@@ -272,9 +266,9 @@ class WaitingRoom extends React.Component {
     }
 
     static async getInitialProps({ query }) {
-        const roomId = query.id && query.id.toUpperCase()
-        return { roomId, namespacesRequired: ['common'] }
+        const groupId = query.id && query.id.toUpperCase()
+        return { groupId, namespacesRequired: ['common'] }
     }
 }
 
-export default withNamespaces('common')(WaitingRoom)
+export default withNamespaces('common')(WaitingGroup)

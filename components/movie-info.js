@@ -26,7 +26,7 @@ export default withNamespaces('common')(
                                         onClick={onClickAddMore}
                                         className="mm-btn add-more-btn"
                                     >
-                                        {t('add-similar-movies-to-room')}
+                                        {t('add-similar-movies-to-group')}
                                     </button>
                                 )}
                                 {!showAddMoreBtn && (

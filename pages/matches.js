@@ -4,11 +4,11 @@ import Topbar from '../components/topbar'
 import Headline from '../components/headline'
 import MovieHead from '../components/movie-head'
 import Loader from '../components/loader'
-import RoomInfoBar from '../components/room-info-bar'
-import { ROOM_STATES } from '../lib/constants'
+import GroupInfoBar from '../components/group-info-bar'
+import { GROUP_STATES } from '../lib/constants'
 import UserPop from '../components/user-popup'
 import { withNamespaces } from '../i18n'
-import validateRoom from '../lib/room-redirect'
+import validateGroup from '../lib/group-redirect'
 const MovieDb = require('moviedb-promise')
 const moviedb = new MovieDb('284941729ae99106f71e56126227659b')
 
@@ -18,16 +18,16 @@ class Matches extends React.Component {
         this.state = {
             matches: [],
             loading: true,
-            room: {},
+            group: {},
             loaded: false,
         }
     }
 
     async componentDidMount() {
-        const moviesR = await axios.get(`/api/room/${this.props.roomId}`)
-        let { room } = moviesR.data
+        const moviesR = await axios.get(`/api/group/${this.props.groupId}`)
+        let { group } = moviesR.data
 
-        if (!validateRoom(room, ROOM_STATES.MATCHED)) {
+        if (!validateGroup(group, GROUP_STATES.MATCHED)) {
             return
         }
 
@@ -35,25 +35,25 @@ class Matches extends React.Component {
             loaded: true,
         })
 
-        const wait = room.matches.map(movieId => {
+        const wait = group.matches.map(movieId => {
             return moviedb.movieInfo(movieId)
         })
 
         const matches = await Promise.all(wait)
 
-        this.setState({ room, matches, loading: false })
+        this.setState({ group, matches, loading: false })
     }
 
     static getInitialProps({ query }) {
-        return { roomId: query.id, namespacesRequired: ['common'] }
+        return { groupId: query.id, namespacesRequired: ['common'] }
     }
 
     render() {
         const TopBarForPage = (
             <Topbar
-                roomPage={true}
-                activetab="room"
-                roomId={this.props.roomId}
+                groupPage={true}
+                activetab="group"
+                groupId={this.props.groupId}
             />
         )
 
@@ -72,9 +72,9 @@ class Matches extends React.Component {
                 <div>
                     {TopBarForPage}
                     {!this.state.loading && (
-                        <RoomInfoBar
-                            users={this.state.room.users}
-                            room={this.state.room}
+                        <GroupInfoBar
+                            users={this.state.group.users}
+                            group={this.state.group}
                         />
                     )}
                     {this.state.loading && <Loader />}
