@@ -1,8 +1,8 @@
-var mongoose = require("mongoose");
+var mongoose = require('mongoose')
 
 var GenreSchema = new mongoose.Schema({
-  id: Number,
-  name: String
-});
+    id: Number,
+    name: String,
+})
 
-mongoose.model("Genre", GenreSchema);
+mongoose.model('Genre', GenreSchema)
