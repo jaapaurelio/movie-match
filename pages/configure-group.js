@@ -234,8 +234,10 @@ class CreateGroup extends React.Component {
                     <div>
                         <PageWidth>
                             <Title
-                                title={this.props.t('what-kind-of-movie-you-like')}>
-                            </Title>
+                                title={this.props.t(
+                                    'what-kind-of-movie-you-like'
+                                )}
+                            ></Title>
                             <div className="mm-content-padding">
                                 <div className="form-title">
                                     {this.props.t('movie-genres')}

@@ -1,5 +1,5 @@
 const passport = require('passport')
-const FacebookStrategy = require('passport-facebook').Strategy;
+const FacebookStrategy = require('passport-facebook').Strategy
 const mongoose = require('mongoose')
 const User = mongoose.model('User')
 
@@ -13,7 +13,7 @@ passport.use(
             clientID: process.env.FACEBOOK_AUTH_CLIENT_ID,
             clientSecret: process.env.FACEBOOK_AUTH_CLIENT_SECRET,
             callbackURL: 'http://localhost:3000/auth/facebook/callback',
-            profileFields: ['id', 'email', 'name', 'displayName']
+            profileFields: ['id', 'email', 'name', 'displayName'],
         },
         function(accessToken, refreshToken, profile, done) {
             User.findOne({ facebookId: profile.id }, function(err, user) {
@@ -30,7 +30,10 @@ passport.use(
                         {
                             facebookId: profile.id,
                             name: profile.displayName,
-                            email: profile.emails && profile.emails[0] && profile.emails[0].value
+                            email:
+                                profile.emails &&
+                                profile.emails[0] &&
+                                profile.emails[0].value,
                         },
                         function(err, user) {
                             return done(err, user)

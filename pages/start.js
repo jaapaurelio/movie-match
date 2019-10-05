@@ -21,7 +21,7 @@ class Start extends React.Component {
             lastGroupId: undefined,
             username: '',
             language,
-            showGroupInput: false
+            showGroupInput: false,
         }
 
         this.onChangeId = this.onChangeId.bind(this)
@@ -47,7 +47,7 @@ class Start extends React.Component {
     }
 
     showGroupInput() {
-        this.setState({showGroupInput: true})
+        this.setState({ showGroupInput: true })
     }
 
     componentDidMount() {
@@ -70,62 +70,60 @@ class Start extends React.Component {
     render() {
         return (
             <div>
-                <Topbar
-                    groupId={this.state.lastGroupId}
-                    title="Movie Match"
-                />
+                <Topbar groupId={this.state.lastGroupId} title="Movie Match" />
 
                 <PageWidth>
-
                     <Title
-                        title={`${this.props.t('hi')} ${this.state.username}${this.props.t('what-looking-for')}`}>
-                    </Title>
+                        title={`${this.props.t('hi')} ${
+                            this.state.username
+                        }${this.props.t('what-looking-for')}`}
+                    ></Title>
 
                     <div className="options-container create-group-container">
-
-
                         <div className="create-group-btn-container">
                             <button
                                 onClick={this.createGroup}
                                 className="mm-btn start-btn "
                             >
                                 {this.props.t('find-a-movie')}
-                                </button>
+                            </button>
                         </div>
                     </div>
                     <div className="options-container">
-                        {!this.state.showGroupInput && <div>
-                            <button
-                                className="mm-btn start-btn join-btn"
-                                onClick={this.showGroupInput}
-                            >
-                                {this.props.t('join-a-group')}
-                            </button>
-                        </div>
-                        }
-
-                        {this.state.showGroupInput && <div>
-
+                        {!this.state.showGroupInput && (
                             <div>
-                            <div className="group-name-label">{this.props.t('group-name')}</div>
-                            <input
-                                className="group-input"
-                                type="text"
-                                placeholder="X X X X X"
-                                maxLength="4"
-                                onChange={this.onChangeId}
-                            />
+                                <button
+                                    className="mm-btn start-btn join-btn"
+                                    onClick={this.showGroupInput}
+                                >
+                                    {this.props.t('join-a-group')}
+                                </button>
                             </div>
+                        )}
 
-                            <button
-                                className="mm-btn start-btn join-btn"
-                                onClick={this.join}
-                            >
-                                {this.props.t('join-btn')}
-                            </button>
-                        </div>
-                        }
+                        {this.state.showGroupInput && (
+                            <div>
+                                <div>
+                                    <div className="group-name-label">
+                                        {this.props.t('group-name')}
+                                    </div>
+                                    <input
+                                        className="group-input"
+                                        type="text"
+                                        placeholder="X X X X X"
+                                        maxLength="4"
+                                        onChange={this.onChangeId}
+                                    />
+                                </div>
 
+                                <button
+                                    className="mm-btn start-btn join-btn"
+                                    onClick={this.join}
+                                >
+                                    {this.props.t('join-btn')}
+                                </button>
+                            </div>
+                        )}
                     </div>
 
                     <div className="how-to-link">
@@ -157,7 +155,6 @@ class Start extends React.Component {
                 <UserPop />
 
                 <style jsx>{`
-
                     .start-btn,
                     .group-input {
                         width: 250px;
@@ -228,10 +225,10 @@ class Start extends React.Component {
     }
 
     static getInitialProps() {
-        const pageProps = { namespacesRequired: ['common']};
+        const pageProps = { namespacesRequired: ['common'] }
 
-        return pageProps;
+        return pageProps
     }
 }
 
-export default withNamespaces('common')(Start);
+export default withNamespaces('common')(Start)

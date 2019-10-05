@@ -72,53 +72,58 @@ function addMoviesToGroup(group, movies, userId) {
     return Promise.all(wait)
 }
 
-router.post('/api/group/add-movies-configuration/:groupId', async (req, res) => {
-    const { userId } = req.cookies
-    const { groupId } = req.params
-    const { movies, config } = req.body
+router.post(
+    '/api/group/add-movies-configuration/:groupId',
+    async (req, res) => {
+        const { userId } = req.cookies
+        const { groupId } = req.params
+        const { movies, config } = req.body
 
-    let group = await Group.findOne({ id: groupId })
+        let group = await Group.findOne({ id: groupId })
 
-    if (!group || group.state !== GROUP_STATES.CONFIGURING) {
-        return res.send({
-            success: false,
-            error: 'No group with this id in configuring phase',
-        })
-    }
+        if (!group || group.state !== GROUP_STATES.CONFIGURING) {
+            return res.send({
+                success: false,
+                error: 'No group with this id in configuring phase',
+            })
+        }
 
-    const userConfig = group.configurationByUser[userId]
+        const userConfig = group.configurationByUser[userId]
 
-    if (userConfig) {
-        return res.send({
-            success: false,
-            error: 'User already with config for this group',
-        })
-    }
+        if (userConfig) {
+            return res.send({
+                success: false,
+                error: 'User already with config for this group',
+            })
+        }
 
-    await addMoviesToGroup(group, movies, userId)
+        await addMoviesToGroup(group, movies, userId)
 
-    group = await Group.findOneAndUpdate(
-        { id: groupId },
-        {
-            [`configurationByUser.${userId}`]: {
-                ...config,
+        group = await Group.findOneAndUpdate(
+            { id: groupId },
+            {
+                [`configurationByUser.${userId}`]: {
+                    ...config,
+                },
             },
-        },
-        { new: true }
-    )
+            { new: true }
+        )
 
-    if (Object.keys(group.configurationByUser).length === group.users.length) {
-        group.state = GROUP_STATES.MATCHING
+        if (
+            Object.keys(group.configurationByUser).length === group.users.length
+        ) {
+            group.state = GROUP_STATES.MATCHING
 
-        await Group.findOneAndUpdate({ id: groupId }, group)
+            await Group.findOneAndUpdate({ id: groupId }, group)
 
-        pusher.trigger(`group-${groupId}`, 'configuration-done', {})
+            pusher.trigger(`group-${groupId}`, 'configuration-done', {})
+        }
+
+        return res.send({
+            success: true,
+        })
     }
-
-    return res.send({
-        success: true,
-    })
-})
+)
 
 router.post('/api/group/add-movies/:groupId', async (req, res) => {
     const { userId } = req.cookies
@@ -197,7 +202,8 @@ router.post('/api/group/:groupId/:movieId/:like', async (req, res) => {
         ) {
             const matches = Object.keys(group.movies).filter(movieId => {
                 return (
-                    group.movies[movieId].usersLike.length === group.users.length
+                    group.movies[movieId].usersLike.length ===
+                    group.users.length
                 )
             })
 

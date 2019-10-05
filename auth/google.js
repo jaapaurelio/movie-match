@@ -15,8 +15,6 @@ passport.use(
             callbackURL: 'http://localhost:3000/auth/google/callback',
         },
         function(accessToken, refreshToken, profile, done) {
-
-
             User.findOne({ googleId: profile.id }, function(err, user) {
                 if (err) {
                     return done(err)
@@ -31,7 +29,7 @@ passport.use(
                         {
                             googleId: profile.id,
                             name: profile.displayName,
-                            email: profile.emails[0].value
+                            email: profile.emails[0].value,
                         },
                         function(err, user) {
                             return done(err, user)

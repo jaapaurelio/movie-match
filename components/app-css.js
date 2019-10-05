@@ -13,12 +13,12 @@ export default () => (
 
             .mm-title {
                 font-size: 24px;
-                font-weight:800;
+                font-weight: 800;
             }
 
             .mm-subtitle {
                 font-size: 14px;
-                font-weight:normal;
+                font-weight: normal;
             }
 
             .mm-big-message {

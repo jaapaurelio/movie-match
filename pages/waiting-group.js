@@ -10,7 +10,7 @@ import validateGroup from '../lib/group-redirect'
 import { GROUP_STATES } from '../lib/constants'
 import Loader from '../components/loader'
 import Title from '../components/title'
-import jsCookie from 'js-cookie';
+import jsCookie from 'js-cookie'
 
 import copy from 'copy-to-clipboard'
 
@@ -93,7 +93,13 @@ class WaitingGroup extends React.Component {
     }
 
     render() {
-        const TopBarForPage = <Topbar showMenu={true} groupId={this.props.groupId} groupPage={true} />
+        const TopBarForPage = (
+            <Topbar
+                showMenu={true}
+                groupId={this.props.groupId}
+                groupPage={true}
+            />
+        )
 
         if (!this.state.loaded) {
             return (
@@ -111,15 +117,10 @@ class WaitingGroup extends React.Component {
                     {TopBarForPage}
                     <div className="page-content">
                         <PageWidth>
-                        <Title
-                            title={this.props.t(
-                                'who-will-watch'
-                            )}
-                            subtitle={this.props.t(
-                                'time-to-invite'
-                            )} >
-                        </Title>
-
+                            <Title
+                                title={this.props.t('who-will-watch')}
+                                subtitle={this.props.t('time-to-invite')}
+                            ></Title>
                         </PageWidth>
                         <div className="align-center top-area">
                             <PageWidth className="mm-content-padding ">
@@ -143,34 +144,33 @@ class WaitingGroup extends React.Component {
                         <PageWidth className="mm-content-padding ">
                             <div>
                                 <div className="group-users">
-                                    <div className="sub-title">{this.props.t('people-in-group')}</div>
+                                    <div className="sub-title">
+                                        {this.props.t('people-in-group')}
+                                    </div>
                                     {this.state.users.map((user, index) => (
                                         <span
                                             className="user-info"
                                             key={user.id}
                                         >
-                                        {index != 0 ? ', ': ' '}
-                                        { user.id == jsCookie.get('userId') ? this.props.t('you'): `${user.name}`}
+                                            {index != 0 ? ', ' : ' '}
+                                            {user.id == jsCookie.get('userId')
+                                                ? this.props.t('you')
+                                                : `${user.name}`}
                                         </span>
                                     ))}
                                 </div>
                             </div>
-
                         </PageWidth>
                     </div>
 
                     <div className="continue-container">
-
-                    {this.state.users.length === 1 && (
-                                <div className="alone-message">
-                                    <b>{this.props.t('you-are-alone')}</b>
-                                    <br />
-                                    {this.props.t(
-                                        'mm-is-better-with-friends'
-                                    )}
-                                </div>
-                            )}
-
+                        {this.state.users.length === 1 && (
+                            <div className="alone-message">
+                                <b>{this.props.t('you-are-alone')}</b>
+                                <br />
+                                {this.props.t('mm-is-better-with-friends')}
+                            </div>
+                        )}
 
                         {!this.state.ready && (
                             <PageWidth className="mm-content-padding ">
@@ -198,8 +198,8 @@ class WaitingGroup extends React.Component {
                     }
 
                     .sub-title {
-                     font-size: 22px;
-                     font-weight: bold;
+                        font-size: 22px;
+                        font-weight: bold;
                     }
 
                     .share-info {
