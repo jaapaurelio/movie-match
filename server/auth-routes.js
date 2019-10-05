@@ -9,7 +9,10 @@ const passport = require('passport')
 router.get(
     '/auth/google',
     passport.authenticate('google', {
-        scope: ['https://www.googleapis.com/auth/userinfo.profile', 'https://www.googleapis.com/auth/userinfo.email'],
+        scope: [
+            'https://www.googleapis.com/auth/userinfo.profile',
+            'https://www.googleapis.com/auth/userinfo.email',
+        ],
     })
 )
 
@@ -26,15 +29,22 @@ router.get(
     })
 )
 
-router.get('/auth/facebook',  passport.authenticate('facebook', { scope: ['email'] }));
+router.get(
+    '/auth/facebook',
+    passport.authenticate('facebook', { scope: ['email'] })
+)
 
-router.get('/auth/facebook/callback',
-  passport.authenticate('facebook', { successRedirect: '/',
-                                      failureRedirect: '/login' }));
+router.get(
+    '/auth/facebook/callback',
+    passport.authenticate('facebook', {
+        successRedirect: '/',
+        failureRedirect: '/login',
+    })
+)
 
-router.get('/logout', function(req, res){
-    req.logout();
-    res.redirect('/');
-  });
+router.get('/logout', function(req, res) {
+    req.logout()
+    res.redirect('/')
+})
 
 module.exports = router

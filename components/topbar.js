@@ -3,13 +3,7 @@ import Link from 'next/link'
 import { withNamespaces } from '../i18n'
 
 export default withNamespaces('common')(
-    ({
-        groupPage = false,
-        groupId,
-        title = '',
-        showMenu = true,
-        t,
-    }) => (
+    ({ groupPage = false, groupId, title = '', showMenu = true, t }) => (
         <nav>
             <PageWidth>
                 <div className="container">

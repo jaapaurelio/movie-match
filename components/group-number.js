@@ -2,12 +2,16 @@ import { withNamespaces } from '../i18n'
 
 export default withNamespaces('common')(({ groupId, t }) => (
     <section className="container">
-        <span className="group-number-desc"><span className="group-url">{t('group-name-is')} {groupId}</span></span>
+        <span className="group-number-desc">
+            <span className="group-url">
+                {t('group-name-is')} {groupId}
+            </span>
+        </span>
         <style jsx>
             {`
-            .container {
-                margin-top: 10px;
-            }
+                .container {
+                    margin-top: 10px;
+                }
                 .group-number-desc {
                     text-align: center;
                     margin-bottom: 10px;

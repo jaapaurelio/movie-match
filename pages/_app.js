@@ -19,12 +19,12 @@ class MyApp extends App {
         }
 
         if (ctx.req && ctx.req.session.passport) {
-            pageProps.user = ctx.req.session.passport.user;
+            pageProps.user = ctx.req.session.passport.user
         }
 
-        pageProps.namespacesRequired = ['common'];
+        pageProps.namespacesRequired = ['common']
 
-        return { pageProps };
+        return { pageProps }
     }
 
     render() {
