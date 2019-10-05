@@ -2,21 +2,20 @@ import { createStore, applyMiddleware } from 'redux'
 import { composeWithDevTools } from 'redux-devtools-extension'
 
 const exampleInitialState = {
-user: {}
+    user: {},
 }
 
-export const actionTypes = {
-}
+export const actionTypes = {}
 
 // REDUCERS
 export const reducer = (state = exampleInitialState, action) => {
-      return state
+    return state
 }
 
-export function initializeStore (initialState = exampleInitialState) {
-  return createStore(
-    reducer,
-    initialState,
-    composeWithDevTools(applyMiddleware())
-  )
+export function initializeStore(initialState = exampleInitialState) {
+    return createStore(
+        reducer,
+        initialState,
+        composeWithDevTools(applyMiddleware())
+    )
 }
