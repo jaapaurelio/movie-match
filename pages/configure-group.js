@@ -5,12 +5,12 @@ import axios from 'axios'
 import Router from 'next/router'
 import PageWidth from '../components/page-width'
 import Title from '../components/title'
-import GroupNumber from '../components/group-number'
 import { pusherConnection } from '../lib/pusher-connection'
 import validateGroup from '../lib/group-redirect'
 import { GROUP_STATES } from '../lib/constants'
 import Loader from '../components/loader'
 import UserPop from '../components/user-popup'
+import FixedBottom from '../components/fixed-bottom'
 import jsCookie from 'js-cookie'
 import { withNamespaces } from '../i18n'
 
@@ -40,6 +40,7 @@ class CreateGroup extends React.Component {
             rating: 1,
             waitingUsers: false,
             loaded: false,
+            isMoreConfigurationsVisible: false,
         }
 
         this.CONST = {
@@ -50,6 +51,11 @@ class CreateGroup extends React.Component {
         this.toggleGenre = this.toggleGenre.bind(this)
         this.submitForm = this.submitForm.bind(this)
         this.showErrors = this.showErrors.bind(this)
+        this.showMoreConfigurations = this.showMoreConfigurations.bind(this)
+    }
+
+    showMoreConfigurations() {
+        this.setState({ isMoreConfigurationsVisible: true })
     }
 
     submitForm() {
@@ -268,74 +274,110 @@ class CreateGroup extends React.Component {
                                     })}
                                 </div>
 
-                                <div className="form-title">
-                                    {this.props.t('rating')}
-                                </div>
-                                <div className="two-selects-row">
-                                    <select
-                                        className="select-m"
-                                        defaultValue={this.state.rating}
-                                        onChange={event => {
-                                            this.setState({
-                                                rating: event.target.value,
-                                            })
-                                        }}
+                                {!this.state.isMoreConfigurationsVisible && (
+                                    <div
+                                        className="mm-text-btn show-more"
+                                        onClick={this.showMoreConfigurations}
                                     >
-                                        {this.CONST.ratings.map((rating, i) => {
-                                            return (
-                                                <option
-                                                    key={rating.id}
-                                                    value={rating.id}
-                                                >
-                                                    {rating.label}
-                                                </option>
-                                            )
-                                        })}
-                                    </select>
-                                </div>
+                                        {this.props.t(
+                                            'show-more-config-group-options'
+                                        )}
+                                    </div>
+                                )}
 
-                                <div className="form-title">
-                                    {this.props.t('from-year')}
-                                </div>
-                                <div className="two-selects-row">
-                                    <select
-                                        className="select-m"
-                                        defaultValue={this.state.startYear}
-                                        onChange={event => {
-                                            this.setState({
-                                                startYear: event.target.value,
-                                            })
-                                        }}
-                                    >
-                                        {this.CONST.years.map((year, i) => {
-                                            return (
-                                                <option key={i} value={year}>
-                                                    {year}
-                                                </option>
-                                            )
-                                        })}
-                                    </select>
-                                    <span className="two-to">
-                                        {this.props.t('to')}
-                                    </span>
-                                    <select
-                                        className="select-m"
-                                        defaultValue={this.state.endYear}
-                                        onChange={event => {
-                                            this.setState({
-                                                endYear: event.target.value,
-                                            })
-                                        }}
-                                    >
-                                        {this.CONST.years.map((year, i) => {
-                                            return (
-                                                <option key={i} value={year}>
-                                                    {year}
-                                                </option>
-                                            )
-                                        })}
-                                    </select>
-                                </div>
+                                {this.state.isMoreConfigurationsVisible && (
+                                    <div>
+                                        <div className="form-title">
+                                            {this.props.t('rating')}
+                                        </div>
+                                        <div className="two-selects-row">
+                                            <select
+                                                className="select-m"
+                                                defaultValue={this.state.rating}
+                                                onChange={event => {
+                                                    this.setState({
+                                                        rating:
+                                                            event.target.value,
+                                                    })
+                                                }}
+                                            >
+                                                {this.CONST.ratings.map(
+                                                    (rating, i) => {
+                                                        return (
+                                                            <option
+                                                                key={rating.id}
+                                                                value={
+                                                                    rating.id
+                                                                }
+                                                            >
+                                                                {rating.label}
+                                                            </option>
+                                                        )
+                                                    }
+                                                )}
+                                            </select>
+                                        </div>
+
+                                        <div className="form-title">
+                                            {this.props.t('from-year')}
+                                        </div>
+                                        <div className="two-selects-row">
+                                            <select
+                                                className="select-m"
+                                                defaultValue={
+                                                    this.state.startYear
+                                                }
+                                                onChange={event => {
+                                                    this.setState({
+                                                        startYear:
+                                                            event.target.value,
+                                                    })
+                                                }}
+                                            >
+                                                {this.CONST.years.map(
+                                                    (year, i) => {
+                                                        return (
+                                                            <option
+                                                                key={i}
+                                                                value={year}
+                                                            >
+                                                                {year}
+                                                            </option>
+                                                        )
+                                                    }
+                                                )}
+                                            </select>
+                                            <span className="two-to">
+                                                {this.props.t('to')}
+                                            </span>
+                                            <select
+                                                className="select-m"
+                                                defaultValue={
+                                                    this.state.endYear
+                                                }
+                                                onChange={event => {
+                                                    this.setState({
+                                                        endYear:
+                                                            event.target.value,
+                                                    })
+                                                }}
+                                            >
+                                                {this.CONST.years.map(
+                                                    (year, i) => {
+                                                        return (
+                                                            <option
+                                                                key={i}
+                                                                value={year}
+                                                            >
+                                                                {year}
+                                                            </option>
+                                                        )
+                                                    }
+                                                )}
+                                            </select>
+                                        </div>
+                                    </div>
+                                )}
 
                                 {!!this.state.errorMessages.length && (
                                     <div className="toast-error-container">
@@ -350,6 +392,10 @@ class CreateGroup extends React.Component {
                                         </div>
                                     </div>
                                 )}
+                            </div>
+                        </PageWidth>
+                        <FixedBottom>
+                            <PageWidth className="mm-content-padding">
                                 <div className="create-group-btn-container">
                                     <button
                                         onClick={this.submitForm}
@@ -358,15 +404,14 @@ class CreateGroup extends React.Component {
                                         {this.props.t('next-btn')}
                                     </button>
                                 </div>
-                            </div>
-                        </PageWidth>
+                            </PageWidth>
+                        </FixedBottom>
                     </div>
                 )}
 
                 {this.state.waitingUsers && (
                     <div className="waiting-users-container">
                         <PageWidth>
-                            <GroupNumber groupId={this.props.groupId} />
                             <div className="waiting-title">
                                 {this.props.t('waiting-for-friends-config')}
                             </div>
@@ -386,6 +431,11 @@ class CreateGroup extends React.Component {
                         }
                         .container {
                             padding: 0 10px;
+                        }
+
+                        .show-more {
+                            margin-top: 20px;
+                            text-align: right;
                         }
 
                         .description-container {
@@ -460,10 +510,11 @@ class CreateGroup extends React.Component {
 
                         .create-group-btn-container {
                             text-align: right;
+                            background: #fff;
                         }
 
                         .create-group-btn {
-                            margin: 40px 0;
+                            margin: 20px 0;
                             width: 100%;
                         }
 
