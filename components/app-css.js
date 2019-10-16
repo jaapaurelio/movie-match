@@ -12,13 +12,15 @@ export default () => (
             }
 
             .mm-title {
-                font-size: 24px;
+                font-size: 22px;
                 font-weight: 800;
             }
 
             .mm-subtitle {
-                font-size: 14px;
+                font-size: 16px;
                 font-weight: normal;
+                margin-top: 6px;
+                display: block;
             }
 
             .mm-big-message {
@@ -71,11 +73,11 @@ export default () => (
             }
             .mm-btn {
                 display: inline-block;
-                padding: 12px;
-                border: 1px solid #ffdb6e;
+                padding: 14px;
+                border: 1px solid #a79600;
                 border-radius: 6px;
                 text-decoration: none;
-                color: #333;
+                color: #443300;
                 font-size: 16px;
                 cursor: pointer;
                 background: #ffdb6e;
@@ -84,6 +86,25 @@ export default () => (
                 line-height: 1;
                 outline: none;
                 font-family: Raleway, sans-serif;
+                font-weight: bold;
+            }
+
+            .mm-btn-line {
+                background: transparent;
+                border: 1px solid #333;
+                color: #333;
+            }
+
+            .mm-btn-accept {
+                background: #00c185;
+                color: #fff;
+                border: 1px solid #0bb17d;
+            }
+
+            .mm-btn:disabled {
+                border-color: #333;
+                background: #fde291;
+                color: #333;
             }
 
             .mm-small-btn {
@@ -100,6 +121,11 @@ export default () => (
                 cursor: pointer;
             }
 
+            .mm-text-btn {
+                cursor: pointer;
+                text-decoration: underline;
+            }
+
             .mm-tooltip {
                 position: absolute;
                 background: #000000cf;
@@ -111,6 +137,7 @@ export default () => (
                 -webkit-transform: translateX(-50%);
                 transform: translateX(-50%);
                 white-space: nowrap;
+                border-radius: 4px;
             }
 
             .join-btn {

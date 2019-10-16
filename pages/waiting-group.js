@@ -10,6 +10,7 @@ import validateGroup from '../lib/group-redirect'
 import { GROUP_STATES } from '../lib/constants'
 import Loader from '../components/loader'
 import Title from '../components/title'
+import FixedFooter from '../components/fixed-bottom'
 import jsCookie from 'js-cookie'
 
 import copy from 'copy-to-clipboard'
@@ -126,18 +127,17 @@ class WaitingGroup extends React.Component {
                             <PageWidth className="mm-content-padding ">
                                 <button
                                     onClick={this.shareGroup}
-                                    className="mm-small-btn"
+                                    className="mm-btn mm-btn-line btn-invite"
                                 >
-                                    {this.state.showShareTooltip && (
-                                        <span className="mm-tooltip share-tooltip ">
-                                            {this.props.t(
-                                                'link-copied-send-friends'
-                                            )}
-                                        </span>
-                                    )}
-
                                     {this.props.t('invite')}
                                 </button>
+                                {this.state.showShareTooltip && (
+                                    <span className="mm-tooltip share-tooltip ">
+                                        {this.props.t(
+                                            'link-copied-send-friends'
+                                        )}
+                                    </span>
+                                )}
                                 <GroupNumber groupId={this.props.groupId} />
                             </PageWidth>
                         </div>
@@ -161,34 +161,55 @@ class WaitingGroup extends React.Component {
                                 </div>
                             </div>
                         </PageWidth>
-                    </div>
 
-                    <div className="continue-container">
-                        {this.state.users.length === 1 && (
+                        {false && this.state.users.length === 1 && (
                             <div className="alone-message">
                                 <b>{this.props.t('you-are-alone')}</b>
                                 <br />
                                 {this.props.t('mm-is-better-with-friends')}
                             </div>
                         )}
-
-                        {!this.state.ready && (
-                            <PageWidth className="mm-content-padding ">
-                                <button
-                                    onClick={this.setReady}
-                                    className="continue-button mm-btn"
-                                >
-                                    Continue
-                                </button>
-                            </PageWidth>
-                        )}
-
-                        {this.state.ready && (
-                            <div className="continue-information">
-                                {this.props.t('waiting-for-friends')}
-                            </div>
-                        )}
                     </div>
+
+                    <FixedFooter>
+                        <div className="continue-container">
+                            {!this.state.ready && (
+                                <PageWidth className="mm-content-padding ">
+                                    {this.state.users.length > 1 && (
+                                        <button
+                                            onClick={this.setReady}
+                                            className="continue-button mm-btn mm-btn-accept"
+                                        >
+                                            {this.props.t('everyone-is-ready')}
+                                        </button>
+                                    )}
+
+                                    {this.state.users.length <= 1 && (
+                                        <button
+                                            disabled="disabled"
+                                            className="continue-button mm-btn"
+                                        >
+                                            {this.props.t(
+                                                'waiting-for-friends-btn'
+                                            )}
+                                        </button>
+                                    )}
+
+                                    <div className="continue-alone">
+                                        <span onClick={this.setReady}>
+                                            {this.props.t('watch-alone')}
+                                        </span>
+                                    </div>
+                                </PageWidth>
+                            )}
+
+                            {this.state.ready && (
+                                <div className="continue-information">
+                                    {this.props.t('waiting-for-friends')}
+                                </div>
+                            )}
+                        </div>
+                    </FixedFooter>
                 </div>
                 <style jsx>{`
                     .alone-message {
@@ -209,6 +230,12 @@ class WaitingGroup extends React.Component {
 
                     .share-tooltip {
                         top: -40px;
+                    }
+
+                    .btn-invite {
+                        background: #333;
+                        color: #fff;
+                        box-shadow: none;
                     }
 
                     .align-center {
@@ -233,6 +260,7 @@ class WaitingGroup extends React.Component {
 
                     .group-users {
                         margin-top: 20px;
+                        text-align: center;
                     }
 
                     .user-info {
@@ -240,22 +268,20 @@ class WaitingGroup extends React.Component {
 
                     .continue-button {
                         margin-top: 20px;
-                        margin-bottom: 40px;
+                        margin-bottom: 20px;
                         width: 100%;
                     }
 
-                    .continue-container {
-                        text-align: center;
-                        bottom: 40px;
-                        margin-top: 40px;
-                        flex-shrink: 0;
+                    .continue-alone {
+                        font-size: 14px;
+                        text-decoration: underline;
+                        margin-bottom: 10px;
+                        cursor: pointer;
                     }
 
                     .page-container {
-                        height: 100vh;
-                        align-items: stretch;
-                        flex-direction: column;
-                        display: flex;
+                        min-height: 100vh;
+                        background: #ffdb6e;
                     }
 
                     .page-content {
@@ -263,7 +289,11 @@ class WaitingGroup extends React.Component {
                     }
 
                     .top-area {
-                        margin: 0 20px 40px 20px;
+                        margin: 60px 20px 60px 20px;
+                    }
+
+                    .continue-container {
+                        background: #ffdb6e;
                     }
                 `}</style>
             </div>

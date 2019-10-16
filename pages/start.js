@@ -93,7 +93,7 @@ class Start extends React.Component {
                         {!this.state.showGroupInput && (
                             <div>
                                 <button
-                                    className="mm-btn start-btn join-btn"
+                                    className="mm-btn mm-btn-line start-btn"
                                     onClick={this.showGroupInput}
                                 >
                                     {this.props.t('join-a-group')}
@@ -117,7 +117,7 @@ class Start extends React.Component {
                                 </div>
 
                                 <button
-                                    className="mm-btn start-btn join-btn"
+                                    className="mm-btn start-btn mm-btn-line"
                                     onClick={this.join}
                                 >
                                     {this.props.t('join-btn')}
@@ -158,15 +158,12 @@ class Start extends React.Component {
                     .start-btn,
                     .group-input {
                         width: 250px;
+                        margin-bottom: 6px;
                     }
 
                     .group-name-label {
                         font-size: 12px;
                         margin-bottom: 6px;
-                    }
-
-                    .join-btn {
-                        background: transparent;
                     }
 
                     .username {
