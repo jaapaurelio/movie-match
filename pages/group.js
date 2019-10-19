@@ -15,6 +15,7 @@ import validateGroup from '../lib/group-redirect'
 import UserPop from '../components/user-popup'
 import { withNamespaces } from '../i18n'
 import { sortMovies } from '../lib/sort-movies'
+import MovieHead from '../components/movie-head'
 
 const MovieDb = require('moviedb-promise')
 const moviedb = new MovieDb('284941729ae99106f71e56126227659b')
@@ -380,17 +381,26 @@ class Index extends React.Component {
                 {movie && movie.fullyLoaded && (
                     <div>
                         <SwipeArea>
-                            <MovieInfo
-                                movie={movie}
-                                showAddMoreBtn={this.state.showAddMoreBtn}
-                                onClickAddMore={this.addMoreLikeThis}
-                            />
+                            <div className="main-info-bg">
+                                <MovieHead movie={movie} />
+                            </div>
                             <PageWidth>
+                                <div className="mm-content-padding movie-description">
+                                    <h3 className="title title-overview">
+                                        {this.props.t('overview')}
+                                    </h3>
+                                    {movie.overview}
+                                </div>
                                 <Cast
                                     t={this.props.t}
                                     cast={movie.credits.cast.slice(0, 5)}
                                 />
                             </PageWidth>
+                            <MovieInfo
+                                movie={movie}
+                                showAddMoreBtn={this.state.showAddMoreBtn}
+                                onClickAddMore={this.addMoreLikeThis}
+                            />
                         </SwipeArea>
                         <div className="buttons-container-space" />
                         <div className="buttons-container-bg">
@@ -442,6 +452,22 @@ class Index extends React.Component {
                             margin-top: 6px;
                         }
 
+                        .title {
+                            padding-top: 20px;
+                            margin-bottom: 10px;
+                            font-weight: bold;
+                            font-size: 16px;
+                        }
+                        .main-info-bg {
+                            background: #ffdb6e;
+                        }
+
+                        .movie-description {
+                            padding-bottom: 20px;
+                            font-size: 14px;
+                            line-height: 1.5;
+                        }
+
                         .group-code-alone {
                             margin-top: 6px;
                             font-weight: bold;
@@ -461,6 +487,7 @@ class Index extends React.Component {
                             bottom: 0;
                             left: 0;
                             right: 0;
+                            background: #fff;
                         }
 
                         .buttons-container {

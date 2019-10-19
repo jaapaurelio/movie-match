@@ -20,7 +20,7 @@ export default ({ cast, t }) => (
         <style jsx>
             {`
                 h3 {
-                    font-size: 14px;
+                    font-size: 16px;
                     font-weight: bold;
                     margin-bottom: 10px;
                 }
