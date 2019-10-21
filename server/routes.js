@@ -200,33 +200,21 @@ router.post('/api/group/:groupId/:movieId/:like', async (req, res) => {
             group.users.length >= 2 &&
             movie.usersLike.length === group.users.length
         ) {
-            const matches = Object.keys(group.movies).filter(movieId => {
-                return (
-                    group.movies[movieId].usersLike.length ===
-                    group.users.length
-                )
+            group = await Group.findOneAndUpdate(
+                { id: groupId },
+                {
+                    $push: {
+                        matches: movieId,
+                    },
+                },
+                { new: true }
+            )
+
+            pusher.trigger(`group-${groupId}`, 'movie-matched', {
+                matches: group.matches,
             })
 
-            if (matches.length >= 3) {
-                group.matches = shuffle(matches)
-                group.state = GROUP_STATES.MATCHED
-
-                pusher.trigger(`group-${groupId}`, 'movie-matched', {
-                    matches: group.matches,
-                })
-
-                group = await Group.findOneAndUpdate(
-                    { id: groupId },
-                    {
-                        matches: matches,
-                        state: GROUP_STATES.MATCHED,
-                        $push: { [`movies.${movieId}.usersLike`]: userId },
-                    },
-                    { new: true }
-                )
-
-                return res.send({})
-            }
+            return res.send({})
         }
     } else {
         group = await Group.findOneAndUpdate(
@@ -328,7 +316,7 @@ router.get('/api/group/:groupId', async (req, res) => {
         pusher.trigger(`group-${groupId}`, 'users', group.users)
     }
 
-    group.matches = group.matches.slice(0, 3)
+    //group.matches = group.matches.slice(0, 3)
 
     res.cookie('groupId', groupId, {
         maxAge: 365 * 24 * 60 * 60 * 1000,

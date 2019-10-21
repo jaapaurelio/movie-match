@@ -12,6 +12,8 @@
 
     "topbar-group": "Group",
     "topbar-new-group": "New Group",
+    "topbar-movies": "Movies",
+    "topbar-matches": "Matches",
 
     "whats-you-name": "What's your name?",
     "save-btn": "Save",
@@ -68,6 +70,8 @@
     "have-nice-movie": "Have a nice movie!",
     "perfect-match": "Perfect match",
     "alternative-matches": "Alternative matches",
+    "no-matches-yet": "No matches yet.",
+    "continue-searching": "Keep searching",
 
     "intro-1": "Tired of wasting time trying to find the best movie to watch with friends?",
     "intro-2": "Create a group, invite your friends and give some likes.",

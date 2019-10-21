@@ -345,6 +345,7 @@ class Index extends React.Component {
                 groupPage={true}
                 activetab="group"
                 groupId={this.props.groupId}
+                showGroupOptions={true}
             />
         )
 
@@ -365,7 +366,7 @@ class Index extends React.Component {
                     shareBtn={this.share}
                     showShare={this.state.showShareButton}
                     users={this.state.users}
-                    group={this.state.group}
+                    groupId={this.props.groupId}
                 />
                 {this.state.users.length == 1 && (
                     <div className="alone-msg">

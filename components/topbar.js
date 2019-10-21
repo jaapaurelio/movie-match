@@ -3,7 +3,16 @@ import Link from 'next/link'
 import { withNamespaces } from '../i18n'
 
 export default withNamespaces('common')(
-    ({ groupPage = false, groupId, title = '', showMenu = true, t }) => (
+    ({
+        groupPage = false,
+        matchesPage = false,
+        groupId,
+        title = '',
+        showMenu = true,
+        t,
+        showGroupOptions = false,
+        showGroup = false,
+    }) => (
         <nav>
             <PageWidth>
                 <div className="container">
@@ -15,7 +24,7 @@ export default withNamespaces('common')(
                     <div className="space-between" />
                     {showMenu && (
                         <div className="top-icons-container">
-                            {groupId && (
+                            {showGroupOptions && (
                                 <Link href={`/group?id=${groupId}`}>
                                     <div className="sublink">
                                         <div
@@ -25,15 +34,41 @@ export default withNamespaces('common')(
                                                     'sublink-btn-active')
                                             }
                                         >
-                                            Group{' '}
-                                            <span className="group-id-top">
-                                                {groupId}
-                                            </span>
+                                            {t('topbar-movies')}
+                                        </div>
+                                    </div>
+                                </Link>
+                            )}
+                            {showGroupOptions && (
+                                <Link href={`/matches?id=${groupId}`}>
+                                    <div className="sublink">
+                                        <div
+                                            className={
+                                                `sublink-btn ` +
+                                                (matchesPage &&
+                                                    'sublink-btn-active')
+                                            }
+                                        >
+                                            {t('topbar-matches')}
                                         </div>
                                     </div>
                                 </Link>
                             )}
                         </div>
+                    )}
+                    {showGroup && (
+                        <Link href={`/group?id=${groupId}`}>
+                            <div className="sublink">
+                                <div
+                                    className={
+                                        `sublink-btn ` +
+                                        (groupPage && 'sublink-btn-active')
+                                    }
+                                >
+                                    {t('topbar-group')} {groupId}
+                                </div>
+                            </div>
+                        </Link>
                     )}
                 </div>
             </PageWidth>
@@ -128,11 +163,6 @@ export default withNamespaces('common')(
 
                     .sublink-btn-active {
                         border-bottom: 1px solid #ffc818;
-                    }
-
-                    .group-id-top {
-                        letter-spacing: 1px;
-                        text-transform: uppercase;
                     }
                 `}
             </style>
