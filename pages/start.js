@@ -70,7 +70,11 @@ class Start extends React.Component {
     render() {
         return (
             <div>
-                <Topbar groupId={this.state.lastGroupId} title="Movie Match" />
+                <Topbar
+                    showGroup={true}
+                    groupId={this.state.lastGroupId}
+                    title="Movie Match"
+                />
 
                 <PageWidth>
                     <Title

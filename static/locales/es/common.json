@@ -3,8 +3,8 @@
     "what-looking-for": ", ¿qué quieres hacer?",
     "lets-find-the-perfect-movie": ", vamos a encontrar la película perfecta para ti y tus amigos",
     "find-a-movie": "Encontrar una película",
-    "join-a-group": "Unirse al grupo",
-    "join-btn": "Unirse",
+    "join-a-group": "Unirte al grupo",
+    "join-btn": "Unirte",
     "group-name": "Grupo",
     "ask-group-number": "Pregunta a tu amigo el código del grupo",
     "how-to-use": "¿Cómo usarlo?",
@@ -12,6 +12,8 @@
 
     "topbar-group": "Grupo",
     "topbar-new-group": "Nuevo grupo",
+    "topbar-movies": "Películas",
+    "topbar-matches": "Matches",
 
     "whats-you-name": "¿Cómo te llamas?",
     "save-btn": "Guardar",
@@ -32,7 +34,7 @@
     "group-is-ready": "El grupo está listo",
     "after-everyone-press-button": "Una vez que todos se han unido, pulsa el botón",
     "waiting-for-friends": "Esperando a tus amigos",
-    "watch-alone": "¿Quieres ver la pelicula solo? Continuar.",
+    "watch-alone": "¿Quieres ver la película solo? Continuar.",
     "bad-movies": "Películas malas",
     "good-movies": "Películas buenas",
     "best-movies": "Las mejores películas",
@@ -68,6 +70,8 @@
     "have-nice-movie": "Disfrutem de la película",
     "perfect-match": "Match perfecto",
     "alternative-matches": "Matches alternativos",
+    "no-matches-yet": "Todavia sin matches.",
+    "continue-searching": "Continúa buscando",
 
     "intro-1": "¿Cansado de gastar tiempo buscando la mejor película para ver con tus amigos?",
     "intro-2": "Crea un grupo, invita a tus amigos y da algunos “me gusta”",

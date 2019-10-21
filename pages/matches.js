@@ -5,10 +5,10 @@ import Headline from '../components/headline'
 import MovieHead from '../components/movie-head'
 import Loader from '../components/loader'
 import GroupInfoBar from '../components/group-info-bar'
-import { GROUP_STATES } from '../lib/constants'
+import Link from 'next/link'
+
 import UserPop from '../components/user-popup'
 import { withNamespaces } from '../i18n'
-import validateGroup from '../lib/group-redirect'
 const MovieDb = require('moviedb-promise')
 const moviedb = new MovieDb('284941729ae99106f71e56126227659b')
 
@@ -27,21 +27,13 @@ class Matches extends React.Component {
         const moviesR = await axios.get(`/api/group/${this.props.groupId}`)
         let { group } = moviesR.data
 
-        if (!validateGroup(group, GROUP_STATES.MATCHED)) {
-            return
-        }
-
-        this.setState({
-            loaded: true,
-        })
-
         const wait = group.matches.map(movieId => {
             return moviedb.movieInfo(movieId)
         })
 
         const matches = await Promise.all(wait)
 
-        this.setState({ group, matches, loading: false })
+        this.setState({ group, matches, loading: false, loaded: true })
     }
 
     static getInitialProps({ query }) {
@@ -51,9 +43,10 @@ class Matches extends React.Component {
     render() {
         const TopBarForPage = (
             <Topbar
-                groupPage={true}
+                matchesPage={true}
                 activetab="group"
                 groupId={this.props.groupId}
+                showGroupOptions={true}
             />
         )
 
@@ -74,7 +67,7 @@ class Matches extends React.Component {
                     {!this.state.loading && (
                         <GroupInfoBar
                             users={this.state.group.users}
-                            group={this.state.group}
+                            groupId={this.props.groupId}
                         />
                     )}
                     {this.state.loading && <Loader />}
@@ -86,65 +79,76 @@ class Matches extends React.Component {
                                 {this.props.t('have-nice-movie')}
                             </Headline>
 
-                            <div>
-                                <PageWidth>
-                                    <h1 className="title">
-                                        {this.props.t('perfect-match')}
-                                    </h1>
-                                </PageWidth>
-
-                                <PageWidth>
-                                    <div className="movie-container perfect-match">
-                                        <MovieHead
-                                            movie={this.state.matches[0]}
-                                        />
-                                    </div>
-                                </PageWidth>
+                            <PageWidth>
+                                <h1 className="title">
+                                    {this.props.t('perfect-match')}
+                                </h1>
+                                <div className="movie-container perfect-match">
+                                    <MovieHead movie={this.state.matches[0]} />
+                                </div>
 
                                 {!!this.state.matches[1] && (
                                     <div className="other-options">
-                                        <PageWidth>
-                                            <h1 className="title">
-                                                {this.props.t(
-                                                    'alternative-matches'
-                                                )}
-                                            </h1>
-                                            {this.state.matches.map(
-                                                (movie, i) => {
-                                                    {
-                                                        return (
-                                                            i != 0 && (
-                                                                <div
-                                                                    className="movie-container"
-                                                                    key={
-                                                                        movie.id
-                                                                    }
-                                                                >
-                                                                    <MovieHead
-                                                                        movie={
-                                                                            movie
-                                                                        }
-                                                                    />
-                                                                </div>
-                                                            )
-                                                        )
-                                                    }
-                                                }
+                                        <h1 className="title">
+                                            {this.props.t(
+                                                'alternative-matches'
                                             )}
-                                        </PageWidth>
+                                        </h1>
+                                        {this.state.matches.map((movie, i) => {
+                                            {
+                                                return (
+                                                    i != 0 && (
+                                                        <div
+                                                            className="movie-container"
+                                                            key={movie.id}
+                                                        >
+                                                            <MovieHead
+                                                                movie={movie}
+                                                            />
+                                                        </div>
+                                                    )
+                                                )
+                                            }
+                                        })}
                                     </div>
                                 )}
-                            </div>
+                            </PageWidth>
                         </div>
                     )}
+
+                    {this.state.loaded && !this.state.matches.length && (
+                        <PageWidth>
+                            <div className="title">
+                                {this.props.t('no-matches-yet')}
+                            </div>
+                        </PageWidth>
+                    )}
+                    <PageWidth>
+                        <div className="keep-searching-container">
+                            <Link href={`/group?id=${this.props.groupId}`}>
+                                <span className="mm-small-btn">
+                                    {this.props.t('continue-searching')}
+                                </span>
+                            </Link>
+                        </div>
+                    </PageWidth>
                 </div>
 
                 <style jsx>{`
                     .title {
-                        font-size: 14px;
+                        font-size: 22px;
+                        font-weight: 800;
                         padding: 20px 20px 10px 20px;
-                        text-align: right;
-                        font-weight: bold;
+                    }
+
+                    .movie-container {
+                        padding: 0 10px;
+                    }
+
+                    .keep-searching-container {
+                        text-align: center;
+                        margin-top: 40px;
+                        margin-bottom: 40px;
                     }
 
                     .movie-info {

@@ -221,7 +221,14 @@ class CreateGroup extends React.Component {
     }
 
     render() {
-        const TopBarForPage = <Topbar showMenu={false} />
+        const TopBarForPage = (
+            <Topbar
+                showMenu={false}
+                showGroup={true}
+                groupId={this.props.groupId}
+                groupPage={true}
+            />
+        )
 
         if (!this.state.loaded) {
             return (
@@ -235,7 +242,7 @@ class CreateGroup extends React.Component {
 
         return (
             <div className="root-container">
-                <Topbar groupPage={true} groupId={this.props.groupId} />
+                {TopBarForPage}
                 {!this.state.waitingUsers && (
                     <div>
                         <PageWidth>

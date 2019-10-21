@@ -99,6 +99,7 @@ class WaitingGroup extends React.Component {
                 showMenu={true}
                 groupId={this.props.groupId}
                 groupPage={true}
+                showGroup={true}
             />
         )
 
