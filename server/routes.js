@@ -189,10 +189,7 @@ router.post('/api/group/:groupId/:movieId/:like', async (req, res) => {
 
         const movie = group.movies[movieId]
 
-        if (
-            group.users.length >= 2 &&
-            movie.usersLike.length === group.users.length
-        ) {
+        if (movie.usersLike.length === group.users.length) {
             group = await Group.findOneAndUpdate(
                 { id: groupId },
                 {
@@ -203,9 +200,11 @@ router.post('/api/group/:groupId/:movieId/:like', async (req, res) => {
                 { new: true }
             )
 
-            pusher.trigger(`group-${groupId}`, 'movie-matched', {
-                matches: group.matches,
-            })
+            if (group.users.length >= 2) {
+                pusher.trigger(`group-${groupId}`, 'movie-matched', {
+                    matches: group.matches,
+                })
+            }
 
             return res.send({})
         }
