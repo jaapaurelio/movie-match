@@ -161,13 +161,6 @@ router.post('/api/group/add-movies/:groupId', async (req, res) => {
     })
 })
 
-//todo remove
-router.post('/api/group/similar/:groupId/:movieId', async (req, res) => {
-    const { movieId, groupId } = req.params
-
-    res.send({})
-})
-
 router.post('/api/group/:groupId/:movieId/:like', async (req, res) => {
     const { movieId, groupId } = req.params
     const { userId } = req.cookies
