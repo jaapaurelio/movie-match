@@ -255,6 +255,15 @@ class Index extends React.Component {
             })
         })
 
+        this.channel.bind('best-match-updated', percentage => {
+            this.setState({
+                group: {
+                    ...this.state.group,
+                    bestMatch: percentage,
+                },
+            })
+        })
+
         this.channel.bind('users', users => {
             this.setState({
                 users,
@@ -333,6 +342,7 @@ class Index extends React.Component {
                 activetab="group"
                 groupId={this.props.groupId}
                 showGroupOptions={true}
+                bestMatch={this.state.group.bestMatch}
             />
         )
 
@@ -408,7 +418,6 @@ class Index extends React.Component {
                     </div>
                 )}
                 {this.state.loading && <Loader />}
-
                 <PageWidth>
                     {!movie && !this.state.loading && (
                         <div className="mm-big-message">
@@ -420,7 +429,6 @@ class Index extends React.Component {
                     show={showMatchPopup}
                     onClickMatches={this.onClickMatches}
                 />
-
                 <style jsx>
                     {`
                         .share-btn {

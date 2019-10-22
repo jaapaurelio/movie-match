@@ -47,6 +47,7 @@ class Matches extends React.Component {
                 activetab="group"
                 groupId={this.props.groupId}
                 showGroupOptions={true}
+                bestMatch={this.state.group.bestMatch}
             />
         )
 
