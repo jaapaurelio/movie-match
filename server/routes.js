@@ -187,6 +187,23 @@ router.post('/api/group/:groupId/:movieId/:like', async (req, res) => {
             { new: true }
         )
 
+        const numOfLikes = group.movies[movieId].usersLike.length
+        const percentage = Math.round((numOfLikes / group.users.length) * 100)
+
+        if (
+            group.users.length >= 2 &&
+            percentage > 50 &&
+            percentage > group.bestMatch
+        ) {
+            group = await Group.findOneAndUpdate(
+                { id: groupId },
+                { bestMatch: percentage },
+                { new: true }
+            )
+
+            pusher.trigger(`group-${groupId}`, 'best-match-updated', percentage)
+        }
+
         const movie = group.movies[movieId]
 
         if (movie.usersLike.length === group.users.length) {
@@ -205,8 +222,6 @@ router.post('/api/group/:groupId/:movieId/:like', async (req, res) => {
                     matches: group.matches,
                 })
             }
-
-            return res.send({})
         }
     } else {
         group = await Group.findOneAndUpdate(

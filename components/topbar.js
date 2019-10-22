@@ -12,6 +12,7 @@ export default withNamespaces('common')(
         t,
         showGroupOptions = false,
         showGroup = false,
+        bestMatch,
     }) => (
         <nav>
             <PageWidth>
@@ -50,6 +51,9 @@ export default withNamespaces('common')(
                                             }
                                         >
                                             {t('topbar-matches')}
+                                            {bestMatch !== 0 && bestMatch && (
+                                                <span> | {bestMatch}%</span>
+                                            )}
                                         </div>
                                     </div>
                                 </Link>

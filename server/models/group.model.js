@@ -42,7 +42,10 @@ var GroupSchema = new mongoose.Schema(
         users: [{ id: String, name: String }],
         readies: { type: [String], default: [] },
         info: InfoSchema,
-        bestMatch: { type: [Number], default: 0 },
+        bestMatch: {
+            type: Number,
+            default: 0,
+        },
         matches: { type: [Number], default: [] },
     },
     { timestamps: true, minimize: false }
