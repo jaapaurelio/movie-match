@@ -27,7 +27,6 @@ class Index extends React.Component {
         this.noLike = this.noLike.bind(this)
         this.onClickMatches = this.onClickMatches.bind(this)
         this.share = this.share.bind(this)
-        this.addMoreLikeThis = this.addMoreLikeThis.bind(this)
         this.loadMoreMovies = this.loadMoreMovies.bind(this)
 
         this.state = {
@@ -40,7 +39,6 @@ class Index extends React.Component {
             info: {},
             group: {},
             showShareButton: false,
-            showAddMoreBtn: true,
             loaded: false,
             userConfiguration: {},
         }
@@ -101,7 +99,6 @@ class Index extends React.Component {
         this.setState({
             movie,
             movies,
-            showAddMoreBtn: true,
         })
 
         // first movie has no data
@@ -192,16 +189,6 @@ class Index extends React.Component {
 
         this.getNewMovie(this.state.movies)
         window.scrollTo(0, 0)
-    }
-
-    addMoreLikeThis() {
-        this.setState({
-            showAddMoreBtn: false,
-        })
-
-        axios.post(
-            `api/group/similar/${this.props.groupId}/${this.state.movie.id}`
-        )
     }
 
     addNewMovies(newMovies) {
@@ -397,11 +384,7 @@ class Index extends React.Component {
                                     cast={movie.credits.cast.slice(0, 5)}
                                 />
                             </PageWidth>
-                            <MovieInfo
-                                movie={movie}
-                                showAddMoreBtn={this.state.showAddMoreBtn}
-                                onClickAddMore={this.addMoreLikeThis}
-                            />
+                            <MovieInfo movie={movie} />
                         </SwipeArea>
                         <div className="buttons-container-space" />
                         <div className="buttons-container-bg">
