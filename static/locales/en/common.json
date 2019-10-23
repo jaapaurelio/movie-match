@@ -71,6 +71,7 @@
     "perfect-match": "Perfect match",
     "alternative-matches": "Alternative matches",
     "no-matches-yet": "No matches yet.",
+    "almost-matched": "We still didn't find the perfect match, but these are the best ones so far.",
     "continue-searching": "Keep searching",
 
     "intro-1": "Tired of wasting time trying to find the best movie to watch with friends?",
