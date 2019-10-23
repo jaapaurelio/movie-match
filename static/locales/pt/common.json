@@ -71,6 +71,7 @@
     "perfect-match": "Filme perfeito",
     "alternative-matches": "Outros filmes",
     "no-matches-yet": "Ainda sem correspondências",
+    "almost-matched": "Ainda não encontramos o match perfeito, mas estes filmes têm {{percentage}}% de correspondência.",
     "continue-searching": "Continua a procurar",
 
     "intro-1": "Cansado(a) de perder tempo a tentar encontrar um filme para ver com amigos?",

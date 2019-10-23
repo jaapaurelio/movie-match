@@ -188,7 +188,7 @@ router.post('/api/group/:groupId/:movieId/:like', async (req, res) => {
         )
 
         const numOfLikes = group.movies[movieId].usersLike.length
-        const percentage = Math.round((numOfLikes / group.users.length) * 100)
+        const percentage = calculatePercentage(numOfLikes, group.users.length)
 
         if (
             group.users.length >= 2 &&
@@ -299,7 +299,7 @@ router.get('/api/group/:groupId', async (req, res) => {
     const groupId = req.params.groupId
     const userId = req.cookies.userId
 
-    const group = await Group.findOne({ id: groupId }).exec()
+    let group = await Group.findOne({ id: groupId }).exec()
 
     if (!group) {
         return res.send({ message: 'No group' })
@@ -318,19 +318,60 @@ router.get('/api/group/:groupId', async (req, res) => {
     }
 
     if (group.state === GROUP_STATES.WAITING_GROUP && !userInGroup) {
-        group.users.push(user)
-        await Group.findOneAndUpdate({ id: groupId }, group)
+        group = await Group.findOneAndUpdate(
+            { id: groupId },
+            {
+                $push: {
+                    [`users`]: user,
+                },
+            },
+            { new: true }
+        )
         pusher.trigger(`group-${groupId}`, 'users', group.users)
     }
-
-    //group.matches = group.matches.slice(0, 3)
 
     res.cookie('groupId', groupId, {
         maxAge: 365 * 24 * 60 * 60 * 1000,
     })
 
-    group.movies = group.movies
+    let matches = []
 
-    res.send({ group })
+    if (
+        group.state === GROUP_STATES.MATCHING ||
+        group.state === GROUP_STATES.MATCHED
+    ) {
+        matches = sortMostLiked(
+            group.movies,
+            group.users.length,
+            group.bestMatch
+        )
+    }
+
+    res.send({ group: { ...group.toJSON(), matches } })
 })
+
+function sortMostLiked(movies, numUsers, bestMatch) {
+    const movieIds = Object.keys(movies)
+    if (!movieIds) {
+        return []
+    }
+
+    const a = movieIds
+        .map(movieId => {
+            return movies[movieId]
+        })
+        .filter(function(movie) {
+            return (
+                calculatePercentage(movie.usersLike.length, numUsers) ==
+                bestMatch
+            )
+        })
+
+    return a
+}
+
+function calculatePercentage(numOfLikes, totalUsers) {
+    return Math.round((numOfLikes / totalUsers) * 100)
+}
+
 module.exports = router

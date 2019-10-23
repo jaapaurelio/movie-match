@@ -70,7 +70,8 @@
     "have-nice-movie": "Disfrutem de la película",
     "perfect-match": "Match perfecto",
     "alternative-matches": "Matches alternativos",
-    "no-matches-yet": "Todavia sin matches.",
+    "no-matches-yet": "Todavía sin matches.",
+    "almost-matched": "Todavía no hemos encontrado el match perfecto, pero estas pelis tienen un {{percentage}}% de coincidencia.",
     "continue-searching": "Continúa buscando",
 
     "intro-1": "¿Cansado de gastar tiempo buscando la mejor película para ver con tus amigos?",

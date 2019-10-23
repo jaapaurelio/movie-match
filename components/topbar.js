@@ -52,7 +52,7 @@ export default withNamespaces('common')(
                                         >
                                             {t('topbar-matches')}
                                             {bestMatch !== 0 && bestMatch && (
-                                                <span> | {bestMatch}%</span>
+                                                <span> ({bestMatch}%)</span>
                                             )}
                                         </div>
                                     </div>

@@ -27,11 +27,11 @@ class Matches extends React.Component {
         const moviesR = await axios.get(`/api/group/${this.props.groupId}`)
         let { group } = moviesR.data
 
-        const wait = group.matches.map(movieId => {
-            return moviedb.movieInfo(movieId)
+        const getMatches = group.matches.map(movie => {
+            return moviedb.movieInfo(movie.id)
         })
 
-        const matches = await Promise.all(wait)
+        const matches = await Promise.all(getMatches)
 
         this.setState({ group, matches, loading: false, loaded: true })
     }
@@ -72,14 +72,13 @@ class Matches extends React.Component {
                         />
                     )}
                     {this.state.loading && <Loader />}
-                    {!!this.state.matches.length && (
+                    {this.state.group.bestMatch == 100 && (
                         <div className="container">
                             <Headline>
                                 {this.props.t('we-found-perfect-match')}
                                 <br />
                                 {this.props.t('have-nice-movie')}
                             </Headline>
-
                             <PageWidth>
                                 <h1 className="title">
                                     {this.props.t('perfect-match')}
@@ -87,14 +86,15 @@ class Matches extends React.Component {
                                 <div className="movie-container perfect-match">
                                     <MovieHead movie={this.state.matches[0]} />
                                 </div>
-
                                 {!!this.state.matches[1] && (
                                     <div className="other-options">
-                                        <h1 className="title">
-                                            {this.props.t(
-                                                'alternative-matches'
-                                            )}
-                                        </h1>
+                                        {this.state.group.bestMatch === 100 && (
+                                            <h1 className="title">
+                                                {this.props.t(
+                                                    'alternative-matches'
+                                                )}
+                                            </h1>
+                                        )}
                                         {this.state.matches.map((movie, i) => {
                                             {
                                                 return (
@@ -116,6 +116,35 @@ class Matches extends React.Component {
                             </PageWidth>
                         </div>
                     )}
+
+                    {this.state.group.bestMatch < 100 &&
+                        this.state.group.bestMatch > 0 && (
+                            <div>
+                                <PageWidth>
+                                    <h1 className="title">
+                                        {this.props.t('almost-matched', {
+                                            percentage: this.state.group
+                                                .bestMatch,
+                                        })}
+                                    </h1>
+                                </PageWidth>
+                                {this.state.matches.map((movie, i) => {
+                                    {
+                                        return (
+                                            <div
+                                                className="movie-container"
+                                                key={movie.id}
+                                            >
+                                                <MovieHead
+                                                    movie={movie}
+                                                    small={true}
+                                                />
+                                            </div>
+                                        )
+                                    }
+                                })}
+                            </div>
+                        )}
 
                     {this.state.loaded && !this.state.matches.length && (
                         <PageWidth>

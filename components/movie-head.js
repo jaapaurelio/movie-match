@@ -9,13 +9,14 @@ const getRuntime = min => {
     return h + 'h' + m + 'm'
 }
 
-export default ({ movie }) => {
+export default ({ movie, small }) => {
+    const imageClass = small ? 'movie-poster-small' : 'movie-poster'
     return (
         <div>
             <PageWidth>
                 <div className="main-info">
                     <img
-                        className="movie-poster"
+                        className={imageClass}
                         src={
                             'https://image.tmdb.org/t/p/w116_and_h174_bestv2/' +
                             movie.poster_path
@@ -90,6 +91,12 @@ export default ({ movie }) => {
 
                     .movie-poster {
                         width: 100px;
+                        margin-left: 10px;
+                        border-radius: 4px;
+                    }
+
+                    .movie-poster-small {
+                        height: 100px;
                         margin-left: 10px;
                         border-radius: 4px;
                     }
