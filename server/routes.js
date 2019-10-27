@@ -18,6 +18,30 @@ const pusher = new Pusher({
     encrypted: true,
 })
 
+function sortMostLiked(movies, numUsers, bestMatch) {
+    const movieIds = Object.keys(movies)
+    if (!movieIds) {
+        return []
+    }
+
+    const a = movieIds
+        .map(movieId => {
+            return movies[movieId]
+        })
+        .filter(function(movie) {
+            return (
+                calculatePercentage(movie.usersLike.length, numUsers) ==
+                bestMatch
+            )
+        })
+
+    return a
+}
+
+function calculatePercentage(numOfLikes, totalUsers) {
+    return Math.round((numOfLikes / totalUsers) * 100)
+}
+
 const generateGroupId = async function() {
     const groupIdsMap = await Group.find(
         {},
@@ -350,28 +374,8 @@ router.get('/api/group/:groupId', async (req, res) => {
     res.send({ group: { ...group.toJSON(), matches } })
 })
 
-function sortMostLiked(movies, numUsers, bestMatch) {
-    const movieIds = Object.keys(movies)
-    if (!movieIds) {
-        return []
-    }
-
-    const a = movieIds
-        .map(movieId => {
-            return movies[movieId]
-        })
-        .filter(function(movie) {
-            return (
-                calculatePercentage(movie.usersLike.length, numUsers) ==
-                bestMatch
-            )
-        })
-
-    return a
-}
-
-function calculatePercentage(numOfLikes, totalUsers) {
-    return Math.round((numOfLikes / totalUsers) * 100)
-}
+router.post('/api/movie-lists', async (req, res) => {
+    return res.send({ success: true, groupId: groupId })
+})
 
 module.exports = router

@@ -24,6 +24,7 @@ const authInit = require('./auth/init')
 
 authInit()
 const appRoutes = require('./server/routes')
+const appRoutesMovieLists = require('./server/movie-list-routes')
 const appAuthRoutes = require('./server/auth-routes')
 
 var Genre = mongoose.model('Genre')
@@ -85,6 +86,7 @@ app.prepare()
         server.use(passport.session())
         server.use(userMiddleware)
         server.use(appRoutes)
+        server.use(appRoutesMovieLists)
         server.use(appAuthRoutes)
         nextI18NextMiddleware(nextI18next, app, server)
 

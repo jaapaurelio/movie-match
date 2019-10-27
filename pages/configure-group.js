@@ -11,6 +11,8 @@ import { GROUP_STATES } from '../lib/constants'
 import Loader from '../components/loader'
 import UserPop from '../components/user-popup'
 import FixedBottom from '../components/fixed-bottom'
+import MovieLists from '../components/movie-lists'
+
 import jsCookie from 'js-cookie'
 import { withNamespaces } from '../i18n'
 
@@ -41,6 +43,7 @@ class CreateGroup extends React.Component {
             waitingUsers: false,
             loaded: false,
             isMoreConfigurationsVisible: false,
+            movieLists: [],
         }
 
         this.CONST = {
@@ -176,7 +179,12 @@ class CreateGroup extends React.Component {
             return
         }
 
+        const movieListsR = await axios.get(`/api/movie-lists`)
+
+        console.log(movieListsR)
+
         this.setState({
+            movieLists: movieListsR.data.movieLists,
             loaded: true,
         })
 
@@ -246,6 +254,16 @@ class CreateGroup extends React.Component {
                 {!this.state.waitingUsers && (
                     <div>
                         <PageWidth>
+                            <Title
+                                title={this.props.t(
+                                    'what-kind-of-movie-you-like'
+                                )}
+                            ></Title>
+
+                            <MovieLists
+                                movieLists={this.state.movieLists}
+                            ></MovieLists>
+
                             <Title
                                 title={this.props.t(
                                     'what-kind-of-movie-you-like'
