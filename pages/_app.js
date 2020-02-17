@@ -8,6 +8,9 @@ import { Provider } from 'react-redux'
 import * as gtag from '../lib/gtag'
 import Router from 'next/router'
 
+import '../assets/reset.css'
+import '../assets/app.css'
+
 Router.events.on('routeChangeComplete', url => gtag.pageview(url))
 
 class MyApp extends App {

@@ -19,7 +19,7 @@ class ErrorPage extends React.Component {
                 <div className="home-link">
                     <div className="mm-btn">
                         <Link href={`/start`}>
-                            {this.props.t('go-to-home-btn')}
+                            <a>{this.props.t('go-to-home-btn')}</a>
                         </Link>
                     </div>
                 </div>

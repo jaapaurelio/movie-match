@@ -1,6 +1,4 @@
 import Head from 'next/head'
-import ResetCss from './reset-css'
-import AppCss from './app-css'
 
 export default () => (
     <div>
@@ -33,7 +31,5 @@ export default () => (
                 content="FRcG65B1vuHfxMOYHCH3PuLjbZ8UKxLc8kO1m2cGshs"
             />
         </Head>
-        <ResetCss />
-        <AppCss />
     </div>
 )
