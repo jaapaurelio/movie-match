@@ -5,4 +5,4 @@ var GenreSchema = new mongoose.Schema({
     name: String,
 })
 
-mongoose.model('Genre', GenreSchema)
+export default mongoose.models.Genre || mongoose.model('Genre', GenreSchema)

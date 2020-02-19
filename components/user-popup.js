@@ -20,7 +20,7 @@ class UserPopup extends React.Component {
         if (this.textInput.current.value !== '') {
             const name = this.textInput.current.value
 
-            await axios.post(`/api/user/`, { name })
+            await axios.post(`/api/user`, { name })
 
             localStorage.setItem('username', name)
             this.setState({ showPopup: false })

@@ -51,4 +51,4 @@ var GroupSchema = new mongoose.Schema(
     { timestamps: true, minimize: false }
 )
 
-mongoose.model('Group', GroupSchema)
+export default mongoose.models.Group || mongoose.model('Group', GroupSchema)

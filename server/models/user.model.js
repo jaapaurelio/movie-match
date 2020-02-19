@@ -9,4 +9,4 @@ var UserSchema = new mongoose.Schema({
     email: String,
 })
 
-mongoose.model('User', UserSchema)
+export default mongoose.models.User || mongoose.model('User', UserSchema)

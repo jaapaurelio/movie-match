@@ -21,10 +21,6 @@ class MyApp extends App {
             pageProps = await Component.getInitialProps(ctx)
         }
 
-        if (ctx.req && ctx.req.session.passport) {
-            pageProps.user = ctx.req.session.passport.user
-        }
-
         pageProps.namespacesRequired = ['common']
 
         return { pageProps }

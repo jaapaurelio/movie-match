@@ -1,13 +1,13 @@
 var uniqid = require('uniqid')
 
-module.exports = function(req, res, next) {
+const withUser = handler => async (req, res) => {
     if (!req.cookies.userId) {
         req.cookies.userId = uniqid()
     }
-
     res.cookie('userId', req.cookies.userId, {
         maxAge: 365 * 24 * 60 * 60 * 1000,
     })
-
-    next()
+    return handler(req, res)
 }
+
+export default withUser

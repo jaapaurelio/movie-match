@@ -61,7 +61,13 @@ class Start extends React.Component {
         if (this.state.creatingGroup) return
 
         this.setState({ creatingGroup: true })
-        const groupResponse = await axios.post('/api/create-group')
+        const groupResponse = await axios.post(
+            '/api/create-group',
+            {},
+            {
+                withCredentials: true,
+            }
+        )
         this.setState({ creatingGroup: false })
 
         Router.push(`/waiting-group?id=${groupResponse.data.groupId}`)
