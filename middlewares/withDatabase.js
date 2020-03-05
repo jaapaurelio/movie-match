@@ -1,7 +1,7 @@
 import mongoose from 'mongoose'
-require('../server/models/genre.model')
-require('../server/models/group.model')
-require('../server/models/user.model')
+require('../models/genre.model')
+require('../models/group.model')
+require('../models/user.model')
 
 const withDatabase = handler => async (req, res) => {
     if (mongoose.connections[0].readyState) return handler(req, res)
@@ -11,6 +11,7 @@ const withDatabase = handler => async (req, res) => {
         useNewUrlParser: true,
         useFindAndModify: false,
         useCreateIndex: true,
+        useUnifiedTopology: true,
     })
 
     return handler(req, res)
