@@ -14,18 +14,6 @@ import '../assets/app.css'
 Router.events.on('routeChangeComplete', url => gtag.pageview(url))
 
 class MyApp extends App {
-    static async getInitialProps({ Component, router, ctx }) {
-        let pageProps = {}
-
-        if (Component.getInitialProps) {
-            pageProps = await Component.getInitialProps(ctx)
-        }
-
-        pageProps.namespacesRequired = ['common']
-
-        return { pageProps }
-    }
-
     render() {
         const { Component, pageProps, reduxStore } = this.props
 
