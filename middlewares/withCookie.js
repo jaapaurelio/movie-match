@@ -12,6 +12,10 @@ const cookie = (res, name, value, options = {}) => {
         options.maxAge /= 1000
     }
 
+    if (!options.path) {
+        options.path = '/'
+    }
+
     res.setHeader('Set-Cookie', serialize(name, String(stringValue), options))
 }
 

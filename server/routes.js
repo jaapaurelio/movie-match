@@ -18,43 +18,7 @@ const pusher = new Pusher({
     encrypted: true,
 })
 
-router.post('/api/group/add-movies-configuration/:groupId')
-
-router.post('/api/group/add-movies/:groupId', async (req, res) => {
-    const { userId } = req.cookies
-    const { groupId } = req.params
-    const { movies, page, totalPages } = req.body
-
-    let group = await Group.findOne({ id: groupId })
-
-    await addMoviesToGroup(group, movies, userId)
-
-    if (page) {
-        group = await Group.findOneAndUpdate(
-            { id: groupId },
-            {
-                [`configurationByUser.${userId}.page`]: page,
-                [`configurationByUser.${userId}.totalPages`]: totalPages,
-            },
-            { new: true }
-        )
-    }
-
-    group = await Group.findOne({ id: groupId })
-
-    // send updated movies to clients
-    const movieToSend = {}
-
-    movies.forEach(movie => {
-        movieToSend[movie.id] = group.movies[movie.id]
-    })
-
-    pusher.trigger(`group-${groupId}`, 'new-movies', movieToSend)
-
-    return res.send({
-        success: true,
-    })
-})
+router.post('/api/group/add-movies/:groupId', async (req, res) => )
 
 router.post('/api/group/:groupId/:movieId/:like')
 

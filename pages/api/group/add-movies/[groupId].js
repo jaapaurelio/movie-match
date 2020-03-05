@@ -1,7 +1,6 @@
 import withMiddleware from '../../../../middlewares/withMiddleware'
 const mongoose = require('mongoose')
 const Group = mongoose.model('Group')
-const { GROUP_STATES } = require('../../../../lib/constants')
 
 const Pusher = require('pusher')
 
@@ -13,8 +12,9 @@ const pusher = new Pusher({
     encrypted: true,
 })
 
-// todo remove duplication
+// todo remove replication
 function addMoviesToGroup(group, movies, userId) {
+    console.log(group)
     const groupId = group.id
     const wait = movies.map(movie => {
         if (group.movies[movie.id]) {
@@ -49,45 +49,34 @@ function addMoviesToGroup(group, movies, userId) {
 async function handle(req, res) {
     const { userId } = req.cookies
     const { groupId } = req.query
-    const { movies, config } = req.body
+    const { movies, page, totalPages } = req.body
+    console.log('groupId', groupId)
 
     let group = await Group.findOne({ id: groupId })
 
-    if (!group || group.state !== GROUP_STATES.CONFIGURING) {
-        return res.send({
-            success: false,
-            error: 'No group with this id in configuring phase',
-        })
-    }
-
-    const userConfig = group.configurationByUser[userId]
-
-    if (userConfig) {
-        return res.send({
-            success: false,
-            error: 'User already with config for this group',
-        })
-    }
-
     await addMoviesToGroup(group, movies, userId)
 
-    group = await Group.findOneAndUpdate(
-        { id: groupId },
-        {
-            [`configurationByUser.${userId}`]: {
-                ...config,
+    if (page) {
+        group = await Group.findOneAndUpdate(
+            { id: groupId },
+            {
+                [`configurationByUser.${userId}.page`]: page,
+                [`configurationByUser.${userId}.totalPages`]: totalPages,
             },
-        },
-        { new: true }
-    )
-
-    if (Object.keys(group.configurationByUser).length === group.users.length) {
-        group.state = GROUP_STATES.MATCHING
-
-        await Group.findOneAndUpdate({ id: groupId }, group)
-
-        pusher.trigger(`group-${groupId}`, 'configuration-done', {})
+            { new: true }
+        )
     }
+
+    group = await Group.findOne({ id: groupId })
+
+    // send updated movies to clients
+    const movieToSend = {}
+
+    movies.forEach(movie => {
+        movieToSend[movie.id] = group.movies[movie.id]
+    })
+
+    pusher.trigger(`group-${groupId}`, 'new-movies', movieToSend)
 
     return res.send({
         success: true,
