@@ -1,7 +1,7 @@
-import withMiddleware from '../../../middlewares/withMiddleware'
+import withMiddleware from '../middlewares/withMiddleware'
 const mongoose = require('mongoose')
 const Group = mongoose.model('Group')
-const { GROUP_STATES } = require('../../../lib/constants')
+const { GROUP_STATES } = require('../lib/constants')
 
 const Pusher = require('pusher')
 

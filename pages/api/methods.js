@@ -1,11 +1,11 @@
 import withMiddleware from '../../middlewares/withMiddleware'
-import likeMethod from './_methods/like'
-import createGroup from './_methods/create-group'
-import user from './_methods/user'
-import getGroup from './_methods/get-group'
-import addMoviesToGroup from './_methods/add-movies-to-group'
-import setGroupReady from './_methods/set-group-ready'
-import addMoviesConfiguration from './_methods/add-movies-configuration'
+import likeMethod from '../../_methods/like'
+import createGroup from '../../_methods/create-group'
+import user from '../../_methods/user'
+import getGroup from '../../_methods/get-group'
+import addMoviesToGroup from '../../_methods/add-movies-to-group'
+import setGroupReady from '../../_methods/set-group-ready'
+import addMoviesConfiguration from '../../_methods/add-movies-configuration'
 
 const apiMethods = {
     like: likeMethod,
