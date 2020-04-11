@@ -4,6 +4,8 @@ import createGroup from './_methods/create-group'
 import user from './_methods/user'
 import getGroup from './_methods/get-group'
 import addMoviesToGroup from './_methods/add-movies-to-group'
+import setGroupReady from './_methods/set-group-ready'
+import addMoviesConfiguration from './_methods/add-movies-configuration'
 
 const apiMethods = {
     like: likeMethod,
@@ -11,6 +13,8 @@ const apiMethods = {
     user,
     'get-group': getGroup,
     'add-movies-to-group': addMoviesToGroup,
+    'set-group-ready': setGroupReady,
+    'add-movies-configuration': addMoviesConfiguration,
 }
 
 async function handle(req, res) {

@@ -137,18 +137,21 @@ class CreateGroup extends React.Component {
             }
         })
 
-        axios.post(`/api/group/add-movies-configuration/${groupId}`, {
-            movies,
-            config: {
-                ratingLte,
-                ratingGte,
-                startYear,
-                endYear,
-                selectedGenres,
-                page: 1,
-                totalPages: moviesListResponse.total_pages,
-            },
-        })
+        axios.post(
+            `/api/methods?api=add-movies-configuration&groupId=${groupId}`,
+            {
+                movies,
+                config: {
+                    ratingLte,
+                    ratingGte,
+                    startYear,
+                    endYear,
+                    selectedGenres,
+                    page: 1,
+                    totalPages: moviesListResponse.total_pages,
+                },
+            }
+        )
     }
 
     toggleGenre(id) {

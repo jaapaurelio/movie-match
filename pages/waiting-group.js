@@ -92,7 +92,9 @@ class WaitingGroup extends React.Component {
     setReady() {
         this.setState({ ready: true })
 
-        axios.post(`/api/group/ready/${this.props.groupId}`)
+        axios.post(
+            `/api/methods?api=set-group-ready&groupId=${this.props.groupId}`
+        )
     }
 
     render() {
