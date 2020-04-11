@@ -1,4 +1,4 @@
-import withMiddleware from '../../middlewares/withMiddleware'
+import withMiddleware from '../../../middlewares/withMiddleware'
 const mongoose = require('mongoose')
 const User = mongoose.model('User')
 

@@ -69,11 +69,14 @@ class Index extends React.Component {
             }
         })
 
-        await axios.post(`/api/group/add-movies/${this.props.groupId}`, {
-            movies,
-            page,
-            totalPages: moviesListResponse.total_pages,
-        })
+        await axios.post(
+            `/api/methods?api=add-movies-to-group&groupId=${this.props.groupId}`,
+            {
+                movies,
+                page,
+                totalPages: moviesListResponse.total_pages,
+            }
+        )
 
         this.setState({
             userConfiguration: { ...this.state.userConfiguration, page: page },
@@ -163,9 +166,12 @@ class Index extends React.Component {
             .movieRecommendations({ id: movieId })
             .then(recomendations => {
                 if (recomendations && recomendations.results) {
-                    axios.post(`/api/group/add-movies/${this.props.groupId}`, {
-                        movies: recomendations.results,
-                    })
+                    axios.post(
+                        `/api/methods?api=add-movies-to-group&groupId=${this.props.groupId}`,
+                        {
+                            movies: recomendations.results,
+                        }
+                    )
                 }
             })
     }
@@ -173,7 +179,9 @@ class Index extends React.Component {
     postLike(like) {
         const movieId = this.state.movie.id
         like = like ? 'like' : 'nolike'
-        axios.post(`api/group/${this.props.groupId}/${movieId}/${like}`)
+        axios.post(
+            `api/methods?api=like&groupId=${this.props.groupId}&movieId=${movieId}&like=${like}`
+        )
     }
 
     like() {
@@ -231,7 +239,9 @@ class Index extends React.Component {
             this.setState({ showShareButton: true })
         }
 
-        const moviesR = await axios.get(`/api/group/${this.props.groupId}`)
+        const moviesR = await axios.get(
+            `/api/methods?api=get-group&groupId=${this.props.groupId}`
+        )
         let { group } = moviesR.data
 
         if (!validateGroup(group, GROUP_STATES.MATCHING)) {

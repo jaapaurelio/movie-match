@@ -1,4 +1,4 @@
-import withMiddleware from '../../../../middlewares/withMiddleware'
+import withMiddleware from '../../../middlewares/withMiddleware'
 const mongoose = require('mongoose')
 const Group = mongoose.model('Group')
 
@@ -14,7 +14,6 @@ const pusher = new Pusher({
 
 // todo remove replication
 function addMoviesToGroup(group, movies, userId) {
-    console.log(group)
     const groupId = group.id
     const wait = movies.map(movie => {
         if (group.movies[movie.id]) {
@@ -50,7 +49,6 @@ async function handle(req, res) {
     const { userId } = req.cookies
     const { groupId } = req.query
     const { movies, page, totalPages } = req.body
-    console.log('groupId', groupId)
 
     let group = await Group.findOne({ id: groupId })
 

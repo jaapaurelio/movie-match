@@ -28,4 +28,4 @@ class MyApp extends App {
     }
 }
 
-export default withReduxStore(appWithTranslation(MyApp))
+export default withReduxStore(MyApp)

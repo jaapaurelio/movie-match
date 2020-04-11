@@ -24,7 +24,9 @@ class Matches extends React.Component {
     }
 
     async componentDidMount() {
-        const moviesR = await axios.get(`/api/group/${this.props.groupId}`)
+        const moviesR = await axios.get(
+            `/api/methods?api=get-group&groupId=${this.props.groupId}`
+        )
         let { group } = moviesR.data
 
         const getMatches = group.matches.map(movie => {

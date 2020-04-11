@@ -31,7 +31,9 @@ class WaitingGroup extends React.Component {
     }
 
     async componentDidMount() {
-        const groupR = await axios.get(`/api/group/${this.props.groupId}`)
+        const groupR = await axios.get(
+            `/api/methods?api=get-group&groupId=${this.props.groupId}`
+        )
         let { group } = groupR.data
 
         if (!validateGroup(group, GROUP_STATES.WAITING_GROUP)) {

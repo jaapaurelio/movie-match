@@ -168,7 +168,9 @@ class CreateGroup extends React.Component {
 
     async componentDidMount() {
         const userId = jsCookie.get('userId')
-        const groupR = await axios.get(`/api/group/${this.props.groupId}`)
+        const groupR = await axios.get(
+            `/api/methods?api=get-group&groupId=${this.props.groupId}`
+        )
 
         let { group } = groupR.data
 

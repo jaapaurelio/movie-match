@@ -60,7 +60,7 @@ class Start extends React.Component {
 
         this.setState({ creatingGroup: true })
         const groupResponse = await axios.post(
-            '/api/create-group',
+            '/api/methods?api=create-group',
             {},
             {
                 withCredentials: true,
@@ -230,6 +230,7 @@ class Start extends React.Component {
     }
 
     static getInitialProps() {
+        console.log('start get initial')
         const pageProps = { namespacesRequired: ['common'] }
 
         return pageProps
