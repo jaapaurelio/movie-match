@@ -2,12 +2,10 @@ import Topbar from '../components/topbar'
 import Link from 'next/link'
 import Router from 'next/router'
 import PageWidth from '../components/page-width'
-import Headline from '../components/headline'
 import UserPop from '../components/user-popup'
 import Title from '../components/title'
 import { withNamespaces } from '../i18n'
 import jsCookie from 'js-cookie'
-import { connect } from 'react-redux'
 import axios from 'axios'
 
 class Start extends React.Component {
