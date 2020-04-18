@@ -3,18 +3,13 @@ const withOffline = require('next-offline')
 require('dotenv').config()
 const withTM = require('next-transpile-modules')
 
-console.log("webpack file loaded")
 module.exports = withOffline(
     withTM({
         webpack: (config, { isServer, buildId, dev }) => {
-            console.log("webpack env print:")
-            console.log(JSON.stringify(process.env))
             const env = Object.keys(process.env).reduce((acc, curr) => {
                 acc[`process.env.${curr}`] = JSON.stringify(process.env[curr])
                 return acc
             }, {})
-            console.log("created env")
-            console.log(env);
 
             config.plugins.push(new webpack.DefinePlugin(env))
 

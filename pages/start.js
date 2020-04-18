@@ -230,7 +230,6 @@ class Start extends React.Component {
     }
 
     static getInitialProps() {
-        console.log('start get initial')
         const pageProps = { namespacesRequired: ['common'] }
 
         return pageProps
