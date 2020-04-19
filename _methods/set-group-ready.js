@@ -25,9 +25,9 @@ async function handle(req, res, {pusher}) {
         group = await Group.findOne({ id: groupId }).exec()
 
         if (group.readies.length === group.users.length) {
-            console.log('group ready')
+            console.log('group ready', `group-${groupId}`)
             group.state = GROUP_STATES.CONFIGURING
-            pusher.trigger(`group-${groupId}`, 'group-ready', {})
+            pusher.trigger(`group-${groupId}`, 'group-ready', {success: true})
 
             await group.save()
             console.log('send push', groupId)
