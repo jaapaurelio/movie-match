@@ -2,21 +2,11 @@ import withMiddleware from '../middlewares/withMiddleware'
 const mongoose = require('mongoose')
 const Group = mongoose.model('Group')
 
-const Pusher = require('pusher')
-
-const pusher = new Pusher({
-    appId: process.env.PUSHER_APP_ID,
-    key: process.env.PUSHER_APP_KEY,
-    secret: process.env.PUSHER_APP_SECRET,
-    cluster: process.env.PUSHER_APP_CLUSTER,
-    encrypted: true,
-})
-
 function calculatePercentage(numOfLikes, totalUsers) {
     return Math.round((numOfLikes / totalUsers) * 100)
 }
 
-async function handle(req, res) {
+async function handle(req, res, {pusher}) {
     const { movieId, groupId } = req.query
     const { userId } = req.cookies
     const like = req.query.like === 'like'

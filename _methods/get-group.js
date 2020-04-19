@@ -3,15 +3,6 @@ const mongoose = require('mongoose')
 const Group = mongoose.model('Group')
 const User = mongoose.model('User')
 const { GROUP_STATES } = require('../lib/constants')
-const Pusher = require('pusher')
-
-const pusher = new Pusher({
-    appId: process.env.PUSHER_APP_ID,
-    key: process.env.PUSHER_APP_KEY,
-    secret: process.env.PUSHER_APP_SECRET,
-    cluster: process.env.PUSHER_APP_CLUSTER,
-    encrypted: true,
-})
 
 function sortMostLiked(movies, numUsers, bestMatch) {
     const movieIds = Object.keys(movies)
@@ -37,7 +28,7 @@ function calculatePercentage(numOfLikes, totalUsers) {
     return Math.round((numOfLikes / totalUsers) * 100)
 }
 
-async function handle(req, res) {
+async function handle(req, res, {pusher}) {
     const groupId = req.query.groupId
     const userId = req.cookies.userId
 

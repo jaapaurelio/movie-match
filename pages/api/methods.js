@@ -6,6 +6,7 @@ import getGroup from '../../_methods/get-group'
 import addMoviesToGroup from '../../_methods/add-movies-to-group'
 import setGroupReady from '../../_methods/set-group-ready'
 import addMoviesConfiguration from '../../_methods/add-movies-configuration'
+import Pusher from 'pusher'
 
 const apiMethods = {
     like: likeMethod,
@@ -17,6 +18,14 @@ const apiMethods = {
     'add-movies-configuration': addMoviesConfiguration,
 }
 
+const pusher = new Pusher({
+    appId: process.env.PUSHER_APP_ID,
+    key: process.env.PUSHER_APP_KEY,
+    secret: process.env.PUSHER_APP_SECRET,
+    cluster: process.env.PUSHER_APP_CLUSTER,
+    encrypted: true,
+})
+
 async function handle(req, res) {
     const apiMethod = req.query.api
 
@@ -24,7 +33,7 @@ async function handle(req, res) {
         console.error('No methods defined for', apiMethod)
     }
 
-    return apiMethods[apiMethod](req, res)
+    return apiMethods[apiMethod](req, res, {pusher})
 }
 
 export default withMiddleware(handle)

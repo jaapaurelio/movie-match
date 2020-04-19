@@ -3,17 +3,8 @@ const mongoose = require('mongoose')
 const Group = mongoose.model('Group')
 
 const { GROUP_STATES } = require('../lib/constants')
-const Pusher = require('pusher')
 
-const pusher = new Pusher({
-    appId: process.env.PUSHER_APP_ID,
-    key: process.env.PUSHER_APP_KEY,
-    secret: process.env.PUSHER_APP_SECRET,
-    cluster: process.env.PUSHER_APP_CLUSTER,
-    encrypted: true,
-})
-
-async function handle(req, res) {
+async function handle(req, res, {pusher}) {
     const groupId = req.query.groupId
     const userId = req.cookies.userId
     let group = await Group.findOne({ id: groupId }).exec()

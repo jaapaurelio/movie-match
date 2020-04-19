@@ -3,8 +3,8 @@ require('../models/genre.model')
 require('../models/group.model')
 require('../models/user.model')
 
-const withDatabase = handler => async (req, res) => {
-    if (mongoose.connections[0].readyState) return handler(req, res)
+const withDatabase = handler => async (...args) => {
+    if (mongoose.connections[0].readyState) return handler(...args)
 
     // Using new database connection
     await mongoose.connect(process.env.MONGODB_URI, {
@@ -14,7 +14,7 @@ const withDatabase = handler => async (req, res) => {
         useUnifiedTopology: true,
     })
 
-    return handler(req, res)
+    return handler(...args)
 }
 
 export default withDatabase

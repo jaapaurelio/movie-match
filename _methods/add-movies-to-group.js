@@ -2,16 +2,6 @@ import withMiddleware from '../middlewares/withMiddleware'
 const mongoose = require('mongoose')
 const Group = mongoose.model('Group')
 
-const Pusher = require('pusher')
-
-const pusher = new Pusher({
-    appId: process.env.PUSHER_APP_ID,
-    key: process.env.PUSHER_APP_KEY,
-    secret: process.env.PUSHER_APP_SECRET,
-    cluster: process.env.PUSHER_APP_CLUSTER,
-    encrypted: true,
-})
-
 // todo remove replication
 function addMoviesToGroup(group, movies, userId) {
     const groupId = group.id
@@ -45,7 +35,7 @@ function addMoviesToGroup(group, movies, userId) {
     return Promise.all(wait)
 }
 
-async function handle(req, res) {
+async function handle(req, res, {pusher}) {
     const { userId } = req.cookies
     const { groupId } = req.query
     const { movies, page, totalPages } = req.body
