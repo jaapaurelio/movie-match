@@ -23,10 +23,15 @@ async function handle(req, res, {pusher}) {
     group.readies.push(userId)
     pusher.trigger(`group-${groupId}`, 'group-tes2', {'aaa':'aa'})
 
-    return group.save().then(async () => {
+    await group.save().then(async () => {
+        pusher.trigger(`group-${groupId}`, 'group-tes3', {'aaa':'aa'})
+
         group = await Group.findOne({ id: groupId }).exec()
+        pusher.trigger(`group-${groupId}`, 'group-tes4', {'aaa':'aa'})
 
         if (group.readies.length === group.users.length) {
+            pusher.trigger(`group-${groupId}`, 'group-tes5', {'aaa':'aa'})
+
             console.log('group ready', `group-${groupId}`)
             group.state = GROUP_STATES.CONFIGURING
 
@@ -35,6 +40,7 @@ async function handle(req, res, {pusher}) {
             await group.save()
             console.log('send push trigger', pusher.trigger)
         }
+        pusher.trigger(`group-${groupId}`, 'group-tes6', {'aaa':'aa'})
 
         return res.send({ success: true, group })
     })
