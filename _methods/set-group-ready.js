@@ -23,11 +23,11 @@ async function handle(req, res, {pusher}) {
     group.readies.push(userId)
     pusher.trigger(`group-${groupId}`, 'group-tes2', {'aaa':'aa'})
 
-    group = await group.save()
+   //group = await group.save()
 
     pusher.trigger(`group-${groupId}`, 'group-tes3', {'aaa':'aa'})
 
-    group = await Group.findOne({ id: groupId }).exec()
+    //group = await Group.findOne({ id: groupId }).exec()
     pusher.trigger(`group-${groupId}`, 'group-tes4', {'aaa':'aa'})
 
     if (group.readies.length === group.users.length) {
