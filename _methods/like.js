@@ -47,7 +47,7 @@ async function handle(req, res, {pusher}) {
                 { new: true }
             )
 
-            pusherTrigger(pusher, `group-${groupId}`, 'best-match-updated', percentage)
+            await pusherTrigger(pusher, `group-${groupId}`, 'best-match-updated', percentage)
 
         }
 
@@ -65,7 +65,7 @@ async function handle(req, res, {pusher}) {
             )
 
             if (group.users.length >= 2) {
-                pusherTrigger(pusher, `group-${groupId}`, 'movie-matched', {
+                await pusherTrigger(pusher, `group-${groupId}`, 'movie-matched', {
                     matches: group.matches,
                 })
             }
@@ -83,7 +83,7 @@ async function handle(req, res, {pusher}) {
         )
     }
 
-    pusherTrigger(pusher, `group-${groupId}`, 'new-movies', [group.movies[movieId]])
+    await pusherTrigger(pusher, `group-${groupId}`, 'new-movies', [group.movies[movieId]])
 
     res.send({})
 }

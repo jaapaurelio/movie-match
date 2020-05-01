@@ -65,7 +65,7 @@ async function handle(req, res, {pusher}) {
         movieToSend[movie.id] = group.movies[movie.id]
     })
 
-    pusherTrigger(pusher, `group-${groupId}`, 'new-movies', movieToSend)
+    await pusherTrigger(pusher, `group-${groupId}`, 'new-movies', movieToSend)
 
 
     return res.send({

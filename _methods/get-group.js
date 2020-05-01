@@ -62,7 +62,7 @@ async function handle(req, res, {pusher}) {
             { new: true }
         )
         
-        pusherTrigger(pusher, `group-${groupId}`, 'users', group.users)
+        await pusherTrigger(pusher, `group-${groupId}`, 'users', group.users)
 
     }
 

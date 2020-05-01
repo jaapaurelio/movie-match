@@ -77,7 +77,7 @@ async function handle(req, res, {pusher}) {
 
         await Group.findOneAndUpdate({ id: groupId }, group)
 
-        pusherTrigger(pusher, `group-${groupId}`,  'configuration-done', {})
+        await pusherTrigger(pusher, `group-${groupId}`,  'configuration-done', {})
 
     }
 

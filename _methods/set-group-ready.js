@@ -30,7 +30,7 @@ async function handle(req, res, {pusher}) {
     if (group.readies.length === group.users.length) {
         group.state = GROUP_STATES.CONFIGURING
 
-        pusherTrigger(pusher, `group-${groupId}`, 'group-ready', {success: true})
+        await pusherTrigger(pusher, `group-${groupId}`, 'group-ready', {success: true})
 
         group = await group.save()
     }
