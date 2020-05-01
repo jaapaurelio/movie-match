@@ -8,8 +8,6 @@ async function handle(req, res, {pusher}) {
     const groupId = req.query.groupId
     const userId = req.cookies.userId
 
-    pusher.trigger(`group-${groupId}`, 'group-teste', {'aa':'aa'})
-
     let group = await Group.findOne({ id: groupId }).exec()
 
     if (!group || group.state !== GROUP_STATES.WAITING_GROUP) {
@@ -30,6 +28,8 @@ async function handle(req, res, {pusher}) {
         if (group.readies.length === group.users.length) {
             console.log('group ready', `group-${groupId}`)
             group.state = GROUP_STATES.CONFIGURING
+            pusher.trigger(`group-${groupId}`, 'group-tes', {'aaa':'aa'})
+
             pusher.trigger(`group-${groupId}`, 'group-ready', {success: true})
 
             await group.save()
