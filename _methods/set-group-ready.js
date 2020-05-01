@@ -7,6 +7,9 @@ const { GROUP_STATES } = require('../lib/constants')
 async function handle(req, res, {pusher}) {
     const groupId = req.query.groupId
     const userId = req.cookies.userId
+
+    pusher.trigger(`group-${groupId}`, 'group-teste', {'aa':'aa'})
+
     let group = await Group.findOne({ id: groupId }).exec()
 
     if (!group || group.state !== GROUP_STATES.WAITING_GROUP) {
