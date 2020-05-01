@@ -1,4 +1,5 @@
 import withMiddleware from '../middlewares/withMiddleware'
+import { pusherTrigger }from '../lib/pusher-promisify'
 const mongoose = require('mongoose')
 const Group = mongoose.model('Group')
 
@@ -64,7 +65,8 @@ async function handle(req, res, {pusher}) {
         movieToSend[movie.id] = group.movies[movie.id]
     })
 
-    pusher.trigger(`group-${groupId}`, 'new-movies', movieToSend)
+    pusherTrigger(pusher, `group-${groupId}`, 'new-movies', movieToSend)
+
 
     return res.send({
         success: true,

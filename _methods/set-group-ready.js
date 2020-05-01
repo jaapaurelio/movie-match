@@ -1,4 +1,5 @@
 import withMiddleware from '../middlewares/withMiddleware'
+import { pusherTrigger }from '../lib/pusher-promisify'
 const mongoose = require('mongoose')
 const Group = mongoose.model('Group')
 
@@ -21,27 +22,18 @@ async function handle(req, res, {pusher}) {
     }
 
     group.readies.push(userId)
-    pusher.trigger(`group-${groupId}`, 'group-tes2', {'aaa':'aa'})
 
-   //group = await group.save()
+    group = await group.save()
 
-    pusher.trigger(`group-${groupId}`, 'group-tes3', {'aaa':'aa'})
-
-    //group = await Group.findOne({ id: groupId }).exec()
-    pusher.trigger(`group-${groupId}`, 'group-tes4', {'aaa':'aa'})
+    group = await Group.findOne({ id: groupId }).exec()
 
     if (group.readies.length === group.users.length) {
-        pusher.trigger(`group-${groupId}`, 'group-tes5', {'aaa':'aa'})
-
-        console.log('group ready', `group-${groupId}`)
         group.state = GROUP_STATES.CONFIGURING
 
-        pusher.trigger(`group-${groupId}`, 'group-ready', {success: true})
+        pusherTrigger(pusher, `group-${groupId}`, 'group-ready', {success: true})
 
         group = await group.save()
-        console.log('send push trigger', pusher.trigger)
     }
-    pusher.trigger(`group-${groupId}`, 'group-tes6', {'aaa':'aa'})
 
     return res.send({ success: true, group })
 }

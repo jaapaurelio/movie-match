@@ -1,4 +1,5 @@
 import withMiddleware from '../middlewares/withMiddleware'
+import { pusherTrigger }from '../lib/pusher-promisify'
 const mongoose = require('mongoose')
 const Group = mongoose.model('Group')
 const User = mongoose.model('User')
@@ -60,7 +61,9 @@ async function handle(req, res, {pusher}) {
             },
             { new: true }
         )
-        pusher.trigger(`group-${groupId}`, 'users', group.users)
+        
+        pusherTrigger(pusher, `group-${groupId}`, 'users', group.users)
+
     }
 
     res.cookie('groupId', groupId, {

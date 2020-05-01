@@ -1,4 +1,5 @@
 import withMiddleware from '../middlewares/withMiddleware'
+import { pusherTrigger }from '../lib/pusher-promisify'
 const mongoose = require('mongoose')
 const Group = mongoose.model('Group')
 
@@ -46,7 +47,8 @@ async function handle(req, res, {pusher}) {
                 { new: true }
             )
 
-            pusher.trigger(`group-${groupId}`, 'best-match-updated', percentage)
+            pusherTrigger(pusher, `group-${groupId}`, 'best-match-updated', percentage)
+
         }
 
         const movie = group.movies[movieId]
@@ -63,7 +65,7 @@ async function handle(req, res, {pusher}) {
             )
 
             if (group.users.length >= 2) {
-                pusher.trigger(`group-${groupId}`, 'movie-matched', {
+                pusherTrigger(pusher, `group-${groupId}`, 'movie-matched', {
                     matches: group.matches,
                 })
             }
@@ -81,7 +83,7 @@ async function handle(req, res, {pusher}) {
         )
     }
 
-    pusher.trigger(`group-${groupId}`, 'new-movies', [group.movies[movieId]])
+    pusherTrigger(pusher, `group-${groupId}`, 'new-movies', [group.movies[movieId]])
 
     res.send({})
 }

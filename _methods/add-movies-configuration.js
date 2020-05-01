@@ -1,4 +1,5 @@
 import withMiddleware from '../middlewares/withMiddleware'
+import { pusherTrigger }from '../lib/pusher-promisify'
 const mongoose = require('mongoose')
 const Group = mongoose.model('Group')
 const { GROUP_STATES } = require('../lib/constants')
@@ -76,7 +77,8 @@ async function handle(req, res, {pusher}) {
 
         await Group.findOneAndUpdate({ id: groupId }, group)
 
-        pusher.trigger(`group-${groupId}`, 'configuration-done', {})
+        pusherTrigger(pusher, `group-${groupId}`,  'configuration-done', {})
+
     }
 
     return res.send({
