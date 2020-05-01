@@ -23,27 +23,27 @@ async function handle(req, res, {pusher}) {
     group.readies.push(userId)
     pusher.trigger(`group-${groupId}`, 'group-tes2', {'aaa':'aa'})
 
-    await group.save().then(async () => {
-        pusher.trigger(`group-${groupId}`, 'group-tes3', {'aaa':'aa'})
+    group = await group.save()
 
-        group = await Group.findOne({ id: groupId }).exec()
-        pusher.trigger(`group-${groupId}`, 'group-tes4', {'aaa':'aa'})
+    pusher.trigger(`group-${groupId}`, 'group-tes3', {'aaa':'aa'})
 
-        if (group.readies.length === group.users.length) {
-            pusher.trigger(`group-${groupId}`, 'group-tes5', {'aaa':'aa'})
+    group = await Group.findOne({ id: groupId }).exec()
+    pusher.trigger(`group-${groupId}`, 'group-tes4', {'aaa':'aa'})
 
-            console.log('group ready', `group-${groupId}`)
-            group.state = GROUP_STATES.CONFIGURING
+    if (group.readies.length === group.users.length) {
+        pusher.trigger(`group-${groupId}`, 'group-tes5', {'aaa':'aa'})
 
-            pusher.trigger(`group-${groupId}`, 'group-ready', {success: true})
+        console.log('group ready', `group-${groupId}`)
+        group.state = GROUP_STATES.CONFIGURING
 
-            await group.save()
-            console.log('send push trigger', pusher.trigger)
-        }
-        pusher.trigger(`group-${groupId}`, 'group-tes6', {'aaa':'aa'})
+        pusher.trigger(`group-${groupId}`, 'group-ready', {success: true})
 
-        return res.send({ success: true, group })
-    })
+        group = await group.save()
+        console.log('send push trigger', pusher.trigger)
+    }
+    pusher.trigger(`group-${groupId}`, 'group-tes6', {'aaa':'aa'})
+
+    return res.send({ success: true, group })
 }
 
 export default withMiddleware(handle)
