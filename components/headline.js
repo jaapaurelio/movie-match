@@ -1,5 +1,5 @@
 import PageWidth from './page-width'
-export default props => {
+const Headline = props => {
     return (
         <section className={`headline ${props.className}`}>
             <PageWidth className="mm-all-padding">{props.children}</PageWidth>
@@ -15,3 +15,5 @@ export default props => {
         </section>
     )
 }
+
+export default Headline

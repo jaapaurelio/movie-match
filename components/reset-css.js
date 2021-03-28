@@ -1,4 +1,4 @@
-export default () => (
+const ResetCss = () => (
     <div>
         <style jsx global>{`
             html,
@@ -128,3 +128,5 @@ export default () => (
         `}</style>
     </div>
 )
+
+export default ResetCss

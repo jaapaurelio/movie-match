@@ -2,7 +2,7 @@ import PageWidth from './page-width'
 import Link from 'next/link'
 import { withNamespaces } from '../i18n'
 
-export default withNamespaces('common')(
+const TopBar = withNamespaces('common')(
     ({
         groupPage = false,
         matchesPage = false,
@@ -173,3 +173,5 @@ export default withNamespaces('common')(
         </nav>
     )
 )
+
+export default TopBar

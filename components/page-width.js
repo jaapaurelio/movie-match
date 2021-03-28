@@ -1,4 +1,4 @@
-export default ({ children, className = '' }) => {
+const PageWidth = ({ children, className = '' }) => {
     return (
         <section className={`page-width ${className}`}>
             {children}
@@ -15,3 +15,5 @@ export default ({ children, className = '' }) => {
         </section>
     )
 }
+
+export default PageWidth

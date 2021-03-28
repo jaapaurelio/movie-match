@@ -1,4 +1,4 @@
-export default props => {
+const Loader = props => {
     return (
         <div className="loader">
             <style jsx>
@@ -47,3 +47,5 @@ export default props => {
         </div>
     )
 }
+
+export default Loader

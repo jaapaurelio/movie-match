@@ -1,6 +1,6 @@
 import Head from 'next/head'
 
-export default () => (
+const Meta = () => (
     <div>
         <Head>
             <link rel="manifest" href="/static/manifest.json" />
@@ -33,3 +33,5 @@ export default () => (
         </Head>
     </div>
 )
+
+export default Meta

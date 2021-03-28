@@ -1,4 +1,4 @@
-export default ({ title, subtitle }) => (
+const Title = ({ title, subtitle }) => (
     <div>
         <div className="mm-title-container">
             <h2 className="mm-title">{title}</h2>
@@ -8,3 +8,4 @@ export default ({ title, subtitle }) => (
         <style jsx>{``}</style>
     </div>
 )
+export default Title

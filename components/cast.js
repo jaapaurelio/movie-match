@@ -1,4 +1,4 @@
-export default ({ cast, t }) => (
+const Cast = ({ cast, t }) => (
     <div className="actors-container">
         <h3 className="mm-content-padding">{t('cast')}</h3>
         <div className="actors">
@@ -61,3 +61,5 @@ export default ({ cast, t }) => (
         </style>
     </div>
 )
+
+export default Cast

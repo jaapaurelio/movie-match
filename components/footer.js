@@ -1,6 +1,6 @@
 import PageWidth from './page-width'
 
-export default ({ children, className = '' }) => {
+const Footer = ({ children, className = '' }) => {
     return (
         <section className="footer-container">
             <div className="footer">
@@ -27,3 +27,4 @@ export default ({ children, className = '' }) => {
         </section>
     )
 }
+export default Footer;

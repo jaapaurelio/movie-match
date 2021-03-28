@@ -1,4 +1,4 @@
-export default ({ children }) => (
+const TextButton = ({ children }) => (
     <div className="container">
         {children}
         <style jsx>
@@ -11,3 +11,4 @@ export default ({ children }) => (
         </style>
     </div>
 )
+export default TextButton

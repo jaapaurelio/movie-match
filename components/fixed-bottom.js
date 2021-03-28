@@ -1,4 +1,4 @@
-export default ({ children }) => {
+const FixedBottom = ({ children }) => {
     return (
         <div className="fixed-bottom-container">
             <div className="fixed-bottom">{children}</div>
@@ -20,3 +20,5 @@ export default ({ children }) => {
         </div>
     )
 }
+
+export default FixedBottom

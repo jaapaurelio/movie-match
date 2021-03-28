@@ -1,6 +1,6 @@
 import PageWidth from './page-width'
 
-export default ({ groupId, users }) => {
+const GroupInfoBar = ({ groupId, users }) => {
     return (
         <PageWidth className="mm-content-padding">
             <div className="group-info">
@@ -53,3 +53,5 @@ export default ({ groupId, users }) => {
         </PageWidth>
     )
 }
+
+export default GroupInfoBar

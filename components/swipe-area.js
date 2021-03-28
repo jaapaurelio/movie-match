@@ -1,4 +1,4 @@
-export default ({ children }) => (
+const SwipeArea = ({ children }) => (
     <section className="container">
         {children}
         <style jsx>
@@ -10,3 +10,4 @@ export default ({ children }) => (
         </style>
     </section>
 )
+export default SwipeArea

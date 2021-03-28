@@ -9,7 +9,7 @@ const getRuntime = min => {
     return h + 'h' + m + 'm'
 }
 
-export default ({ movie, small }) => {
+const MovieHead = ({ movie, small }) => {
     const imageClass = small ? 'movie-poster-small' : 'movie-poster'
     return (
         <div>
@@ -151,3 +151,5 @@ export default ({ movie, small }) => {
         </div>
     )
 }
+
+export default MovieHead
