@@ -1,7 +1,7 @@
 {
   "short_name": "Movie Match",
   "name": "Movie Match",
-  "start_url": "/start",
+  "start_url": "/",
   "background_color": "#ffffff",
   "theme_color": "#ffffff",
   "display": "standalone",

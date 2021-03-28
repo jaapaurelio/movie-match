@@ -4,6 +4,7 @@ const Meta = () => (
     <div>
         <Head>
             <link rel="manifest" href="/manifest.json" />
+            <link rel="apple-touch-icon" href="/icons/icon-256x256.png" />
             <link rel="icon" type="image/x-icon" href="/favicon.png" />
             <link
                 rel="stylesheet"
@@ -16,6 +17,7 @@ const Meta = () => (
                 rel="stylesheet"
             />
             <meta name="theme-color" content="#333" />
+            <meta name="apple-mobile-web-app-status-bar" content="#333" />
             <meta
                 name="viewport"
                 content="width=device-width, initial-scale=1, minimum-scale=1.0, user-scalable=no"

@@ -17,7 +17,7 @@ const TopBar = withNamespaces('common')(
         <nav>
             <PageWidth>
                 <div className="container">
-                    <Link href={`/start`}>
+                    <Link href={`/`}>
                         <div className="page-title">
                             {title || 'Movie Match'}
                         </div>

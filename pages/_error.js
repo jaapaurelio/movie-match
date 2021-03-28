@@ -18,7 +18,7 @@ class ErrorPage extends React.Component {
                 </div>
                 <div className="home-link">
                     <div className="mm-btn">
-                        <Link href={`/start`}>
+                        <Link href={`/`}>
                             <a>{this.props.t('go-to-home-btn')}</a>
                         </Link>
                     </div>
