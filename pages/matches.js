@@ -10,7 +10,8 @@ import Link from 'next/link'
 
 import UserPop from '../components/user-popup'
 import { withNamespaces } from '../i18n'
-const MovieDb = require('moviedb-promise')
+import { MovieDb } from 'moviedb-promise'
+
 const moviedb = new MovieDb('284941729ae99106f71e56126227659b')
 
 class Matches extends React.Component {

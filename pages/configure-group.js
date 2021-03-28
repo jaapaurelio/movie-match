@@ -1,7 +1,6 @@
 import * as React from 'react'
 import Topbar from '../components/topbar'
-const MovieDb = require('moviedb-promise')
-const moviedb = new MovieDb('284941729ae99106f71e56126227659b')
+import { MovieDb } from 'moviedb-promise'
 import axios from 'axios'
 import Router from 'next/router'
 import PageWidth from '../components/page-width'
@@ -14,6 +13,8 @@ import UserPop from '../components/user-popup'
 import FixedBottom from '../components/fixed-bottom'
 import jsCookie from 'js-cookie'
 import { withNamespaces } from '../i18n'
+
+const moviedb = new MovieDb('284941729ae99106f71e56126227659b')
 
 class CreateGroup extends React.Component {
     constructor(props) {

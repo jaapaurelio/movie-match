@@ -18,7 +18,7 @@ import { withNamespaces } from '../i18n'
 import { sortMovies } from '../lib/sort-movies'
 import MovieHead from '../components/movie-head'
 
-const MovieDb = require('moviedb-promise')
+import { MovieDb } from 'moviedb-promise'
 const moviedb = new MovieDb('284941729ae99106f71e56126227659b')
 
 class Index extends React.Component {
@@ -107,7 +107,8 @@ class Index extends React.Component {
 
         // first movie has no data
         if (!movie.fullyLoaded) {
-            const movieInfo = await moviedb.movieInfo(movie.id, {
+            const movieInfo = await moviedb.movieInfo({
+                id: movie.id,
                 append_to_response: 'credits',
             })
 
@@ -136,9 +137,7 @@ class Index extends React.Component {
         if (!nextMovie) return
 
         moviedb
-            .movieInfo(nextMovie.id, {
-                append_to_response: 'credits',
-            })
+            .movieInfo({ id: nextMovie.id, append_to_response: 'credits' })
             .then(movie => {
                 const nextMovies = this.state.movies
 
