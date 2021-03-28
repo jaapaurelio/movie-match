@@ -1,3 +1,4 @@
+import * as React from 'react'
 import Topbar from '../components/topbar'
 import MovieInfo from '../components/movie-info'
 import Cast from '../components/cast'

@@ -1,3 +1,4 @@
+import * as React from 'react'
 import Topbar from '../components/topbar'
 const MovieDb = require('moviedb-promise')
 const moviedb = new MovieDb('284941729ae99106f71e56126227659b')

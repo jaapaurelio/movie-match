@@ -1,3 +1,4 @@
+import * as React from 'react'
 import Topbar from '../components/topbar'
 import { withNamespaces } from '../i18n'
 import axios from 'axios'

@@ -1,3 +1,4 @@
+import * as React from 'react'
 import { connect } from 'react-redux'
 import { setUser } from '../state-manager/actions'
 import axios from 'axios'
