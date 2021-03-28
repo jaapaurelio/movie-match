@@ -3,8 +3,8 @@ import Head from 'next/head'
 const Meta = () => (
     <div>
         <Head>
-            <link rel="manifest" href="/static/manifest.json" />
-            <link rel="icon" type="image/x-icon" href="/static/favicon.png" />
+            <link rel="manifest" href="/manifest.json" />
+            <link rel="icon" type="image/x-icon" href="/favicon.png" />
             <link
                 rel="stylesheet"
                 href="https://use.fontawesome.com/releases/v5.5.0/css/all.css"
