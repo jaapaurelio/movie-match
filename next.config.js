@@ -4,6 +4,15 @@ require('dotenv').config()
 const withTM = require('next-transpile-modules')
 
 module.exports = {
+    async redirects() {
+        return [
+            {
+                source: '/start',
+                destination: '/',
+                permanent: true,
+            },
+        ]
+    },
     ...withOffline({
         workboxOpts: {
             swDest: process.env.NEXT_EXPORT
