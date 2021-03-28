@@ -12,21 +12,21 @@ module.exports = {
             runtimeCaching: [
                 {
                     urlPattern: '/',
-                    handler: 'networkFirst',
+                    handler: 'NetworkFirst',
                     options: {
                         cacheName: 'html-cache',
                     },
                 },
                 {
                     urlPattern: /api/,
-                    handler: 'networkOnly',
+                    handler: 'NetworkOnly',
                     options: {
                         cacheName: 'internal-api',
                     },
                 },
                 {
                     urlPattern: /.*\.(?:png|jpg|jpeg|svg|gif)/,
-                    handler: 'cacheFirst',
+                    handler: 'CacheFirst',
                     options: {
                         cacheName: 'image-cache',
                         cacheableResponse: {
@@ -38,7 +38,7 @@ module.exports = {
                     urlPattern: new RegExp(
                         '^https://api.themoviedb.org/3/movie'
                     ),
-                    handler: 'staleWhileRevalidate',
+                    handler: 'StaleWhileRevalidate',
                     options: {
                         cacheName: 'api-cache',
                         cacheableResponse: {
