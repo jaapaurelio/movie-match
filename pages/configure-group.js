@@ -13,20 +13,22 @@ import UserPop from '../components/user-popup'
 import FixedBottom from '../components/fixed-bottom'
 import jsCookie from 'js-cookie'
 import { withNamespaces } from '../i18n'
+import randomInt from 'random-int'
 
 const moviedb = new MovieDb('284941729ae99106f71e56126227659b')
-
 class CreateGroup extends React.Component {
     constructor(props) {
         super(props)
+        const currentDate = new Date()
+        const currentYear = currentDate.getFullYear()
 
         const years = []
-        for (let i = 1950; i <= 2020; i = i + 10) {
+        for (let i = 1950; i <= currentYear; i = i + 10) {
             years.push(i)
         }
 
-        // TODO Make it smart
-        years[years.length - 1] = 2019
+        // Make sure current year is the last one
+        years[years.length - 1] = currentYear
 
         const ratings = [
             { id: 0, label: this.props.t('bad-movies') },
@@ -38,11 +40,12 @@ class CreateGroup extends React.Component {
             allSelected: false,
             errorMessages: [],
             startYear: 2000,
-            endYear: 2019,
+            endYear: currentYear,
             rating: 1,
             waitingUsers: false,
             loaded: false,
             isMoreConfigurationsVisible: false,
+            page: randomInt(3, 7),
         }
 
         this.CONST = {
@@ -129,7 +132,7 @@ class CreateGroup extends React.Component {
 
         const moviesListResponse = await moviedb.discoverMovie({
             ...baseQuery,
-            page: 1,
+            page: this.state.page,
         })
 
         const movies = moviesListResponse.results.map(movie => {
@@ -149,7 +152,7 @@ class CreateGroup extends React.Component {
                     startYear,
                     endYear,
                     selectedGenres,
-                    page: 1,
+                    page: this.state.page,
                     totalPages: moviesListResponse.total_pages,
                 },
             }
