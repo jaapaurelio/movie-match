@@ -7,8 +7,9 @@ const Cast = ({ cast, t }) => (
                     <img
                         className="actor-image"
                         src={
-                            `https://image.tmdb.org/t/p/w240_and_h266_face/` +
                             actor.profile_path
+                                ? `https://image.tmdb.org/t/p/w240_and_h266_face/${actor.profile_path}`
+                                : '/mmicon.png'
                         }
                     />
                     <div className="actor-name">{actor.name}</div>

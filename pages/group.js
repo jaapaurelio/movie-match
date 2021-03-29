@@ -1,6 +1,7 @@
 import * as React from 'react'
 import Topbar from '../components/topbar'
 import MovieInfo from '../components/movie-info'
+import MovieVideo from '../components/movie-video'
 import Cast from '../components/cast'
 import MatchPopup from '../components/match-popup'
 import SwipeArea from '../components/swipe-area'
@@ -21,6 +22,13 @@ import MovieHead from '../components/movie-head'
 import { MovieDb } from 'moviedb-promise'
 const moviedb = new MovieDb('284941729ae99106f71e56126227659b')
 
+function getMovieTrailerKey(videos = []) {
+    const results = videos.results || []
+    const trailer =
+        results.find(video => video.type === 'Trailer') || results[0] || {}
+
+    return trailer.key
+}
 class Index extends React.Component {
     constructor(props) {
         super(props)
@@ -109,7 +117,7 @@ class Index extends React.Component {
         if (!movie.fullyLoaded) {
             const movieInfo = await moviedb.movieInfo({
                 id: movie.id,
-                append_to_response: 'credits',
+                append_to_response: 'credits,videos',
             })
 
             if (this.state.movie && this.state.movie.id === movieInfo.id) {
@@ -137,7 +145,10 @@ class Index extends React.Component {
         if (!nextMovie) return
 
         moviedb
-            .movieInfo({ id: nextMovie.id, append_to_response: 'credits' })
+            .movieInfo({
+                id: nextMovie.id,
+                append_to_response: 'credits,videos',
+            })
             .then(movie => {
                 const nextMovies = this.state.movies
 
@@ -404,7 +415,17 @@ class Index extends React.Component {
                                     cast={movie.credits.cast.slice(0, 5)}
                                 />
                             </PageWidth>
+
                             <MovieInfo movie={movie} />
+                            <PageWidth>
+                                <div className="mm-content-padding">
+                                    <MovieVideo
+                                        youtubeKey={getMovieTrailerKey(
+                                            movie.videos
+                                        )}
+                                    ></MovieVideo>
+                                </div>
+                            </PageWidth>
                         </SwipeArea>
                         <div className="buttons-container-space" />
                         <div className="buttons-container-bg">
