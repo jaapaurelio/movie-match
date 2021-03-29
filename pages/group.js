@@ -269,10 +269,17 @@ class Index extends React.Component {
 
         this.channel = this.pusher.subscribe(`group-${this.props.groupId}`)
 
-        this.channel.bind('movie-matched', matches => {
+        this.channel.bind('movie-matched', async data => {
+            const { matches } = data
+            const matchMovieId = matches[matches.length - 1]
+            const movieInfo = await moviedb.movieInfo({
+                id: matchMovieId,
+            })
+
             this.setState({
                 matched: true,
                 showMatchPopup: true,
+                matchPoster: movieInfo.poster_path,
             })
         })
 
@@ -356,7 +363,7 @@ class Index extends React.Component {
     }
 
     render() {
-        const { movie, showMatchPopup } = this.state
+        const { movie, showMatchPopup, matchPoster } = this.state
         const TopBarForPage = (
             <Topbar
                 groupPage={true}
@@ -458,7 +465,14 @@ class Index extends React.Component {
                 </PageWidth>
                 <MatchPopup
                     show={showMatchPopup}
+                    poster={matchPoster}
                     onClickMatches={this.onClickMatches}
+                    onClickDismiss={() => {
+                        this.setState({
+                            showMatchPopup: false,
+                            matchPoster: undefined,
+                        })
+                    }}
                 />
                 <style jsx>
                     {`
