@@ -16,7 +16,7 @@ const withDatabase = (handler) => async (...args) => {
         return handler(...args)
     }
 
-    console.log('withDatabase- tenta conectar', process.env.MONGODB_URI)
+    console.log('withDatabase- tenta conectar')
     // Using new database connection
     await mongoose.connect(process.env.MONGODB_URI, {
         useNewUrlParser: true,
