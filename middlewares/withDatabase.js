@@ -3,8 +3,12 @@ require('../models/genre.model')
 require('../models/group.model')
 require('../models/user.model')
 
+let id = 0
+
 const withDatabase = (handler) => async (...args) => {
     console.log('withDatabase- withdatabase')
+    id++
+    console.log('number of times reused', id)
 
     if (mongoose.connections[0].readyState) {
         console.log('withDatabase- reuse connection')
