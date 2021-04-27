@@ -4,14 +4,15 @@ require('../models/group.model')
 require('../models/user.model')
 
 let id = 0
+let isConnected
 
 const withDatabase = (handler) => async (...args) => {
     console.log('withDatabase- withdatabase')
     id++
     console.log('number of times reused', id)
 
-    if (mongoose.connections[0].readyState) {
-        console.log('withDatabase- reuse connection')
+    if (isConnected) {
+        console.log('=> using existing database connection')
         return handler(...args)
     }
 
@@ -23,6 +24,8 @@ const withDatabase = (handler) => async (...args) => {
         useCreateIndex: true,
         useUnifiedTopology: true,
     })
+
+    isConnected = mongoose.connections[0].readyState
     console.log('withDatabase- success database')
 
     return handler(...args)
