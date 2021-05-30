@@ -3,24 +3,20 @@ const mongoose = require('mongoose')
 const Group = mongoose.model('Group')
 const randomstring = require('randomstring')
 
-const generateGroupId = async function() {
-    const groupIdsMap = await Group.find(
-        {},
-        {
-            _id: 0,
-            id: 1,
-        }
-    ).exec()
-    const groupIds = groupIdsMap.map(r => r.id)
+const generateGroupId = async function () {
+    let groupExists = true
     let groupId
-    do {
+
+    while (groupExists) {
         groupId = randomstring.generate({
-            length: 4,
+            length: 5,
             charset: 'alphabetic',
             readable: true,
             capitalization: 'uppercase',
         })
-    } while (groupIds.some(id => groupId === id))
+
+        groupExists = await Group.findOne({ id: groupId }).exec()
+    }
 
     return groupId
 }
