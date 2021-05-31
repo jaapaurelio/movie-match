@@ -136,7 +136,7 @@ class Start extends React.Component {
                     </div>
 
                     <div className="how-to-link">
-                        <Link href="/intro">
+                        <Link href="/how-to-use">
                             <a>{this.props.t('how-to-use')}</a>
                         </Link>
                     </div>
