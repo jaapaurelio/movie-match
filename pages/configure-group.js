@@ -1,4 +1,5 @@
-import * as React from 'react'
+import React, { useState, useEffect } from 'react'
+
 import Topbar from '../components/topbar'
 import { MovieDb } from 'moviedb-promise'
 import axios from 'axios'
@@ -12,102 +13,96 @@ import Loader from '../components/loader'
 import UserPop from '../components/user-popup'
 import FixedBottom from '../components/fixed-bottom'
 import jsCookie from 'js-cookie'
-import { withNamespaces } from '../i18n'
 import randomInt from 'random-int'
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+import { useTranslation } from 'next-i18next'
 
 const moviedb = new MovieDb('284941729ae99106f71e56126227659b')
-class CreateGroup extends React.Component {
-    constructor(props) {
-        super(props)
-        const currentDate = new Date()
-        const currentYear = currentDate.getFullYear()
 
-        const years = []
-        for (let i = 1950; i <= currentYear; i = i + 10) {
-            years.push(i)
-        }
+function CreateGroup(props) {
+    const { t } = useTranslation('common')
 
-        // Make sure current year is the last one
-        years[years.length - 1] = currentYear
+    const currentDate = new Date()
+    const currentYear = currentDate.getFullYear()
 
-        const ratings = [
-            { id: 0, label: this.props.t('bad-movies') },
-            { id: 1, label: this.props.t('good-movies') },
-        ]
-
-        this.state = {
-            genres: [],
-            allSelected: false,
-            errorMessages: [],
-            startYear: 2000,
-            endYear: currentYear,
-            rating: 1,
-            waitingUsers: false,
-            loaded: false,
-            isMoreConfigurationsVisible: false,
-            page: randomInt(3, 7),
-        }
-
-        this.CONST = {
-            years,
-            ratings,
-        }
-
-        this.toggleGenre = this.toggleGenre.bind(this)
-        this.submitForm = this.submitForm.bind(this)
-        this.showErrors = this.showErrors.bind(this)
-        this.showMoreConfigurations = this.showMoreConfigurations.bind(this)
+    const years = []
+    for (let i = 1950; i <= currentYear; i = i + 10) {
+        years.push(i)
     }
 
-    showMoreConfigurations() {
-        this.setState({ isMoreConfigurationsVisible: true })
+    // Make sure current year is the last one
+    years[years.length - 1] = currentYear
+
+    const ratings = [
+        { id: 0, label: t('bad-movies') },
+        { id: 1, label: t('good-movies') },
+    ]
+
+    const [state, setState] = useState({
+        genres: props.genres || [],
+        allSelected: false,
+        errorMessages: [],
+        startYear: 2000,
+        endYear: currentYear,
+        rating: 1,
+        waitingUsers: false,
+        loaded: false,
+        isMoreConfigurationsVisible: false,
+        page: randomInt(3, 7),
+    })
+
+    const constants = {
+        years,
+        ratings,
     }
 
-    submitForm() {
-        const selectedGenres = this.state.genres
-            .filter(genre => genre.selected)
-            .map(genre => genre.id)
+    function showMoreConfigurations() {
+        setState({ ...state, isMoreConfigurationsVisible: true })
+    }
+
+    function submitForm() {
+        const selectedGenres = state.genres
+            .filter((genre) => genre.selected)
+            .map((genre) => genre.id)
 
         const errorMessages = []
 
-        if (this.state.startYear >= this.state.endYear) {
-            errorMessages.push(this.props.t('invalid-years'))
+        if (state.startYear >= state.endYear) {
+            errorMessages.push(t('invalid-years'))
         }
 
         if (!selectedGenres.length) {
-            errorMessages.push(this.props.t('please-select-genre'))
+            errorMessages.push(t('please-select-genre'))
         }
 
         if (errorMessages.length > 0) {
-            return this.showErrors(errorMessages)
+            return showErrors(errorMessages)
         }
 
-        this.createGroup({
+        createGroup({
             selectedGenres,
-            startYear: this.state.startYear,
-            endYear: this.state.endYear,
-            rating: this.state.rating,
+            startYear: state.startYear,
+            endYear: state.endYear,
+            rating: state.rating,
         })
     }
 
-    showErrors(errorMessages) {
-        if (this.errorTimer) {
-            clearTimeout(this.errorTimer)
-            this.errorTimer = null
+    function showErrors(errorMessages) {
+        if (errorTimer) {
+            clearTimeout(errorTimer)
+            errorTimer = null
         }
 
-        this.errorTimer = setTimeout(() => {
-            this.setState({ errorMessages: [] })
-            this.errorTimer = null
+        errorTimer = setTimeout(() => {
+            setState({ ...state, errorMessages: [] })
+            errorTimer = null
         }, 2000)
 
-        this.setState({
-            errorMessages,
-        })
+        setState({ ...state, errorMessages })
     }
 
-    async createGroup({ selectedGenres, startYear, endYear, rating }) {
-        const groupId = this.props.groupId
+    async function createGroup({ selectedGenres, startYear, endYear, rating }) {
+        const groupId = props.groupId
         let ratingGte = 1
         let ratingLte = 10
 
@@ -128,14 +123,14 @@ class CreateGroup extends React.Component {
             with_genres: selectedGenres.join('|'),
         }
 
-        this.setState({ waitingUsers: true })
+        setState({ ...state, waitingUsers: true })
 
         const moviesListResponse = await moviedb.discoverMovie({
             ...baseQuery,
-            page: this.state.page,
+            page: state.page,
         })
 
-        const movies = moviesListResponse.results.map(movie => {
+        const movies = moviesListResponse.results.map((movie) => {
             return {
                 id: movie.id,
                 title: movie.title,
@@ -152,15 +147,15 @@ class CreateGroup extends React.Component {
                     startYear,
                     endYear,
                     selectedGenres,
-                    page: this.state.page,
+                    page: state.page,
                     totalPages: moviesListResponse.total_pages,
                 },
             }
         )
     }
 
-    toggleGenre(id) {
-        const genres = this.state.genres.map(genre => {
+    function toggleGenre(id) {
+        const genres = state.genres.map((genre) => {
             if (genre.id === id) {
                 return {
                     ...genre,
@@ -171,396 +166,376 @@ class CreateGroup extends React.Component {
             return genre
         })
 
-        this.setState({ genres })
+        setState({ ...state, genres })
     }
 
-    async componentDidMount() {
-        const userId = jsCookie.get('userId')
-        const groupR = await axios.get(
-            `/api/methods?api=get-group&groupId=${this.props.groupId}`
-        )
-
-        let { group } = groupR.data
-
-        if (!validateGroup(group, GROUP_STATES.CONFIGURING)) {
-            return
-        }
-
-        this.setState({
-            loaded: true,
-        })
-
-        const userHasConfig = group.configurationByUser[userId]
-
-        if (userHasConfig) {
-            return this.setState({
-                waitingUsers: true,
-            })
-        }
-
-        this.pusher = pusherConnection()
-
-        this.channel = this.pusher.subscribe(`group-${this.props.groupId}`)
-
-        this.channel.bind('configuration-done', () => {
-            this.setState({ loaded: false })
-            Router.push(`/group?id=${this.props.groupId}`)
-        })
-    }
-
-    componentWillUnmount() {
-        if (this.pusher) {
-            this.pusher.unsubscribe(`group-${this.props.groupId}`)
-        }
-    }
-    componentWillMount() {
-        const genres = this.props.genres
-        this.setState({ genres })
-    }
-
-    static async getInitialProps({ query }) {
-        const groupId = query.id && query.id.toUpperCase()
-        const genreMovieList = await moviedb.genreMovieList()
-
-        const genres = genreMovieList.genres.map(genre => ({
-            ...genre,
-            selected: false,
-        }))
-
-        return { genres, namespacesRequired: ['common'], groupId }
-    }
-
-    render() {
-        const TopBarForPage = (
-            <Topbar
-                showMenu={false}
-                showGroup={true}
-                groupId={this.props.groupId}
-                groupPage={true}
-            />
-        )
-
-        if (!this.state.loaded) {
-            return (
-                <div>
-                    {TopBarForPage}
-                    <Loader />
-                    <UserPop />
-                </div>
+    useEffect(() => {
+        let pusher
+        ;(async () => {
+            const userId = jsCookie.get('userId')
+            const groupR = await axios.get(
+                `/api/methods?api=get-group&groupId=${props.groupId}`
             )
+
+            let { group } = groupR.data
+
+            if (!validateGroup(group, GROUP_STATES.CONFIGURING)) {
+                return
+            }
+
+            setState((state) => ({ ...state, loaded: true }))
+
+            const userHasConfig = group.configurationByUser[userId]
+
+            if (userHasConfig) {
+                return setState((state) => ({ ...state, waitingUsers: true }))
+            }
+
+            pusher = pusherConnection()
+
+            const channel = pusher.subscribe(`group-${props.groupId}`)
+
+            channel.bind('configuration-done', () => {
+                setState((state) => ({ ...state, loaded: false }))
+                Router.push(`/group?id=${props.groupId}`)
+            })
+        })()
+
+        return function cleanup() {
+            if (pusher) {
+                pusher.unsubscribe(`group-${props.groupId}`)
+            }
         }
+    }, [])
 
+    const TopBarForPage = (
+        <Topbar
+            showMenu={false}
+            showGroup={true}
+            groupId={props.groupId}
+            groupPage={true}
+        />
+    )
+
+    if (!state.loaded) {
         return (
-            <div className="root-container">
+            <div>
                 {TopBarForPage}
-                {!this.state.waitingUsers && (
-                    <div>
-                        <PageWidth>
-                            <Title
-                                title={this.props.t(
-                                    'what-kind-of-movie-you-like'
-                                )}
-                            ></Title>
-                            <div className="mm-content-padding">
-                                <div className="form-title">
-                                    {this.props.t('movie-genres')}
-                                </div>
-                                <div className="genres-container">
-                                    {this.state.genres.map(genre => {
-                                        return (
-                                            <div
-                                                key={genre.id}
-                                                className="checkbox-m"
-                                            >
-                                                <label
-                                                    className={
-                                                        genre.selected
-                                                            ? 'selected'
-                                                            : ''
-                                                    }
-                                                    onClick={() =>
-                                                        this.toggleGenre(
-                                                            genre.id
-                                                        )
-                                                    }
-                                                >
-                                                    {genre.name}
-                                                </label>
-                                            </div>
-                                        )
-                                    })}
-                                </div>
-
-                                {!this.state.isMoreConfigurationsVisible && (
-                                    <div
-                                        className="mm-text-btn show-more"
-                                        onClick={this.showMoreConfigurations}
-                                    >
-                                        {this.props.t(
-                                            'show-more-config-group-options'
-                                        )}
-                                    </div>
-                                )}
-
-                                {this.state.isMoreConfigurationsVisible && (
-                                    <div>
-                                        <div className="form-title">
-                                            {this.props.t('rating')}
-                                        </div>
-                                        <div className="two-selects-row">
-                                            <select
-                                                className="select-m"
-                                                defaultValue={this.state.rating}
-                                                onChange={event => {
-                                                    this.setState({
-                                                        rating:
-                                                            event.target.value,
-                                                    })
-                                                }}
-                                            >
-                                                {this.CONST.ratings.map(
-                                                    (rating, i) => {
-                                                        return (
-                                                            <option
-                                                                key={rating.id}
-                                                                value={
-                                                                    rating.id
-                                                                }
-                                                            >
-                                                                {rating.label}
-                                                            </option>
-                                                        )
-                                                    }
-                                                )}
-                                            </select>
-                                        </div>
-
-                                        <div className="form-title">
-                                            {this.props.t('from-year')}
-                                        </div>
-                                        <div className="two-selects-row">
-                                            <select
-                                                className="select-m"
-                                                defaultValue={
-                                                    this.state.startYear
-                                                }
-                                                onChange={event => {
-                                                    this.setState({
-                                                        startYear:
-                                                            event.target.value,
-                                                    })
-                                                }}
-                                            >
-                                                {this.CONST.years.map(
-                                                    (year, i) => {
-                                                        return (
-                                                            <option
-                                                                key={i}
-                                                                value={year}
-                                                            >
-                                                                {year}
-                                                            </option>
-                                                        )
-                                                    }
-                                                )}
-                                            </select>
-                                            <span className="two-to">
-                                                {this.props.t('to')}
-                                            </span>
-                                            <select
-                                                className="select-m"
-                                                defaultValue={
-                                                    this.state.endYear
-                                                }
-                                                onChange={event => {
-                                                    this.setState({
-                                                        endYear:
-                                                            event.target.value,
-                                                    })
-                                                }}
-                                            >
-                                                {this.CONST.years.map(
-                                                    (year, i) => {
-                                                        return (
-                                                            <option
-                                                                key={i}
-                                                                value={year}
-                                                            >
-                                                                {year}
-                                                            </option>
-                                                        )
-                                                    }
-                                                )}
-                                            </select>
-                                        </div>
-                                    </div>
-                                )}
-
-                                {!!this.state.errorMessages.length && (
-                                    <div className="toast-error-container">
-                                        <div className="toast-error">
-                                            {this.state.errorMessages.map(
-                                                message => (
-                                                    <span key={message}>
-                                                        {message} <br />
-                                                    </span>
-                                                )
-                                            )}
-                                        </div>
-                                    </div>
-                                )}
-                            </div>
-                        </PageWidth>
-                        <FixedBottom>
-                            <PageWidth className="mm-content-padding">
-                                <div className="create-group-btn-container">
-                                    <button
-                                        onClick={this.submitForm}
-                                        className="mm-btn create-group-btn"
-                                    >
-                                        {this.props.t('next-btn')}
-                                    </button>
-                                </div>
-                            </PageWidth>
-                        </FixedBottom>
-                    </div>
-                )}
-
-                {this.state.waitingUsers && (
-                    <div className="waiting-users-container">
-                        <PageWidth>
-                            <div className="waiting-title">
-                                {this.props.t('waiting-for-friends-config')}
-                            </div>
-                        </PageWidth>
-                    </div>
-                )}
-
-                <style jsx>
-                    {`
-                        .waiting-users-container {
-                            padding-top: 20px;
-                        }
-                        .waiting-title {
-                            margin-top: 10px;
-                            padding: 20px;
-                            text-align: center;
-                        }
-                        .container {
-                            padding: 0 10px;
-                        }
-
-                        .show-more {
-                            margin-top: 20px;
-                            text-align: right;
-                        }
-
-                        .description-container {
-                            margin-bottom: 20px;
-                        }
-
-                        .description {
-                            padding: 20px;
-                        }
-
-                        .form-title {
-                            font-size: 16px;
-                            margin: 20px 0 10px;
-                        }
-
-                        .two-selects-row {
-                            display: flex;
-                            justify-content: center;
-                            flex-direction: row;
-                            align-items: center;
-                        }
-
-                        .two-to {
-                            padding: 0 10px;
-                        }
-
-                        .select-m {
-                            width: 100%;
-                            padding: 10px;
-                            box-sizing: border-box;
-                            font-size: 14px;
-                            color: #333;
-                        }
-
-                        .genres-container {
-                            display: flex;
-                            flex-wrap: wrap;
-                        }
-
-                        .checkbox-m {
-                            display: inline-block;
-                            user-select: none;
-                            box-sizing: content-box;
-                            flex: 1 1 auto;
-                        }
-
-                        .select-all {
-                            width: 100%;
-                            text-align: center;
-                        }
-
-                        .checkbox-m input {
-                            position: absolute;
-                            left: -9999px;
-                        }
-
-                        .checkbox-m label {
-                            padding: 10px;
-                            border: 1px solid #b7b7b7;
-                            border-radius: 4px;
-                            font-size: 14px;
-                            cursor: pointer;
-                            display: block;
-                            margin: 4px;
-                            background: #fff;
-                        }
-
-                        .checkbox-m label.selected {
-                            background: #fff5bc;
-                            border-color: #f3e077;
-                        }
-
-                        .create-group-btn-container {
-                            text-align: right;
-                            background: #fff;
-                        }
-
-                        .create-group-btn {
-                            margin: 20px 0;
-                            width: 100%;
-                        }
-
-                        .toast-error-container {
-                            position: fixed;
-                            z-index: 2;
-                            top: 50px;
-                            left: 0;
-                            right: 0;
-                            justify-content: center;
-                            align-items: center;
-                            display: flex;
-                        }
-
-                        .toast-error {
-                            background: #f78a88;
-                            color: #fff;
-                            font-size: 12px;
-                            padding: 10px;
-                            border-radius: 4px;
-                            text-align: center;
-                            box-sizing: content-box;
-                            width: 80%;
-                        }
-                    `}
-                </style>
+                <Loader />
+                <UserPop />
             </div>
         )
     }
+
+    return (
+        <div className="root-container">
+            {TopBarForPage}
+            {!state.waitingUsers && (
+                <div>
+                    <PageWidth>
+                        <Title title={t('what-kind-of-movie-you-like')}></Title>
+                        <div className="mm-content-padding">
+                            <div className="form-title">
+                                {t('movie-genres')}
+                            </div>
+                            <div className="genres-container">
+                                {state.genres.map((genre) => {
+                                    return (
+                                        <div
+                                            key={genre.id}
+                                            className="checkbox-m"
+                                        >
+                                            <label
+                                                className={
+                                                    genre.selected
+                                                        ? 'selected'
+                                                        : ''
+                                                }
+                                                onClick={() =>
+                                                    toggleGenre(genre.id)
+                                                }
+                                            >
+                                                {genre.name}
+                                            </label>
+                                        </div>
+                                    )
+                                })}
+                            </div>
+
+                            {!state.isMoreConfigurationsVisible && (
+                                <div
+                                    className="mm-text-btn show-more"
+                                    onClick={showMoreConfigurations}
+                                >
+                                    {t('show-more-config-group-options')}
+                                </div>
+                            )}
+
+                            {state.isMoreConfigurationsVisible && (
+                                <div>
+                                    <div className="form-title">
+                                        {t('rating')}
+                                    </div>
+                                    <div className="two-selects-row">
+                                        <select
+                                            className="select-m"
+                                            defaultValue={state.rating}
+                                            onChange={(event) => {
+                                                setState({
+                                                    ...state,
+                                                    rating: event.target.value,
+                                                })
+                                            }}
+                                        >
+                                            {constants.ratings.map(
+                                                (rating, i) => {
+                                                    return (
+                                                        <option
+                                                            key={rating.id}
+                                                            value={rating.id}
+                                                        >
+                                                            {rating.label}
+                                                        </option>
+                                                    )
+                                                }
+                                            )}
+                                        </select>
+                                    </div>
+
+                                    <div className="form-title">
+                                        {t('from-year')}
+                                    </div>
+                                    <div className="two-selects-row">
+                                        <select
+                                            className="select-m"
+                                            defaultValue={state.startYear}
+                                            onChange={(event) => {
+                                                setState({
+                                                    ...state,
+                                                    startYear:
+                                                        event.target.value,
+                                                })
+                                            }}
+                                        >
+                                            {constants.years.map((year, i) => {
+                                                return (
+                                                    <option
+                                                        key={i}
+                                                        value={year}
+                                                    >
+                                                        {year}
+                                                    </option>
+                                                )
+                                            })}
+                                        </select>
+                                        <span className="two-to">
+                                            {t('to')}
+                                        </span>
+                                        <select
+                                            className="select-m"
+                                            defaultValue={state.endYear}
+                                            onChange={(event) => {
+                                                setState({
+                                                    ...state,
+                                                    endYear: event.target.value,
+                                                })
+                                            }}
+                                        >
+                                            {constants.years.map((year, i) => {
+                                                return (
+                                                    <option
+                                                        key={i}
+                                                        value={year}
+                                                    >
+                                                        {year}
+                                                    </option>
+                                                )
+                                            })}
+                                        </select>
+                                    </div>
+                                </div>
+                            )}
+
+                            {!!state.errorMessages.length && (
+                                <div className="toast-error-container">
+                                    <div className="toast-error">
+                                        {state.errorMessages.map((message) => (
+                                            <span key={message}>
+                                                {message} <br />
+                                            </span>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    </PageWidth>
+                    <FixedBottom>
+                        <PageWidth className="mm-content-padding">
+                            <div className="create-group-btn-container">
+                                <button
+                                    onClick={submitForm}
+                                    className="mm-btn create-group-btn"
+                                >
+                                    {t('next-btn')}
+                                </button>
+                            </div>
+                        </PageWidth>
+                    </FixedBottom>
+                </div>
+            )}
+
+            {state.waitingUsers && (
+                <div className="waiting-users-container">
+                    <PageWidth>
+                        <div className="waiting-title">
+                            {t('waiting-for-friends-config')}
+                        </div>
+                    </PageWidth>
+                </div>
+            )}
+
+            <style jsx>
+                {`
+                    .waiting-users-container {
+                        padding-top: 20px;
+                    }
+                    .waiting-title {
+                        margin-top: 10px;
+                        padding: 20px;
+                        text-align: center;
+                    }
+                    .container {
+                        padding: 0 10px;
+                    }
+
+                    .show-more {
+                        margin-top: 20px;
+                        text-align: right;
+                    }
+
+                    .description-container {
+                        margin-bottom: 20px;
+                    }
+
+                    .description {
+                        padding: 20px;
+                    }
+
+                    .form-title {
+                        font-size: 16px;
+                        margin: 20px 0 10px;
+                    }
+
+                    .two-selects-row {
+                        display: flex;
+                        justify-content: center;
+                        flex-direction: row;
+                        align-items: center;
+                    }
+
+                    .two-to {
+                        padding: 0 10px;
+                    }
+
+                    .select-m {
+                        width: 100%;
+                        padding: 10px;
+                        box-sizing: border-box;
+                        font-size: 14px;
+                        color: #333;
+                    }
+
+                    .genres-container {
+                        display: flex;
+                        flex-wrap: wrap;
+                    }
+
+                    .checkbox-m {
+                        display: inline-block;
+                        user-select: none;
+                        box-sizing: content-box;
+                        flex: 1 1 auto;
+                    }
+
+                    .select-all {
+                        width: 100%;
+                        text-align: center;
+                    }
+
+                    .checkbox-m input {
+                        position: absolute;
+                        left: -9999px;
+                    }
+
+                    .checkbox-m label {
+                        padding: 10px;
+                        border: 1px solid #b7b7b7;
+                        border-radius: 4px;
+                        font-size: 14px;
+                        cursor: pointer;
+                        display: block;
+                        margin: 4px;
+                        background: #fff;
+                    }
+
+                    .checkbox-m label.selected {
+                        background: #fff5bc;
+                        border-color: #f3e077;
+                    }
+
+                    .create-group-btn-container {
+                        text-align: right;
+                        background: #fff;
+                    }
+
+                    .create-group-btn {
+                        margin: 20px 0;
+                        width: 100%;
+                    }
+
+                    .toast-error-container {
+                        position: fixed;
+                        z-index: 2;
+                        top: 50px;
+                        left: 0;
+                        right: 0;
+                        justify-content: center;
+                        align-items: center;
+                        display: flex;
+                    }
+
+                    .toast-error {
+                        background: #f78a88;
+                        color: #fff;
+                        font-size: 12px;
+                        padding: 10px;
+                        border-radius: 4px;
+                        text-align: center;
+                        box-sizing: content-box;
+                        width: 80%;
+                    }
+                `}
+            </style>
+        </div>
+    )
 }
 
-export default withNamespaces('common')(CreateGroup)
+export const getServerSideProps = async ({ locale, query }) => {
+    const groupId = query.id && query.id.toUpperCase()
+    const genreMovieList = await moviedb.genreMovieList({ language: locale })
+
+    const genres = genreMovieList.genres.map((genre) => ({
+        ...genre,
+        selected: false,
+    }))
+    const a = await serverSideTranslations(locale)
+    return {
+        props: {
+            ...a,
+            genres,
+            groupId,
+        },
+    }
+}
+
+export default CreateGroup

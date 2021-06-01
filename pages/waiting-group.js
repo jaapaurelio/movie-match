@@ -29,35 +29,38 @@ function WaitingGroup(props) {
         loaded: false,
     })
 
-    useEffect(async () => {
-        const groupR = await axios.get(
-            `/api/methods?api=get-group&groupId=${props.groupId}`
-        )
-        let { group } = groupR.data
+    useEffect(() => {
+        let pusher
+        ;(async () => {
+            const groupR = await axios.get(
+                `/api/methods?api=get-group&groupId=${props.groupId}`
+            )
+            let { group } = groupR.data
 
-        if (!validateGroup(group, GROUP_STATES.WAITING_GROUP)) {
-            return
-        }
+            if (!validateGroup(group, GROUP_STATES.WAITING_GROUP)) {
+                return
+            }
 
-        setState((state) => ({ ...state, loaded: true }))
+            setState((state) => ({ ...state, loaded: true }))
 
-        const pusher = pusherConnection()
+            pusher = pusherConnection()
 
-        const channel = pusher.subscribe(`group-${props.groupId}`)
+            const channel = pusher.subscribe(`group-${props.groupId}`)
 
-        channel.bind('users', (users) => {
-            setState({ ...state, users })
-        })
+            channel.bind('users', (users) => {
+                setState((state) => ({ ...state, users }))
+            })
 
-        channel.bind('group-ready', () => {
-            Router.push(`/configure-group?id=${props.groupId}`)
-        })
+            channel.bind('group-ready', () => {
+                Router.push(`/configure-group?id=${props.groupId}`)
+            })
 
-        setState((state) => ({ ...state, users: group.users }))
+            setState((state) => ({ ...state, users: group.users }))
+        })()
 
-        return () => {
+        return function cleanup() {
             if (pusher) {
-                //pusher.unsubscribe(`group-${props.groupId}`);
+                pusher.unsubscribe(`group-${props.groupId}`)
             }
         }
     }, [])
