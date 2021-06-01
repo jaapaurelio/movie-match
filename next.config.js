@@ -2,8 +2,10 @@ const webpack = require('webpack')
 const withOffline = require('next-offline')
 require('dotenv').config()
 const withTM = require('next-transpile-modules')
+const { i18n } = require('./next-i18next.config')
 
 module.exports = {
+    i18n,
     async redirects() {
         return [
             {

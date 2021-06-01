@@ -1,6 +1,4 @@
 import * as React from 'react'
-import { connect } from 'react-redux'
-import { setUser } from '../state-manager/actions'
 import axios from 'axios'
 import { withNamespaces } from '../i18n'
 
@@ -101,14 +99,4 @@ class UserPopup extends React.Component {
     }
 }
 
-function mapStateToProps(state) {
-    const { user } = state
-    return { userName: user.name }
-}
-
-const mapDispatchToProps = { setUser }
-
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(withNamespaces('common')(UserPopup))
+export default withNamespaces('common')(UserPopup)
