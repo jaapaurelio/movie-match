@@ -40,7 +40,6 @@ function CreateGroup(props) {
 
     const [state, setState] = useState({
         genres: props.genres || [],
-        allSelected: false,
         errorMessages: [],
         startYear: 2000,
         endYear: currentYear,
@@ -49,6 +48,7 @@ function CreateGroup(props) {
         loaded: false,
         isMoreConfigurationsVisible: false,
         page: randomInt(3, 7),
+        errorTime: undefined,
     })
 
     const constants = {
@@ -88,17 +88,20 @@ function CreateGroup(props) {
     }
 
     function showErrors(errorMessages) {
-        if (errorTimer) {
+        if (state.errorTimer) {
             clearTimeout(errorTimer)
-            errorTimer = null
+            setState((state) => ({ ...state, errorTime: null }))
         }
 
-        errorTimer = setTimeout(() => {
-            setState({ ...state, errorMessages: [] })
-            errorTimer = null
+        const errorTime = setTimeout(() => {
+            setState((state) => ({
+                ...state,
+                errorMessages: [],
+                errorTime: null,
+            }))
         }, 2000)
 
-        setState({ ...state, errorMessages })
+        setState((state) => ({ ...state, errorMessages, errorTime }))
     }
 
     async function createGroup({ selectedGenres, startYear, endYear, rating }) {
