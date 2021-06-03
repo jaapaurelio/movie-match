@@ -114,7 +114,7 @@ function Start() {
                                     className="group-input"
                                     type="text"
                                     placeholder="X X X X X"
-                                    maxLength="4"
+                                    maxLength="5"
                                     onChange={onChangeId}
                                 />
                             </div>
