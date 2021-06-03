@@ -2,14 +2,16 @@ import React, { useState, useEffect } from 'react'
 import jsCookie from 'js-cookie'
 import Title from '../components/title'
 import PageWidth from '../components/page-width'
-import { withNamespaces } from '../i18n'
 import Link from 'next/link'
 
 import Topbar from '../components/topbar'
+import { useTranslation } from 'next-i18next'
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
 const HowToUse = (props) => {
+    const { t } = useTranslation('common')
     const [lastGroupId, setLastGroupId] = useState()
-    console.log(props)
+
     useEffect(() => {
         const lastGroupId = jsCookie.get('groupId')
 
@@ -19,29 +21,30 @@ const HowToUse = (props) => {
     return (
         <div className="container">
             <Topbar
+                t={t}
                 showGroup={true}
                 groupId={lastGroupId}
                 title="Movie Match"
             />
             <PageWidth className="mm-content-padding">
-                <Title title={props.t('how-to-title')}></Title>
+                <Title title={t('how-to-title')}></Title>
                 <div className="image-container">
                     <img className="image" src="/blabla.png"></img>
                 </div>
-                <div className="description">{props.t('intro-1')}</div>
+                <div className="description">{t('intro-1')}</div>
 
                 <div className="image-container">
                     <img className="image" src="/yesyes.png"></img>
                 </div>
-                <div className="description">{props.t('intro-2')}</div>
+                <div className="description">{t('intro-2')}</div>
 
                 <div className="image-container">
                     <img className="image" src="/match.png"></img>
                 </div>
-                <div className="description">{props.t('intro-3')}</div>
+                <div className="description">{t('intro-3')}</div>
                 <Link href="/">
                     <button className="close-button mm-btn mm-btn-accept">
-                        {props.t('close-btn')}
+                        {t('close-btn')}
                     </button>
                 </Link>
             </PageWidth>
@@ -71,10 +74,14 @@ const HowToUse = (props) => {
     )
 }
 
-HowToUse.getInitialProps = () => {
-    const pageProps = { namespacesRequired: ['common'] }
+export const getServerSideProps = async ({ locale, query }) => {
+    const translations = await serverSideTranslations(locale)
 
-    return pageProps
+    return {
+        props: {
+            ...translations,
+        },
+    }
 }
 
-export default withNamespaces('common')(HowToUse)
+export default HowToUse

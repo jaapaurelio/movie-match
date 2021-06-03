@@ -70,6 +70,7 @@ function Start() {
     return (
         <div>
             <Topbar
+                t={t}
                 showGroup={true}
                 groupId={state.lastGroupId}
                 title="Movie Match"
@@ -152,7 +153,7 @@ function Start() {
                 .
             </footer>
 
-            <UserPop />
+            <UserPop t={t} />
 
             <style jsx>{`
                 .start-btn,

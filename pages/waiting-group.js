@@ -93,6 +93,7 @@ function WaitingGroup(props) {
 
     const TopBarForPage = (
         <Topbar
+            t={t}
             showMenu={true}
             groupId={props.groupId}
             groupPage={true}
@@ -134,7 +135,7 @@ function WaitingGroup(props) {
                                     {t('link-copied-send-friends')}
                                 </span>
                             )}
-                            <GroupNumber groupId={props.groupId} />
+                            <GroupNumber groupId={props.groupId} t={t} />
                         </PageWidth>
                     </div>
                     <PageWidth className="mm-content-padding ">

@@ -1,7 +1,6 @@
 import PageWidth from './page-width'
-import { withNamespaces } from '../i18n'
 
-export default withNamespaces('common')(({ movie, t }) => {
+export default function MovieInfo({ movie, t }) {
     const crew =
         movie &&
         movie.credits &&
@@ -17,7 +16,7 @@ export default withNamespaces('common')(({ movie, t }) => {
                             <div>
                                 <h3 className="title">{t('crew')}</h3>
                                 <div className="crew-container">
-                                    {crew.map(c => {
+                                    {crew.map((c) => {
                                         return (
                                             <div
                                                 key={c.credit_id}
@@ -91,4 +90,4 @@ export default withNamespaces('common')(({ movie, t }) => {
             </style>
         </section>
     )
-})
+}

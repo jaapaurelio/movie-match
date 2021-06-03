@@ -364,6 +364,7 @@ function Group(props) {
     const { movie, showMatchPopup, matchPoster } = state
     const TopBarForPage = (
         <Topbar
+            t={t}
             groupPage={true}
             activetab="group"
             groupId={props.groupId}
@@ -376,7 +377,7 @@ function Group(props) {
             <div>
                 {TopBarForPage}
                 <Loader />
-                <UserPop />
+                <UserPop t={t} />
             </div>
         )
     }
@@ -417,7 +418,7 @@ function Group(props) {
                             <Cast t={t} cast={movie.credits.cast.slice(0, 5)} />
                         </PageWidth>
 
-                        <MovieInfo movie={movie} />
+                        <MovieInfo movie={movie} t={t} />
                         <PageWidth>
                             <div className="mm-content-padding">
                                 <MovieVideo

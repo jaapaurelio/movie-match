@@ -50,6 +50,7 @@ function Matches(props) {
 
     const TopBarForPage = (
         <Topbar
+            t={t}
             matchesPage={true}
             activetab="group"
             groupId={props.groupId}
@@ -63,7 +64,7 @@ function Matches(props) {
             <div>
                 {TopBarForPage}
                 <Loader />
-                <UserPop />
+                <UserPop t={t} />
             </div>
         )
     }

@@ -213,6 +213,7 @@ function CreateGroup(props) {
 
     const TopBarForPage = (
         <Topbar
+            t={t}
             showMenu={false}
             showGroup={true}
             groupId={props.groupId}
@@ -225,7 +226,7 @@ function CreateGroup(props) {
             <div>
                 {TopBarForPage}
                 <Loader />
-                <UserPop />
+                <UserPop t={t} />
             </div>
         )
     }

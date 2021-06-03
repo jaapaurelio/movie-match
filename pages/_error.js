@@ -1,42 +1,48 @@
 import React from 'react'
 import Topbar from '../components/topbar'
 import Link from 'next/link'
-import { withNamespaces } from '../i18n'
+import { useTranslation } from 'next-i18next'
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
-class ErrorPage extends React.Component {
-    static getInitialProps({ res, err }) {
-        const statusCode = res ? res.statusCode : err ? err.statusCode : null
-        return { statusCode, namespacesRequired: ['common'] }
-    }
+function ErrorPage() {
+    const { t } = useTranslation('common')
 
-    render() {
-        return (
-            <div>
-                <Topbar />
-                <div className="error">
-                    {this.props.t('sorry-page-not-found')}
+    return (
+        <div>
+            <Topbar />
+            <div className="error">{t('sorry-page-not-found')}</div>
+            <div className="home-link">
+                <div className="mm-btn">
+                    <Link href={`/`}>
+                        <a>{t('go-to-home-btn')}</a>
+                    </Link>
                 </div>
-                <div className="home-link">
-                    <div className="mm-btn">
-                        <Link href={`/`}>
-                            <a>{this.props.t('go-to-home-btn')}</a>
-                        </Link>
-                    </div>
-                </div>
-                <style jsx>{`
-                    .error {
-                        text-align: center;
-                        margin-top: 40px;
-                    }
-
-                    .home-link {
-                        margin-top: 20px;
-                        text-align: center;
-                    }
-                `}</style>
             </div>
-        )
+            <style jsx>{`
+                .error {
+                    text-align: center;
+                    margin-top: 40px;
+                }
+
+                .home-link {
+                    margin-top: 20px;
+                    text-align: center;
+                }
+            `}</style>
+        </div>
+    )
+}
+
+export const getServerSideProps = async ({ locale, res, err }) => {
+    const translations = await serverSideTranslations(locale)
+    const statusCode = res ? res.statusCode : err ? err.statusCode : null
+
+    return {
+        props: {
+            ...translations,
+            statusCode,
+        },
     }
 }
 
-export default withNamespaces('common')(ErrorPage)
+export default ErrorPage
