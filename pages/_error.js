@@ -33,7 +33,7 @@ function ErrorPage() {
     )
 }
 
-export const getServerSideProps = async ({ locale, res, err }) => {
+export const getStaticProps = async ({ locale, res, err }) => {
     const translations = await serverSideTranslations(locale)
     const statusCode = res ? res.statusCode : err ? err.statusCode : null
 
