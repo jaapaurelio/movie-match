@@ -1,4 +1,4 @@
-import en from './public/locales/en/common.json'
+import en from './public/static/locales/en/common.json'
 
 function i18(WrappedComponent) {
     function Theme(props) {
