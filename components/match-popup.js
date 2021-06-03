@@ -1,7 +1,11 @@
-import { withNamespaces } from '../i18n'
-
-export default withNamespaces('common')(
-    ({ show, poster, onClickMatches, onClickDismiss, t }) => (
+export default function MatchPopup({
+    show,
+    poster,
+    onClickMatches,
+    onClickDismiss,
+    t,
+}) {
+    return (
         <div className={`popup-container ${show ? 'show' : ''}`}>
             <div className="popup-content">
                 <h1>{t('its-a-match')}</h1>
@@ -94,4 +98,4 @@ export default withNamespaces('common')(
             </style>
         </div>
     )
-)
+}

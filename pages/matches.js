@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import PageWidth from '../components/page-width'
 import Topbar from '../components/topbar'
@@ -9,209 +9,212 @@ import GroupInfoBar from '../components/group-info-bar'
 import Link from 'next/link'
 
 import UserPop from '../components/user-popup'
-import { withNamespaces } from '../i18n'
 import { MovieDb } from 'moviedb-promise'
+import { useTranslation } from 'next-i18next'
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
 const moviedb = new MovieDb('284941729ae99106f71e56126227659b')
 
-class Matches extends React.Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            matches: [],
-            loading: true,
-            group: {},
-            loaded: false,
-        }
-    }
+function Matches(props) {
+    const { t } = useTranslation('common')
 
-    async componentDidMount() {
-        const moviesR = await axios.get(
-            `/api/methods?api=get-group&groupId=${this.props.groupId}`
-        )
-        let { group } = moviesR.data
+    const [state, setState] = useState({
+        matches: [],
+        loading: true,
+        group: {},
+        loaded: false,
+    })
 
-        const getMatches = group.matches.map(movie => {
-            return moviedb.movieInfo(movie.id)
-        })
-
-        const matches = await Promise.all(getMatches)
-
-        this.setState({ group, matches, loading: false, loaded: true })
-    }
-
-    static getInitialProps({ query }) {
-        return { groupId: query.id, namespacesRequired: ['common'] }
-    }
-
-    render() {
-        const TopBarForPage = (
-            <Topbar
-                matchesPage={true}
-                activetab="group"
-                groupId={this.props.groupId}
-                showGroupOptions={true}
-                bestMatch={this.state.group.bestMatch}
-            />
-        )
-
-        if (!this.state.loaded) {
-            return (
-                <div>
-                    {TopBarForPage}
-                    <Loader />
-                    <UserPop />
-                </div>
+    useEffect(() => {
+        ;(async () => {
+            const moviesR = await axios.get(
+                `/api/methods?api=get-group&groupId=${props.groupId}`
             )
-        }
+            let { group } = moviesR.data
 
+            const getMatches = group.matches.map((movie) => {
+                return moviedb.movieInfo(movie.id)
+            })
+
+            const matches = await Promise.all(getMatches)
+
+            setState((state) => ({
+                ...state,
+                group,
+                matches,
+                loading: false,
+                loaded: true,
+            }))
+        })()
+    }, [])
+
+    const TopBarForPage = (
+        <Topbar
+            matchesPage={true}
+            activetab="group"
+            groupId={props.groupId}
+            showGroupOptions={true}
+            bestMatch={state.group.bestMatch}
+        />
+    )
+
+    if (!state.loaded) {
         return (
             <div>
-                <div>
-                    {TopBarForPage}
-                    {!this.state.loading && (
-                        <GroupInfoBar
-                            users={this.state.group.users}
-                            groupId={this.props.groupId}
-                        />
-                    )}
-                    {this.state.loading && <Loader />}
-                    {this.state.group.bestMatch == 100 && (
-                        <div className="container">
-                            <Headline>
-                                {this.props.t('we-found-perfect-match')}
-                                <br />
-                                {this.props.t('have-nice-movie')}
-                            </Headline>
-                            <PageWidth>
-                                <h1 className="title">
-                                    {this.props.t('perfect-match')}
-                                </h1>
-                                <div className="movie-container perfect-match">
-                                    <MovieHead movie={this.state.matches[0]} />
-                                </div>
-                                {!!this.state.matches[1] && (
-                                    <div className="other-options">
-                                        {this.state.group.bestMatch === 100 && (
-                                            <h1 className="title">
-                                                {this.props.t(
-                                                    'alternative-matches'
-                                                )}
-                                            </h1>
-                                        )}
-                                        {this.state.matches.map((movie, i) => {
-                                            {
-                                                return (
-                                                    i != 0 && (
-                                                        <div
-                                                            className="movie-container"
-                                                            key={movie.id}
-                                                        >
-                                                            <MovieHead
-                                                                movie={movie}
-                                                            />
-                                                        </div>
-                                                    )
-                                                )
-                                            }
-                                        })}
-                                    </div>
-                                )}
-                            </PageWidth>
-                        </div>
-                    )}
-
-                    {this.state.group.bestMatch < 100 &&
-                        this.state.group.bestMatch > 0 && (
-                            <div>
-                                <PageWidth>
-                                    <h1 className="title">
-                                        {this.props.t('almost-matched', {
-                                            percentage: this.state.group
-                                                .bestMatch,
-                                        })}
-                                    </h1>
-                                </PageWidth>
-                                {this.state.matches.map((movie, i) => {
-                                    {
-                                        return (
-                                            <div
-                                                className="movie-container"
-                                                key={movie.id}
-                                            >
-                                                <MovieHead
-                                                    movie={movie}
-                                                    small={true}
-                                                />
-                                            </div>
-                                        )
-                                    }
-                                })}
-                            </div>
-                        )}
-
-                    {this.state.loaded && !this.state.matches.length && (
-                        <PageWidth>
-                            <div className="title">
-                                {this.props.t('no-matches-yet')}
-                            </div>
-                        </PageWidth>
-                    )}
-                    <PageWidth>
-                        <div className="keep-searching-container">
-                            <Link href={`/group?id=${this.props.groupId}`}>
-                                <span className="mm-small-btn">
-                                    {this.props.t('continue-searching')}
-                                </span>
-                            </Link>
-                        </div>
-                    </PageWidth>
-                </div>
-
-                <style jsx>{`
-                    .title {
-                        font-size: 22px;
-                        font-weight: 800;
-                        padding: 20px 20px 10px 20px;
-                    }
-
-                    .movie-container {
-                        padding: 0 10px;
-                    }
-
-                    .keep-searching-container {
-                        text-align: center;
-                        margin-top: 40px;
-                        margin-bottom: 40px;
-                    }
-
-                    .movie-info {
-                        padding-left: 20px;
-                    }
-
-                    .movie-title {
-                        font-weight: bold;
-                    }
-
-                    .show-more-container {
-                        text-align: center;
-                        margin: 20px 0;
-                    }
-
-                    .other-options {
-                        background: #fafafa;
-                        margin-top: 20px;
-                        border-top: 1px solid #eaeaea;
-                    }
-
-                    .info-message {
-                        text-align: center;
-                        padding-top: 20px;
-                    }
-                `}</style>
+                {TopBarForPage}
+                <Loader />
+                <UserPop />
             </div>
         )
     }
+
+    return (
+        <div>
+            <div>
+                {TopBarForPage}
+                {!state.loading && (
+                    <GroupInfoBar
+                        users={state.group.users}
+                        groupId={props.groupId}
+                    />
+                )}
+                {state.loading && <Loader />}
+                {state.group.bestMatch == 100 && (
+                    <div className="container">
+                        <Headline>
+                            {t('we-found-perfect-match')}
+                            <br />
+                            {t('have-nice-movie')}
+                        </Headline>
+                        <PageWidth>
+                            <h1 className="title">{t('perfect-match')}</h1>
+                            <div className="movie-container perfect-match">
+                                <MovieHead movie={state.matches[0]} />
+                            </div>
+                            {!!state.matches[1] && (
+                                <div className="other-options">
+                                    {state.group.bestMatch === 100 && (
+                                        <h1 className="title">
+                                            {t('alternative-matches')}
+                                        </h1>
+                                    )}
+                                    {state.matches.map((movie, i) => {
+                                        {
+                                            return (
+                                                i != 0 && (
+                                                    <div
+                                                        className="movie-container"
+                                                        key={movie.id}
+                                                    >
+                                                        <MovieHead
+                                                            movie={movie}
+                                                        />
+                                                    </div>
+                                                )
+                                            )
+                                        }
+                                    })}
+                                </div>
+                            )}
+                        </PageWidth>
+                    </div>
+                )}
+
+                {state.group.bestMatch < 100 && state.group.bestMatch > 0 && (
+                    <div>
+                        <PageWidth>
+                            <h1 className="title">
+                                {t('almost-matched', {
+                                    percentage: state.group.bestMatch,
+                                })}
+                            </h1>
+                        </PageWidth>
+                        {state.matches.map((movie, i) => {
+                            {
+                                return (
+                                    <div
+                                        className="movie-container"
+                                        key={movie.id}
+                                    >
+                                        <MovieHead movie={movie} small={true} />
+                                    </div>
+                                )
+                            }
+                        })}
+                    </div>
+                )}
+
+                {state.loaded && !state.matches.length && (
+                    <PageWidth>
+                        <div className="title">{t('no-matches-yet')}</div>
+                    </PageWidth>
+                )}
+                <PageWidth>
+                    <div className="keep-searching-container">
+                        <Link href={`/group?id=${props.groupId}`}>
+                            <span className="mm-small-btn">
+                                {t('continue-searching')}
+                            </span>
+                        </Link>
+                    </div>
+                </PageWidth>
+            </div>
+
+            <style jsx>{`
+                .title {
+                    font-size: 22px;
+                    font-weight: 800;
+                    padding: 20px 20px 10px 20px;
+                }
+
+                .movie-container {
+                    padding: 0 10px;
+                }
+
+                .keep-searching-container {
+                    text-align: center;
+                    margin-top: 40px;
+                    margin-bottom: 40px;
+                }
+
+                .movie-info {
+                    padding-left: 20px;
+                }
+
+                .movie-title {
+                    font-weight: bold;
+                }
+
+                .show-more-container {
+                    text-align: center;
+                    margin: 20px 0;
+                }
+
+                .other-options {
+                    background: #fafafa;
+                    margin-top: 20px;
+                    border-top: 1px solid #eaeaea;
+                }
+
+                .info-message {
+                    text-align: center;
+                    padding-top: 20px;
+                }
+            `}</style>
+        </div>
+    )
 }
 
-export default withNamespaces('common')(Matches)
+export const getServerSideProps = async ({ locale, query }) => {
+    const translations = await serverSideTranslations(locale)
+    const groupId = query.id && query.id.toUpperCase()
+
+    return {
+        props: {
+            ...translations,
+            groupId,
+        },
+    }
+}
+
+export default Matches

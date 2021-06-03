@@ -468,6 +468,7 @@ function Group(props) {
                         matchPoster: undefined,
                     }))
                 }}
+                t={t}
             />
             <style jsx>
                 {`
