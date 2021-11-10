@@ -106,7 +106,7 @@ function WaitingGroup(props) {
             <div>
                 {TopBarForPage}
                 <Loader />
-                <UserPop />
+                <UserPop t={t} />
             </div>
         )
     }
